@@ -1,0 +1,9 @@
+main: me.redstonepvpcore.RedstonePvPCore
+version: 1.0alpha
+name: RedstonePvPCore
+author: Sandwicha
+commands:
+  redstonepvpcore:
+    usage: /<command>
+    description: Main command
+    aliases: [rpcore, redpvpcore, rpc, redstonepvputils, rputils]

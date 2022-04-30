@@ -1,0 +1,95 @@
+# Empty messages "" won't be sent.
+# ==================================
+# << Repair Anvil >>
+# ==================================
+repair-anvil-empty-hand: "&cYou can't repair your hand!"
+repair-anvil-already-repaired: "&cThe item you're holding is already repaired!"
+# available variables: %item%, %item_readable%
+repair-anvil-not-repairable: "&cYou can't repair this item."
+# available variables: %item%, %item_readable%, %amount% 
+repair-anvil-not-enough: "&cYou don't have enough to repair."
+repair-anvil-repairing: "&a&oRepairing...."
+repair-anvil-repaired: ""
+# ==================================
+# << Converter >>
+# ==================================
+redstone-converter-not-enough: "&cYou need &o%amount% &credstone to convert."
+gold-converter-not-enough: "&cYou need &o%amount% &cgold to convert."
+emerald-converter-not-enough: "&cYou need &o%amount% &cemerald to convert."
+redstone-converter-use: ""
+gold-converter-use: ""
+emerald-converter-use: ""
+# ==================================
+# << Random Box >>
+# ==================================
+# available variables: %amount%, %item%, %item_readable%
+random-box-not-enough: "&cYou need &o%amount% %item_readable% &cto use a random box."
+random-box-in-use: "&cThis random box is currently being used."
+random-box-use: "&eShuffling..."
+random-box-done: ""
+# ==================================
+# << Drop Party >>
+# ==================================
+drop-party-not-ready: "&cYou need to wait %time% seconds to start the drop party."
+drop-party-already-running: "&cThe drop party is already running!"
+drop-party-activate: "&a&l&oDrop &f&l&oparty &a&l&ostarted!"
+drop-party-ready: "&bDrop party &ais ready to drop! Click on it to turn it on."
+drop-party-not-enough-players: "&cThere must be at least &f%amount% &cplayers online in order to activate the drop party."
+# ==================================
+# << Frame Giver >>
+# ==================================
+frame-giver-use: "&aYou have taken an item." 
+# =============================
+# COMMAND /rpcore set <gadget> and admin stuff
+# =============================
+select-repair-anvil: "&cSelect a block by clicking with your mouse to set a &7Repair Anvil&c."
+select-redstone-converter: "&cSelect a block by clicking with your mouse to set a &4Redstone Converter&c."
+select-gold-converter: "&cSelect a block by clicking with your mouse to set a &6Gold Converter&c."
+select-emerald-converter: "&cSelect a block by clicking with your mouse to set an &aEmerald Converter&c."
+select-random-box: "&cSelect a block by clicking with your mouse to set a &eRandom Box&c."
+select-drop-party: "&cSelect a block by clicking with your mouse to set a &bDrop Party Activator&c."
+select-exp-sign: "&cSelect a block/sign by clicking with your mouse to set an &2Exp Sign&c."
+select-frame-giver: "&cSelect an item frame by clicking with your mouse to set a &9Frame Giver&c."
+# available variables: %location% {
+set-repair-anvil: "&cSuccessfully set &7Repair Anvil &cat &o&n%location%&c."
+set-redstone-converter: "&cSuccessfully set &4Redstone Converter &cat &o&n%location%&c."
+set-gold-converter: "&cSuccessfully set &6Gold Converter &cat &o&n%location%&c."
+set-emerald-converter: "&cSuccessfully set &aEmerald Converter &cat &o&n%location%&c."
+set-random-box: "&cSuccessfully set &eRandom Box &cat &o&n%location%&c."
+set-drop-party: "&cSuccessfully set &bDrop Party Activator &cat &o&n%location%&c."
+set-exp-sign: "&cSuccessfully set &2Exp Sign &cat &o&n%location%&c."
+set-frame-giver: "&cSuccessfully set &9Frame Giver &cat &o&n%location%&c."
+remove-repair-anvil: "&cSuccessfully removed &7Repair Anvil &cat &o&n%location%&c."
+remove-redstone-converter: "&cSuccessfully removed &4Redstone Converter &cat &o&n%location%&c."
+remove-gold-converter: "&cSuccessfully removed &6Gold Converter &cat &o&n%location%&c."
+remove-emerald-converter: "&cSuccessfully removed &aEmerald Converter &cat &o&n%location%&c."
+remove-random-box: "&cSuccessfully removed &eRandom Box &cat &o&n%location%&c."
+remove-drop-party: "&cSuccessfully removed &bDrop Party Activator &cat &o&n%location%&c."
+remove-exp-sign: "&cSuccessfully removed &2Exp Sign &cat &o&n%location%&c."
+remove-frame-giver: "&cSuccessfully removed &9Frame Giver &cat &o&n%location%&c."
+# }
+select-cancel: "&cor write &o/rpcore cancel &cto cancel the process."
+unknown-player: "&cThe player &o&n%target% &cis not online."
+player-only: "&cThis command can only be run by a player."
+reload: "&aSuccessfully reloaded config files."
+cancel: "&cCancelled set command."
+bypass-on: "&7Bypass is &aON &7for you."
+bypass-off: "&7Bypass is &cOFF &7for you."
+bypass-on-other: "&7Bypass is &aON &7for &a%target%&7."
+bypass-off-other: "&7Bypass is &cOFF &7for &c%target%&7."
+reset-drop-party: "&7Drop party timer has been reset."
+start-drop-party: "&7Drop party has been forcefully activated."
+no-permission-use: "&cYou don't have permission to use this gadget."
+list:
+- "&3[&cRedstonePvPCore&3] &aLoaded Gadgets:-"
+- "%pos.1% %gadget.1%"
+- "%pos.2% %gadget.2%"
+- "%pos.3% %gadget.3%"
+- "%pos.4% %gadget.4%"
+- "%pos.5% %gadget.5%"
+- "%pos.6% %gadget.6%"
+- "%pos.7% %gadget.7%"
+- "%pos.8% %gadget.8%"
+- "%pos.9% %gadget.9%"
+- "%pos.10% %gadget.10%"
+- "&3[&c%page%&3/&c%lastpage%&3]"

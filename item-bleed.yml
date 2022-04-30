@@ -1,0 +1,21 @@
+item:
+  # * item to drop
+  material: "GOLD_INGOT"
+  # * select a random amount to drop, ranging from 3 to 7
+  # * (from)->(to)
+  amount-range: "3->7"
+  # * %25 chance for an item bleed
+  drop-chance: 25
+  # * remove the # and the space next to it to enable the options below 
+  # data: 0
+  # name: "&6&lGold Ingot"
+  # enchantments:
+  # - "sharpness 1"
+  # - "unbreaking 1"
+  # lore:
+  # - "&6Custom Item"
+  # - "&4Another line"
+  # flags:
+  # - "HIDE_ENCHANTS"
+  # nbt:
+  # - "key->value"

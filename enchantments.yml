@@ -1,0 +1,21 @@
+Poison: 
+  display-name: "&7Poison"
+  max-level: 255
+Wither:
+  display-name: "&7Wither"
+  max-level: 255
+Blindness:
+  display-name: "&7Blindness"
+  max-level: 255
+Slowness:
+  display-name: "&7Slowness"
+  max-level: 255
+Hunger:
+  display-name: "&7Hunger"
+  max-level: 255
+Extradamage:
+  display-name: "&7Extradamage"
+  max-level: 255
+Nausea:
+  display-name: "&7Nausea"
+  max-level: 255

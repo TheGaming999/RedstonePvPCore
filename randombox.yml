@@ -1,0 +1,448 @@
+# permission: redstonepvpcore.use.randombox
+requires-permission: false
+use-sound:
+  name: "NOTE_PLING"
+  volume: 1.0
+  pitch: 1.0
+animation-sound:
+  name: ""
+  volume: 1.0
+  pitch: 1.0
+end-sound:
+  name: "BAT_HURT"
+  volume: 1.0
+  pitch: 1.0
+take-item:
+  material: GOLD_INGOT
+  amount: 32 # will be used if player didn't have any of the permissions below
+use-permissions:
+  24: randombox.cost.24
+  16: randombox.cost.16
+shuffle-duration: 9.0 # time it takes for a single randombox use to finish
+items:
+  '0':
+    # * the item that will show above the randombox when you use it
+    display-material: DIAMOND_SWORD
+    # * the item that you will get
+    material: DIAMOND_SWORD
+    # * the amount that you will see above the randombox
+    display-amount: 1
+    # * the real amount of the item you will get
+    amount: 1
+    # * the fake data
+    display-data: 0
+    # * the real data aka durability
+    data: 0
+    # * the item name which will be displayed when you hold it in your hand
+    name: "&eDiamond Sword"
+    lore:
+    - "&7Wither III"
+    # * Only if you want the item to glow when it appears above the randombox
+    display-enchantments:
+    - "unbreaking 1"
+    # * the real enchantments the item has
+    enchantments:
+    - "sharpness 5"
+    - "fireaspect 1"
+    # * item flags such as HIDE_ENCHANTS
+    flags: []
+    # * commands that will be executed when you get the item
+    commands:
+    - "give %player% gold_ingot 1"
+    broadcast:
+    - "&c%player% &6won a rare diamond sword"
+    msg:
+    - "&a&lCongratulations!"
+  '1':
+    display-material: GOLD_BLOCK
+    material: GOLD_BLOCK
+    display-amount: 1
+    amount: 4
+    display-data: 0
+    data: 0
+    msg:
+    - "&eYou got 4x gold block"
+  '2':
+    display-material: GOLDEN_APPLE
+    material: GOLDEN_APPLE
+    display-amount: 1
+    amount: 1
+    display-data: 1
+    data: 1
+    name: "&c&oSuper Golden Apple"
+    msg:
+    - "&eYou got a super golden apple"
+  '3':
+    display-material: DIAMOND_HELMET
+    material: DIAMOND_HELMET
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Helmet"
+    lore: []
+    display-enchantments:
+    - "protect 1"
+    enchantments:
+    - "protect 3"
+    - "unbreaking 3"
+    flags: []
+    commands: []
+    broadcast: []
+  '4':
+    display-material: DIAMOND_CHESTPLATE
+    material: DIAMOND_CHESTPLATE
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Chestplate"
+    lore: []
+    display-enchantments:
+    - "protect 1"
+    enchantments:
+    - "protect 2"
+    - "projectileprotection 5"
+    flags: []
+    commands: []
+    broadcast: []
+  '5':
+    display-material: DIAMOND_LEGGINGS
+    material: DIAMOND_LEGGINGS
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Leggings"
+    lore: []
+    display-enchantments:
+    - "protect 1"
+    enchantments:
+    - "protect 4"
+    flags: []
+    commands: []
+    broadcast: []
+  '6':
+    display-material: DIAMOND_BOOTS
+    material: DIAMOND_BOOTS
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Boots"
+    lore: []
+    display-enchantments:
+    - "protect 1"
+    enchantments:
+    - "protect 3"
+    - "featherfalling 4"
+    flags: []
+    commands: []
+    broadcast: []
+  '7':
+    display-material: DIAMOND_HELMET
+    material: DIAMOND_HELMET
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Helmet"
+    lore: []
+    display-enchantments:
+    - "protect 1"
+    enchantments:
+    - "protect 4"
+    flags: []
+    commands: []
+    broadcast: []
+  '8':
+    display-material: DIAMOND_CHESTPLATE
+    material: DIAMOND_CHESTPLATE
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Chestplate"
+    lore: []
+    display-enchantments:
+    - "protect 1"
+    enchantments:
+    - "protect 4"
+    flags: []
+    commands: []
+    broadcast: []
+  '9':
+    display-material: DIAMOND_LEGGINGS
+    material: DIAMOND_LEGGINGS
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Leggings"
+    lore: []
+    display-enchantments:
+    - "protect 1"
+    enchantments:
+    - "protect 4"
+    - "unbreaking 3"
+    flags: []
+    commands: []
+    broadcast: []
+  '10':
+    display-material: DIAMOND_BOOTS
+    material: DIAMOND_BOOTS
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Boots"
+    lore: []
+    display-enchantments:
+    - "protect 1"
+    enchantments:
+    - "protect 4"
+    flags: []
+    commands: []
+    broadcast: []
+  '11':
+    display-material: DIAMOND_LEGGINGS
+    material: DIAMOND_LEGGINGS
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Leggings"
+    lore: []
+    display-enchantments:
+    - "protect 1"
+    enchantments:
+    - "protect 3"
+    - "unbreaking 3"
+    flags: []
+    commands: []
+    broadcast: []
+  '12':
+    display-material: DIAMOND_CHESTPLATE
+    material: DIAMOND_CHESTPLATE
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Chestplate"
+    lore: []
+    display-enchantments:
+    - "protect 1"
+    enchantments:
+    - "protect 1"
+    - "thorns 3"
+    flags: []
+    commands: []
+    broadcast: []
+  '13':
+    display-material: DIAMOND_HELMET
+    material: DIAMOND_HELMET
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Helmet"
+    lore: []
+    display-enchantments:
+    - "protect 1"
+    enchantments:
+    - "respiration 4"
+    - "unbreaking 3"
+    - "protect 3"
+    flags: []
+    commands: []
+    broadcast: []
+  '14':
+    display-material: DIAMOND_SWORD
+    material: DIAMOND_SWORD
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Sword"
+    lore: []
+    display-enchantments:
+    - "sharpness 5"
+    enchantments:
+    - "sharpness 3"
+    - "fireaspect 1"
+    - "knockback 2"
+    flags: []
+    commands: []
+    broadcast: []
+  '15':
+    display-material: DIAMOND_SWORD
+    material: DIAMOND_SWORD
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Sword"
+    lore: []
+    display-enchantments:
+    - "sharpness 5"
+    enchantments:
+    - "sharpness 5"
+    flags: []
+    commands: []
+    broadcast: []
+  '16':
+    display-material: DIAMOND_SWORD
+    material: DIAMOND_SWORD
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Sword"
+    lore: []
+    display-enchantments:
+    - "sharpness 5"
+    enchantments:
+    - "sharpness 4"
+    - "fireaspect 2"
+    - "unbreaking 3"
+    flags: []
+    commands: []
+    broadcast: []
+  '17':
+    display-material: DIAMOND_SWORD
+    material: DIAMOND_SWORD
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Sword"
+    lore: []
+    display-enchantments:
+    - "sharpness 5"
+    enchantments:
+    - "unbreaking 3"
+    - "knockback 3"
+    flags: []
+    commands: []
+    broadcast: []
+  '18':
+    display-material: DIAMOND_SWORD
+    material: DIAMOND_SWORD
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Sword"
+    lore: []
+    display-enchantments:
+    - "sharpness 5"
+    enchantments:
+    - "fireaspect 2"
+    - "knockback 2"
+    flags: []
+    commands: []
+    broadcast: []
+  '19':
+    display-material: DIAMOND_BOOTS
+    material: DIAMOND_BOOTS
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cDiamond Boots"
+    lore: []
+    display-enchantments:
+    - "unbreak 1"
+    enchantments:
+    - "depthstrider 4"
+    - "protect 4"
+    flags: []
+    commands: []
+    broadcast: []
+  '20':
+    display-material: BOW
+    material: BOW
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cBow"
+    lore: []
+    display-enchantments:
+    - "power 5"
+    enchantments:
+    - "power 3"
+    - "punch 2"
+    flags: []
+    commands: []
+    broadcast: []
+  '21':
+    display-material: BOW
+    material: BOW
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cBow"
+    lore: []
+    display-enchantments:
+    - "power 5"
+    enchantments:
+    - "power 4"
+    - "flame 1"
+    - "unbreaking 3"
+    flags: []
+    commands: []
+    broadcast: []
+  '22':
+    display-material: BOW
+    material: BOW
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cBow"
+    lore: []
+    display-enchantments:
+    - "power 5"
+    enchantments:
+    - "punch 2"
+    - "flame 1"
+    - "unbreaking 3"
+    flags: []
+    commands: []
+    broadcast: []
+  '23':
+    display-material: BOW
+    material: BOW
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cBow"
+    lore: []
+    display-enchantments:
+    - "power 5"
+    enchantments:
+    - "power 5"
+    - "unbreaking 3"
+    flags: []
+    commands: []
+    broadcast: []
+  '24':
+    display-material: BOW
+    material: BOW
+    display-amount: 1
+    amount: 1
+    display-data: 0
+    data: 0
+    name: "&cBow"
+    lore: []
+    display-enchantments:
+    - "power 5"
+    enchantments:
+    - "flame 2"
+    - "unbreaking 3"
+    flags: []
+    commands: []
+    broadcast: []

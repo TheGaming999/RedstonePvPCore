@@ -1,0 +1,6 @@
+# permission: redstonepvpcore.use.framegiver
+requires-permission: false
+use-sound:
+  name: "DOOR_OPEN"
+  volume: 1.0
+  pitch: 1.0

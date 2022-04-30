@@ -1,0 +1,35 @@
+# permission: redstonepvpcore.use.repairanvil
+requires-permission: false
+# * item that will be taken from you once you repair
+take-item:
+  material: "GOLD_INGOT"
+  amount: 10
+use-sound:
+  name: "DOOR_CLOSE"
+  volume: 1.0
+  pitch: 1.0
+animation-sound:
+  name: "ANVIL_USE"
+  volume: 1.0
+  pitch: 1.0
+  play-once: false
+# * items that can be repaired
+repairable-items:
+- DIAMOND_SWORD
+- IRON_SWORD
+- GOLD_SWORD
+- WOODEN_SWORD
+- STONE_SWORD
+- DIAMOND_AXE
+- DIAMOND_PICKAXE
+- IRON_AXE
+- STONE_AXE
+- BOW
+- DIAMOND_HELMET
+- DIAMOND_CHESTPLATE
+- DIAMOND_LEGGINGS
+- DIAMOND_BOOTS
+- IRON_HELMET
+- IRON_CHESTPLATE
+- IRON_LEGGINGS
+- IRON_BOOTS

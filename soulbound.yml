@@ -1,0 +1,6 @@
+allow-drop: false
+drop-on-death: false
+# Shows the lore when an item has a soulbound
+use-lore: true
+lore:
+- "&4Soulbound"

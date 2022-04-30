@@ -1,0 +1,74 @@
+open-sound:
+  name: "CHEST_OPEN"
+  volume: 1.0
+  pitch: 1.0
+close-sound:
+  name: "CHEST_CLOSE"
+  volume: 1.0
+  pitch: 1.0
+buy-sound:
+  name: ""
+  volume: 1.0
+  pitch: 1.0
+not-enough-sound:
+  name: ""
+  volume: 1.0
+  pitch: 1.0
+no-permission-sound:
+  name: ""
+  volume: 1.0
+  pitch: 1.0
+gui:
+  title: "&6&l&n&oSHOP &e&l:D"
+  size: 54
+  items:
+    poisonaxe:
+      # * material that will show on the shop gui
+      display-material: DIAMOND_AXE
+      # * the actual material that you will get once you purchase the item
+      material: DIAMOND_AXE
+      display-amount: 1
+      amount: 1
+      data: 0
+      # * item display name that shows on the shop gui
+      display-name: "&aPoison Axe"
+      # * the actual item display name that you will see once you purchase the item
+      name: "&aPoison Axe"
+      # * item lore that shows on the shop gui
+      display-lore:
+      - "&7Poison II"
+      - "&6Cost: &f32 x GOLD_INGOT"
+      # * the actual lore that you will see once you purchase the item
+      lore:
+      - "&7Poison II"
+      # * same as above
+      display-enchantments:
+      - "Unbreaking 1"
+      # * same as above
+      enchantments:
+      - "Sharpness 3"
+      slot: 0
+      permission: "shop.poisonaxe"
+      cost-material: GOLD_INGOT
+      cost: 32
+    hungeraxe:
+      display-material: DIAMOND_AXE
+      material: DIAMOND_AXE
+      display-amount: 1
+      amount: 1
+      data: 0
+      display-name: "&7&kii&f&lHunger Axe&7&kii"
+      name: "&7&kii&f&lHunger Axe&7&kii"
+      display-lore:
+      - "&7Hunger III"
+      - "&6Cost: &f32 x GOLD_INGOT"
+      lore:
+      - "&7Hunger III"
+      display-enchantments:
+      - "Unbreaking 1"
+      enchantments:
+      - "Sharpness 3"
+      slot: 1
+      permission: "shop.hungeraxe"
+      cost-material: GOLD_INGOT
+      cost: 32

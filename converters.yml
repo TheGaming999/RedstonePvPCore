@@ -1,0 +1,40 @@
+# permission: redstonepvpcore.use.converters
+requires-permission: false
+redstone:
+  # * item that the will be taken from you once you click the converter
+  take-item:
+    material: "REDSTONE"
+    amount: 9
+  # * item that will be given to you after a successful conversion
+  give-item:
+    material: "REDSTONE_BLOCK"
+    amount: 1
+    # * the same options you can use in Item-Bleed, can be used here as well
+  use-sound:
+    # * write "/rpcore sounds" to list all the available sounds
+    # * write "/rpcore playsound <sound> <volume> <pitch>" to test the sounds
+    name: "NOTE_STICKS"
+    volume: 1.0
+    pitch: 1.0
+gold:
+  take-item:
+    material: "GOLD_INGOT"
+    amount: 9
+  give-item:
+    material: "GOLD_BLOCK"
+    amount: 1
+  use-sound:
+    name: "NOTE_PIANO"
+    volume: 1.0
+    pitch: 1.0
+emerald:
+  take-item:
+    material: "EMERALD"
+    amount: 9
+  give-item:
+    material: "EMERALD_BLOCK"
+    amount: 1
+  use-sound:
+    name: "NOTE_PLING"
+    volume: 1.0
+    pitch: 1.0

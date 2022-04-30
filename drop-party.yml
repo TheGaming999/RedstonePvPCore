@@ -1,0 +1,55 @@
+# permission: redstonepvpcore.use.dropparty
+requires-permission: false
+# * true: plays the sound to all online players right after the drop party starts
+broadcast-start-sound: true
+# * true: broadcasts the message to all online players right after the drop party starts
+broadcast-start-message: true
+# * true: plays the sound to all online players when the drop party gets ready
+broadcast-ready-sound: true
+# * true: broadcasts the messages to all online players when the drop party is ready to be turned on
+broadcast-ready-message: true
+start-sound:
+  name: "LEVEL_UP"
+  volume: 1.0
+  pitch: 1.0
+ready-sound:
+  name: "LEVEL_UP"
+  volume: 1.0
+  pitch: 1.0
+end-sound:
+  name: "WOOD_CLICK"
+  volume: 1.0
+  pitch: 1.0
+drop-sound:
+  name: "ORB_PICKUP"
+  volume: 1.0
+  pitch: 1.0
+# 600 seconds before the drop party can be used again
+cooldown-duration: 600.0
+# how many players must be online to start a drop party
+required-players: 5
+# how many drops does the drop party drop
+dropping-duration: 10
+# how many ticks between drops 20 ticks = 1 second, 5 ticks = 0.25 second
+between-drops-duration: 20
+# When water should spawn. Default: spawns at the 7th drop and the 13th drop of dropping duration 
+water-spawn-durations: "7,13"
+# How many ticks should the water stay before getting removed.
+water-remove-duration: 7
+# makes drop party always enabled
+always-on: false
+# * format: <> = required, [] = optional
+# * item=<material> amount=<number> data=[durability] name=[name] enchantments=[enchant]:[lvl],[enchant]:[lvl] lore=[lore1],[lore2] itemflags=[flag1],[flag2] 
+# * example format (basic format):
+# item=GOLD_INGOT amount=16
+# * example format2 (display name):
+# item=GOLD_INGOT amount=1 name=&bUnique_Gold_Ingot
+# * example format3 (enchantments):
+# item=GOLD_INGOT amount=3 enchantments=unbreaking:4,protect:3 name=&6&lEnchanted_Gold_Ingot
+# * example format4 (lore):
+# item=DIAMOND_SWORD amount=1 enchantments=sharpness:4 lore=&6An_Amazing_Sword,&9Another_Lore_Line itemflags=HIDE_ENCHANTMENTS
+# * example format5 (Orange wool):
+# item=WOOL amount=1 data=1
+items-to-drop:
+- material=GOLD_INGOT amount=64
+- material=GOLD_INGOT amount=32

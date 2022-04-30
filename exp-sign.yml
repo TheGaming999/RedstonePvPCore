@@ -1,0 +1,8 @@
+# permission: redstonepvpcore.use.expsign
+requires-permission: false
+take-item:
+  material: "GOLD_INGOT"
+  amount: 1
+give:
+  type: AMOUNT # either AMOUNT or LEVELS
+  amount: 250
