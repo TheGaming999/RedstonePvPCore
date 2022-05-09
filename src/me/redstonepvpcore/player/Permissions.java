@@ -15,6 +15,11 @@ public class Permissions {
 	public final static String FRAMEGIVER_USE_PERMISSION = "redstonepvpcore.use.framegiver";
 	public final static String RANDOMBOX_USE_PERMISSION = "redstonepvpcore.use.randombox";
 	public final static String REPAIRANVIL_USE_PERMISSION = "redstonepvpcore.use.repairanvil";
+	
+	public final static String REDSTONEPVP_CORE_ADMIN = "redstonepvpcore.admin";
+	public final static String SHOP = "redstonepvpcore.shop";
+	public final static String SHOP_OTHER = "redstonepvpcore.shop.other";
+	
 	private final static Set<String> PERMISSIONS = new HashSet<>();
 	
 	private static boolean registerPermission(String permission, String configName) {
@@ -28,6 +33,7 @@ public class Permissions {
 	}
 	
 	public static void reload() {
+		PERMISSIONS.clear();
 		registerPermission(CONVERTERS_USE_PERMISSION, "converters.yml");
 		registerPermission(DROPPARTY_USE_PERMISSION, "drop-party.yml");
 		registerPermission(EXPSIGN_USE_PERMISSION, "exp-sign.yml");

@@ -5,26 +5,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
+import me.redstonepvpcore.sounds.SoundInfo;
+import me.redstonepvpcore.sounds.SoundParser;
 import me.redstonepvpcore.utils.ConfigCreator;
 import me.redstonepvpcore.utils.ItemStackReader;
-import me.redstonepvpcore.utils.XSound;
-import me.redstonepvpcore.utils.XSound.Record;
 
 public class RandomBoxMother {
 
-	private Record useRecord;
-	private Record animationRecord;
-	private Record endRecord;
+	private SoundInfo useSound;
+	private SoundInfo animationSound;
+	private SoundInfo endSound;
 	private ItemStack takeItemStack;
 	private Map<String, Integer> usePermissions = new HashMap<>();
 	private double shuffleDuration;
 	private List<ItemStack> items = new ArrayList<>();
 	private List<ItemStack> displayItems = new ArrayList<>();
+	private Map<Integer, Actions> actions = new HashMap<>();
 
 	public RandomBoxMother() {
 		setup();	
@@ -38,27 +40,9 @@ public class RandomBoxMother {
 		ConfigurationSection useSoundSection = config.getConfigurationSection("use-sound");
 		ConfigurationSection animationSoundSection = config.getConfigurationSection("animation-sound");
 		ConfigurationSection endSoundSection = config.getConfigurationSection("end-sound");
-		Record record = new Record(XSound.matchXSound(useSoundSection.getString("name")).orElse(null),
-				null, 
-				null, 
-				(float)useSoundSection.getDouble("volume"), 
-				(float)useSoundSection.getDouble("pitch"), 
-				useSoundSection.getBoolean("3d", true));
-		if(record.sound != null) useRecord = record;
-		record = new Record(XSound.matchXSound(animationSoundSection.getString("name")).orElse(null),
-				null, 
-				null, 
-				(float)animationSoundSection.getDouble("volume"), 
-				(float)animationSoundSection.getDouble("pitch"), 
-				animationSoundSection.getBoolean("3d", true));
-		if(record.sound != null) animationRecord = record;
-		record = new Record(XSound.matchXSound(endSoundSection.getString("name")).orElse(null),
-				null, 
-				null, 
-				(float)endSoundSection.getDouble("volume"), 
-				(float)endSoundSection.getDouble("pitch"), 
-				endSoundSection.getBoolean("3d", true));
-		if(record.sound != null) endRecord = record;
+		useSound = SoundParser.parse(useSoundSection);
+		animationSound = SoundParser.parse(animationSoundSection);
+		endSound = SoundParser.parse(endSoundSection);
 		takeItemStack = ItemStackReader.fromConfigurationSection(config.getConfigurationSection("take-item"), 
 				"material", "amount", "data", "name", "lore", "enchantments", "flags", " ");
 		ConfigurationSection usePermissionsSection = config.getConfigurationSection("use-permissions");
@@ -67,37 +51,45 @@ public class RandomBoxMother {
 		});
 		shuffleDuration = config.getDouble("shuffle-duration");
 		ConfigurationSection itemsSection = config.getConfigurationSection("items");
+		AtomicInteger positionNumber = new AtomicInteger();
 		itemsSection.getKeys(false).forEach(position -> {
-			items.add(ItemStackReader.fromConfigurationSection(itemsSection.getConfigurationSection(position), 
+			ConfigurationSection positionSection = itemsSection.getConfigurationSection(position);
+			items.add(ItemStackReader.fromConfigurationSection(positionSection, 
 				"material", "amount", "data", "name", "lore", "enchantments", "flags", " "));
-			displayItems.add(ItemStackReader.fromConfigurationSection(itemsSection.getConfigurationSection(position), 
+			displayItems.add(ItemStackReader.fromConfigurationSection(positionSection, 
 					"display-material", "display-amount", "display-data", "display-name", "display-lore", 
 					"display-enchantments", "display-flags", " "));
+			List<String> commands = positionSection.getStringList("commands");
+			List<String> broadcastMessages = positionSection.getStringList("broadcast");
+			List<String> messages = positionSection.getStringList("msg");
+			Actions actions = new Actions(broadcastMessages, commands, messages, true);
+			if(actions.hasExecutors()) this.actions.put(positionNumber.get(), actions);
+			positionNumber.incrementAndGet();
 		});
 	}
 
-	public void setUseSound(Record record) {
-		this.useRecord = record;
+	public void setUseSound(SoundInfo sound) {
+		this.useSound = sound;
 	}
 
-	public Record getUseSound() {
-		return useRecord;
+	public SoundInfo getUseSound() {
+		return useSound;
 	}
 
-	public void setAnimationSound(Record record) {
-		this.animationRecord = record;
+	public void setAnimationSound(SoundInfo sound) {
+		this.animationSound = sound;
 	}
 
-	public Record getAnimationSound() {
-		return animationRecord;
+	public SoundInfo getAnimationSound() {
+		return animationSound;
 	}
 
-	public Record getEndSound() {
-		return endRecord;
+	public SoundInfo getEndSound() {
+		return endSound;
 	}
 
-	public void setEndSound(Record record) {
-		this.endRecord = record;
+	public void setEndSound(SoundInfo sound) {
+		this.endSound = sound;
 	}
 
 	public ItemStack getTakeItemStack() {
@@ -126,6 +118,10 @@ public class RandomBoxMother {
 
 	public Map<String, Integer> getUsePermissions() {
 		return usePermissions;
+	}
+	
+	public Actions getActions(int index) {
+		return actions.get(index);
 	}
 	
 }

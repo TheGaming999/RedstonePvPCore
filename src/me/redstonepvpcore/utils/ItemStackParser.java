@@ -31,6 +31,7 @@ public class ItemStackParser {
 		ItemStack stringStack = new ItemStack(Material.STONE, 1);
 		ItemMeta stackMeta = stringStack.getItemMeta();
 		int amount = 1;
+		int data = 0;
 		String displayName = "";
 		List<String> lore = new ArrayList<>();
 		for(String stringMeta : stringValue.split(" ")) {
@@ -54,6 +55,12 @@ public class ItemStackParser {
 				}
 				stringStack.setAmount(amount);
 			} //amount check
+			if(stringMeta.startsWith("data=")) {
+				if(isNumber(stringMeta.substring(5))) {
+					data = Integer.parseInt(stringMeta.substring(5));
+				}
+				stringStack.setDurability((short)data);
+			}
 			if(stringMeta.startsWith("name=")) {
 				displayName = c(stringMeta.substring(5));
 				stackMeta.setDisplayName(displayName.replace("_", " "));
@@ -97,7 +104,7 @@ public class ItemStackParser {
 		}
 		return stringStack;
 	}
-	
+
 	public static List<ItemStack> parse(List<String> stringList) {
 		List<ItemStack> itemStacks = new ArrayList<>();
 		stringList.forEach(string -> itemStacks.add(parse(string)));

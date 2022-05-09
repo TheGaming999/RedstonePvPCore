@@ -1,9 +1,24 @@
 main: me.redstonepvpcore.RedstonePvPCore
-version: 1.0alpha
+version: 1.1alpha
 name: RedstonePvPCore
 author: Sandwicha
 commands:
   redstonepvpcore:
     usage: /<command>
-    description: Main command
+    description: Admin commands for RedstonePvPCore
     aliases: [rpcore, redpvpcore, rpc, redstonepvputils, rputils]
+    permission: redstonepvpcore.admin
+    permission-message: "You don't have permission to use this command."
+  shop:
+    usage: /<command> [other]
+    description: Open shop GUI
+    aliases: [shopmenu, mtgr, mtjr, b8alh, supermarket]
+    permission: redstonepvpcore.shop
+    permission-message: "You don't have permission to use this command."
+permissions:
+  redstonepvpcore.admin:
+    description: Allows redstonepvpcore main command
+    default: op
+  redstonepvpcore.shop:
+    description: Allows redstonepvpcore shop other command
+    default: op

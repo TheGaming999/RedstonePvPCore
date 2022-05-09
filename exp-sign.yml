@@ -3,6 +3,12 @@ requires-permission: false
 take-item:
   material: "GOLD_INGOT"
   amount: 1
+  # additional options:
+  # name: "CustomDisplayName" | lore: [firstloreline, secondloreline] | enchantments: [SHARPNESS 1, UNBREAKING 3]
+use-sound:
+  name: "ORB_PICKUP"
+  volume: 1.0
+  pitch: 1.0
 give:
   type: AMOUNT # either AMOUNT or LEVELS
   amount: 250

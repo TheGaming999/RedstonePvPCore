@@ -38,7 +38,12 @@ drop-party-not-enough-players: "&cThere must be at least &f%amount% &cplayers on
 # ==================================
 # << Frame Giver >>
 # ==================================
-frame-giver-use: "&aYou have taken an item." 
+frame-giver-use: "&aYou have taken an item."
+# ==================================
+# << Exp Sign >>
+# ==================================
+exp-sign-not-enough: "&cYou need %amount% to use the exp sign."
+exp-sign-use: ""
 # =============================
 # COMMAND /rpcore set <gadget> and admin stuff
 # =============================
@@ -73,13 +78,24 @@ unknown-player: "&cThe player &o&n%target% &cis not online."
 player-only: "&cThis command can only be run by a player."
 reload: "&aSuccessfully reloaded config files."
 cancel: "&cCancelled set command."
-bypass-on: "&7Bypass is &aON &7for you."
-bypass-off: "&7Bypass is &cOFF &7for you."
-bypass-on-other: "&7Bypass is &aON &7for &a%target%&7."
-bypass-off-other: "&7Bypass is &cOFF &7for &c%target%&7."
+bypass-on: "&7Bypass has been &aenabled &7for you."
+bypass-off: "&7Bypass has been &cdisabled &7for you."
+# available variables: %target% {
+bypass-on-other: "&7Bypass has been &aenabled &7for &a%target%&7."
+bypass-off-other: "&7Bypass has been &cdisabled &7for &c%target%&7."
+# }
 reset-drop-party: "&7Drop party timer has been reset."
 start-drop-party: "&7Drop party has been forcefully activated."
 no-permission-use: "&cYou don't have permission to use this gadget."
+enchant-level-not-number: "&cSorry, but the level number you have written is invalid."
+enchant-level-max: "&cSorry, but the level number exceeds maximum level of the enchantment."
+enchant-item-hand: "&cSorry, but you can't enchant your hand."
+enchant-item-add: "&aAdded [%enchantment_display_name%&a] [&e%enchantment_level%&a] to the item you're holding."
+enchant-item-update: "&aUpdated [%enchantment_display_name%&a] enchantment level to [&e%enchantment_level%&a]."
+enchant-item-remove: "&aRemoved [%enchantment_display_name%&a] from the item you're holding."
+shop-no-permission: "&cYou don't have permission to buy this item."
+shop-buy: "&aPurchase successful."
+shop-not-enough: "&cYou don't have enough money to buy this item."
 list:
 - "&3[&cRedstonePvPCore&3] &aLoaded Gadgets:-"
 - "%pos.1% %gadget.1%"

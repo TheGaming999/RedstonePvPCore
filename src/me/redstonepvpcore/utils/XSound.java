@@ -1356,7 +1356,7 @@ public enum XSound {
      */
     @Nonnull
     public static Optional<XSound> matchXSound(@Nonnull String sound) {
-        // Validate.notEmpty(sound, "Cannot match XSound of a null or empty sound name");
+        Validate.notEmpty(sound, "Cannot match XSound of a null or empty sound name");
         return Optional.ofNullable(Data.NAMES.get(format(sound)));
     }
 
@@ -1721,14 +1721,15 @@ public enum XSound {
      * @since 3.0.0
      */
     public static class Record {
-        public final XSound sound;
-        public final float volume, pitch;
+        @Nonnull public final XSound sound;
+        public float volume;
+		public float pitch;
         public boolean playAtLocation;
         @Nullable public Player player;
         @Nullable public Location location;
 
-        public Record(XSound sound, @Nullable Player player, @Nullable Location location, float volume, float pitch, boolean playAtLocation) {
-            this.sound = sound;
+        public Record(@Nonnull XSound sound, @Nullable Player player, @Nullable Location location, float volume, float pitch, boolean playAtLocation) {
+            this.sound = Objects.requireNonNull(sound, "Sound cannot be null");
             this.player = player;
             this.location = location;
             this.volume = volume;

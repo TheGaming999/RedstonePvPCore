@@ -8,35 +8,53 @@ broadcast-start-message: true
 broadcast-ready-sound: true
 # * true: broadcasts the messages to all online players when the drop party is ready to be turned on
 broadcast-ready-message: true
+# * true: sends a message every time a water explosion happens, so you know when to configure "change-between-drops-speed-at-tick"
+debug-ticks: false
 start-sound:
-  name: "LEVEL_UP"
-  volume: 1.0
-  pitch: 1.0
+  # Download nbs files here: https://github.com/thatcraniumguy/Songs/tree/master/NBS%20files
+  # You could also search for .midi files and convert them using Minecraft Note Block Studio to .nbs format
+  name: NBS:Dream Lover.nbs
+  # volume ranges from 1 to 100 when it's an NBS song
+  volume: 100.0
+  # pitch is read as distance when using an NBS song, so players 5 blocks away and less will hear it
+  pitch: 5.0
+  # which tick should music start from, 0 = start of song
+  start-at-tick: 0
+  # when to change speed of the dropping? Currently, it changes when the song gets fast.
+  # Changes when tick reaches 33 to 5 ticks dropping speed (You can get the wanted tick from above by setting debug-ticks to true)
+  # Can change multiple times by adding commas , as follows: 
+  # "33->5,92->3,123->1"
+  # to disable, make it empty: ""
+  change-between-drops-speed-at-tick: "33->5"
 ready-sound:
-  name: "LEVEL_UP"
-  volume: 1.0
-  pitch: 1.0
+  name: CHEST_OPEN
+  volume: 3.0
+  pitch: 2.0
 end-sound:
-  name: "WOOD_CLICK"
-  volume: 1.0
-  pitch: 1.0
+  name: BAT_HURT
+  volume: 3.0
+  pitch: 0.5
 drop-sound:
-  name: "ORB_PICKUP"
+  name: ''
+  volume: 2.0
+  pitch: 2.0
+water-spawn-sound:
+  name: EXPLODE
   volume: 1.0
   pitch: 1.0
 # 600 seconds before the drop party can be used again
 cooldown-duration: 600.0
 # how many players must be online to start a drop party
-required-players: 5
-# how many drops does the drop party drop
-dropping-duration: 10
-# how many ticks between drops 20 ticks = 1 second, 5 ticks = 0.25 second
+required-players: 1
+# how long does the drop party last in seconds
+dropping-duration: 20
+# how many ticks between drops (20 ticks = 1 second, 5 ticks = 0.25 second)
 between-drops-duration: 20
-# When water should spawn. Default: spawns at the 7th drop and the 13th drop of dropping duration 
-water-spawn-durations: "7,13"
-# How many ticks should the water stay before getting removed.
-water-remove-duration: 7
-# makes drop party always enabled
+# When water should spawn. Default: spawns at the 5th, 10th, and 15th second of dropping duration
+water-spawn-durations: 5,10,15
+# How many ticks should the water stay before getting removed. (20 ticks = 1 second)
+water-remove-duration: 20
+# makes drop party always enabled with accounting to required-players, cooldown-duration
 always-on: false
 # * format: <> = required, [] = optional
 # * item=<material> amount=<number> data=[durability] name=[name] enchantments=[enchant]:[lvl],[enchant]:[lvl] lore=[lore1],[lore2] itemflags=[flag1],[flag2] 

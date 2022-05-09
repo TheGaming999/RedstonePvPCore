@@ -126,12 +126,16 @@ public class CooldownScheduler {
 			return new AsyncCooldownEntry<T>(name, twoDecimals(cooldown-0.05));
 		}
 
-		public void removeCooldown(T name) {
-			this.entries.remove(name);
+		public AsyncCooldownEntry<T> removeCooldown(T name) {
+			return this.entries.remove(name);
 		}
 
-		public void setCooldown(T name, AsyncCooldownEntry<T> asyncCooldownEntry) {
-			this.entries.put(name, asyncCooldownEntry);
+		public AsyncCooldownEntry<T> setCooldown(T name, AsyncCooldownEntry<T> asyncCooldownEntry) {
+			return this.entries.put(name, asyncCooldownEntry);
+		}
+		
+		public void clearCooldowns() {
+			this.entries.clear();
 		}
 
 		public BukkitTask getCooldownTask() {
@@ -172,7 +176,7 @@ public class CooldownScheduler {
 							double timeLeft = twoDecimals(durationValue);
 							double safeTimeLeft = timeLeft < 0.0 ? 0.0 : timeLeft; 
 							Consumer<Double> repeatingConsumer = value.getRepeatingConsumer();
-							Runnable finishRunnable = value.getFinishRunnable();
+							Runnable finishRunnable = value.getWhenDone();
 							AsyncCooldownEntry<T> entryRefreshed = processEntry(key, timeLeft);
 							entryRefreshed.orElseRepeat(repeatingConsumer);
 							entryRefreshed.whenDone(finishRunnable);
@@ -249,7 +253,7 @@ public class CooldownScheduler {
 			return this.repeatingConsumer;
 		}
 
-		private Runnable getFinishRunnable() {
+		public Runnable getWhenDone() {
 			return this.finishRunnable;
 		}
 

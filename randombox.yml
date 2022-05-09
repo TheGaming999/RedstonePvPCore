@@ -1,24 +1,28 @@
 # permission: redstonepvpcore.use.randombox
 requires-permission: false
 use-sound:
-  name: "NOTE_PLING"
+  name: NOTE_STICKS
   volume: 1.0
-  pitch: 1.0
+  pitch: 0.5
 animation-sound:
-  name: ""
+  name: CLICK
   volume: 1.0
-  pitch: 1.0
+  pitch: 1.75
 end-sound:
-  name: "BAT_HURT"
-  volume: 1.0
-  pitch: 1.0
+  name: ITEM_BREAK
+  volume: 2.0
+  pitch: 0.5
 take-item:
   material: GOLD_INGOT
-  amount: 32 # will be used if player didn't have any of the permissions below
+  # will be used if player didn't have any of the permissions below
+  amount: 32
+  # additional options:
+  # name: "CustomDisplayName" | lore: [firstloreline, secondloreline] | enchantments: [SHARPNESS 1, UNBREAKING 3]
 use-permissions:
   24: randombox.cost.24
   16: randombox.cost.16
-shuffle-duration: 9.0 # time it takes for a single randombox use to finish
+# time in ticks it takes for a single randombox use to finish
+shuffle-duration: 9.0 
 items:
   '0':
     # * the item that will show above the randombox when you use it

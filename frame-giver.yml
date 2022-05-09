@@ -4,3 +4,5 @@ use-sound:
   name: "DOOR_OPEN"
   volume: 1.0
   pitch: 1.0
+# true: gives you 64 of the item or 1 if the item is not stackable (sword, bow, etc...)
+give-stack: true

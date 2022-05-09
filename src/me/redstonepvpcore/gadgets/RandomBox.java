@@ -17,12 +17,13 @@ import org.bukkit.util.Vector;
 import me.redstonepvpcore.mothers.RandomBoxMother;
 import me.redstonepvpcore.player.BypassManager;
 import me.redstonepvpcore.player.Permissions;
-import me.redstonepvpcore.utils.XSound.Record;
+import me.redstonepvpcore.sounds.SoundInfo;
 import xyz.xenondevs.particle.ParticleEffect;
 
 public class RandomBox extends Gadget {
 
 	private boolean inUse;
+	private ItemStack takeItemStack;
 
 	public RandomBox(Location location) {
 		super(GadgetType.RANDOM_BOX, location);
@@ -72,7 +73,7 @@ public class RandomBox extends Gadget {
 	public double getRandom(double from, double to) {
 		return ThreadLocalRandom.current().nextDouble(from, to);
 	}
-
+	
 	private CompletableFuture<Void> useRandomBox(Player player) {
 		CompletableFuture<Void> taskFinishFuture = new CompletableFuture<>();
 		AtomicInteger pos = new AtomicInteger();
@@ -83,10 +84,10 @@ public class RandomBox extends Gadget {
 		AtomicInteger shuffles = new AtomicInteger();
 		mother.getDisplayItems().toString();
 		Item droppedItem = centerLocation.getWorld().dropItem(centerLocation, mother.getDisplayItems().get(0));
-		Record animationSound = mother.getAnimationSound();
+		SoundInfo animationSound = mother.getAnimationSound();
 		new BukkitRunnable() {
 			public void run() {
-				if(animationSound != null) animationSound.atLocation(centerLocation).play();
+				if(animationSound != null) animationSound.play(centerLocation);
 				int randomIndex = pos.get();
 				ItemStack displayItemStack = mother.getDisplayItems().get(randomIndex);	
 				droppedItem.setItemStack(RepairAnvil.AIR);
@@ -97,6 +98,7 @@ public class RandomBox extends Gadget {
 					getParent().doSyncLater(() -> {
 						ItemStack reward = mother.getItems().get(randomIndex);
 						ParticleEffect.FLAME.display(centerLocation.clone().add(0.0, 0.5, 0.0));
+						mother.getActions(randomIndex).execute(player);
 						if(!isInventoryFull(player)) {
 							player.getInventory().addItem(reward);
 						} else {
@@ -122,7 +124,6 @@ public class RandomBox extends Gadget {
 			sendMessage(player, getParent().getMessages().getNoPermissionUse());
 			return false;
 		}
-		ItemStack takeItemStack = getParent().getRandomBoxMother().getTakeItemStack();
 		int cost = getCost(takeItemStack, player);
 		if(!isBypassing && !player.getInventory().containsAtLeast(takeItemStack, cost)) {
 			sendMessage(player, getParent().getMessages().getRandomBoxNotEnough()
@@ -145,6 +146,12 @@ public class RandomBox extends Gadget {
 			sendMessage(player, getParent().getMessages().getRandomBoxDone());
 			sendSound(getLocation(), getParent().getRandomBoxMother().getEndSound());
 		});
+		return true;
+	}
+
+	@Override
+	public boolean setup() {
+		takeItemStack = getParent().getRandomBoxMother().getTakeItemStack();
 		return true;
 	}
 

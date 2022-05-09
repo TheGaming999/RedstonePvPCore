@@ -1,6 +1,7 @@
 package me.redstonepvpcore.gadgets;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +94,7 @@ public class GadgetManager {
 	public static Gadget addGadget(Gadget gadget, String locationString) {
 		Location loc = parseLocation(locationString);
 		gadget.setLocation(loc);
+		gadget.setup();
 		return GADGETS.put(loc, gadget);
 	}
 	
@@ -102,11 +104,13 @@ public class GadgetManager {
 		Converter converter = (Converter)gadget;
 		converter.setLocation(loc);
 		converter.setConverterType(converterType);
+		converter.setup();
 		return GADGETS.put(loc, converter);
 	}
 	
 	public static Gadget addRandomBox(String locationString) {
 		RandomBox randomBox = new RandomBox(parseLocation(locationString));
+		randomBox.setup();
 		return GADGETS.put(randomBox.getLocation(), randomBox);
 	}
 	
@@ -114,44 +118,53 @@ public class GadgetManager {
 		Converter converter = new Converter(parseLocation(locationString));
 		converter.setConverterType(converterType);
 		converter.fetchConverter();
+		converter.setup();
 		return GADGETS.put(converter.getLocation(), converter);
 	}
 	
 	public static Gadget addDropPartyActivator(String locationString) {
 		DropPartyActivator dropPartyActivator = new DropPartyActivator(parseLocation(locationString));
+		dropPartyActivator.setup();
 		return GADGETS.put(dropPartyActivator.getLocation(), dropPartyActivator);
 	}
 	
 	public static Gadget addExpSign(String locationString) {
 		ExpSign expSign = new ExpSign(parseLocation(locationString));
+		expSign.setup();
 		return GADGETS.put(expSign.getLocation(), expSign);
 	}
 	
 	public static Gadget addRepairAnvil(String locationString) {
 		RepairAnvil repairAnvil = new RepairAnvil(parseLocation(locationString));
+		repairAnvil.setup();
 		return GADGETS.put(repairAnvil.getLocation(), repairAnvil);
 	}
 	
 	public static Gadget addFrameGiver(String locationString) {
 		FrameGiver frameGiver = new FrameGiver(parseLocation(locationString));
+		frameGiver.setup();
 		return GADGETS.put(frameGiver.getLocation(), frameGiver);
 	}
 	
 	public static Gadget removeGadget(String locationString) {
-		return GADGETS.remove(parseLocation(locationString));
+		Gadget gadget = GADGETS.remove(parseLocation(locationString));
+		return gadget;
 	}
 	
 	public static Gadget removeGadget(Location location) {
-		return GADGETS.remove(location);
+		Gadget gadget = GADGETS.remove(location);
+		return gadget;
 	}
 	
 	public static Location parseLocation(String location) {
 		String[] arguments = location.split(" ");
-		return new Location(Bukkit.getWorld(arguments[0]), Double.parseDouble(arguments[1]), Double.parseDouble(arguments[2]), Double.parseDouble(arguments[3]));
+		return new Location(Bukkit.getWorld(arguments[0]), Double.parseDouble(arguments[1]),
+				Double.parseDouble(arguments[2]), Double.parseDouble(arguments[3]),
+				Float.parseFloat(arguments[4]), Float.parseFloat(arguments[5]));
 	}
 	
 	public static String deparseLocation(Location location) {
-		return location.getWorld().getName() + " " + String.valueOf(location.getBlockX()) + " " + String.valueOf(location.getBlockY()) + " " + String.valueOf(location.getBlockZ());
+		return location.getWorld().getName() + " " + String.valueOf(location.getX()) + " " + String.valueOf(location.getY()) + " " + String.valueOf(location.getZ()) + " " + String.valueOf(location.getYaw()) + " " + String.valueOf(location.getPitch());
 	}
 	
 	public static Gadget fromGadgetType(GadgetType gadgetType, @Nullable ConverterType converterType) {
@@ -184,8 +197,20 @@ public class GadgetManager {
 		return GADGETS.keySet();
 	}
 	
+	public static Collection<Gadget> getGadgetsCollection() {
+		return GADGETS.values();
+	}
+	
 	public static boolean isGadget(Location location) {
 		return GADGETS.containsKey(location);
+	}
+	
+	public static boolean isEntityGadget(Location location) {
+		return GADGETS.get(location) instanceof EntityGadget;
+	}
+	
+	public static boolean isEntityGadget(Gadget gadget) {
+		return gadget instanceof EntityGadget;
 	}
 	
 	public static Gadget getGadget(Location location) {

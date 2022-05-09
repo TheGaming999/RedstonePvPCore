@@ -10,47 +10,48 @@ import me.redstonepvpcore.utils.Colorizer;
 import me.redstonepvpcore.utils.ConfigCreator;
 
 public class Messages {
-	
+
 	private FileConfiguration config;
-	
+
 	private String repairAnvilEmptyHand, repairAnvilAlreadyRepaired, repairAnvilNotRepairable, repairAnvilNotEnough,
 	repairAnvilRepairing, repairAnvilRepaired, redstoneConverterNotEnough, goldConverterNotEnough, 
 	emeraldConverterNotEnough, redstoneConverterUse, goldConverterUse, emeraldConverterUse, randomBoxNotEnough, 
 	randomBoxInUse, randomBoxUse, randomBoxDone, dropPartyNotReady, dropPartyAlreadyRunning, dropPartyActivate, 
-	dropPartyReady, dropPartyNotEnoughPlayers, frameGiverUse, selectRepairAnvil, selectRedstoneConverter, 
+	dropPartyReady, dropPartyNotEnoughPlayers, frameGiverUse, expSignNotEnough, expSignUse, selectRepairAnvil, selectRedstoneConverter, 
 	selectGoldConverter, selectEmeraldConverter, selectRandomBox, selectDropParty, selectExpSign, selectFrameGiver, 
 	setRepairAnvil, setRedstoneConverter, setGoldConverter, setEmeraldConverter, setRandomBox, setDropParty, setExpSign,
 	setFrameGiver, removeRepairAnvil, removeRedstoneConverter, removeGoldConverter, removeEmeraldConverter, 
 	removeRandomBox, removeDropParty, removeExpSign, removeFrameGiver,
 	selectCancel, unknownPlayer, playerOnly, reload, cancel, bypassOn, bypassOff, bypassOnOther, bypassOffOther,
-	resetDropParty, startDropParty, noPermissionUse;
-	
+	resetDropParty, startDropParty, noPermissionUse, enchantLevelNotNumber, enchantLevelMax, enchantItemHand, 
+	enchantItemAdd, enchantItemUpdate, enchantItemRemove, shopNoPermission, shopBuy, shopNotEnough;
+
 	private List<String> list;
-	
+
 	public Messages() {
 		setup();
 	}
-	
+
 	public final static boolean sendMessage(Player player, String message) {
 		if(message == null || message.isEmpty()) return false;
 		player.sendMessage(message);
 		return true;
 	}
-	
+
 	public final static boolean sendMessage(CommandSender sender, String message) {
 		if(message == null || message.isEmpty()) return false;
 		sender.sendMessage(message);
 		return true;
 	}
-	
+
 	private String get(String configField) {
 		return Colorizer.colorize(config.getString(configField));
 	}
-	
+
 	private List<String> getList(String configField) {
 		return Colorizer.colorize(config.getStringList(configField));
 	}
-	
+
 	public void setup() {
 		config = ConfigCreator.getConfig("messages.yml");
 		repairAnvilEmptyHand = get("repair-anvil-empty-hand");
@@ -75,7 +76,9 @@ public class Messages {
 		dropPartyReady = get("drop-party-ready");
 		dropPartyNotEnoughPlayers = get("drop-party-not-enough-players");
 		frameGiverUse = get("frame-giver-use");
-		
+		expSignUse = get("exp-sign-use");
+		expSignNotEnough = get("exp-sign-not-enough");
+
 		selectRepairAnvil = get("select-repair-anvil");
 		selectRedstoneConverter = get("select-redstone-converter");
 		selectGoldConverter = get("select-gold-converter");
@@ -101,7 +104,7 @@ public class Messages {
 		removeExpSign = get("remove-exp-sign");
 		removeFrameGiver = get("remove-frame-giver");
 		selectCancel = get("select-cancel");
-		
+
 		unknownPlayer = get("unknown-player");
 		playerOnly = get("player-only");
 		reload = get("reload");
@@ -113,6 +116,15 @@ public class Messages {
 		resetDropParty = get("reset-drop-party");
 		startDropParty = get("start-drop-party");
 		noPermissionUse = get("no-permission-use");
+		enchantLevelNotNumber = get("enchant-level-not-number");
+		enchantLevelMax = get("enchant-level-max");
+		enchantItemHand = get("enchant-item-hand");
+		enchantItemAdd = get("enchant-item-add");
+		enchantItemUpdate = get("enchant-item-update");
+		enchantItemRemove = get("enchant-item-remove");
+		shopNoPermission = get("shop-no-permission");
+		shopBuy = get("shop-buy");
+		shopNotEnough = get("shop-not-enough");
 		list = getList("list");
 	}
 
@@ -319,7 +331,7 @@ public class Messages {
 	public String getNoPermissionUse() {
 		return noPermissionUse;
 	}
-	
+
 	public List<String> getList() {
 		return list;
 	}
@@ -355,5 +367,49 @@ public class Messages {
 	public String getRemoveFrameGiver() {
 		return removeFrameGiver;
 	}
-	
+
+	public String getExpSignNotEnough() {
+		return expSignNotEnough;
+	}
+
+	public String getExpSignUse() {
+		return expSignUse;
+	}
+
+	public String getEnchantLevelNotNumber() {
+		return enchantLevelNotNumber;
+	}
+
+	public String getEnchantLevelMax() {
+		return enchantLevelMax;
+	}
+
+	public String getEnchantItemHand() {
+		return enchantItemHand;
+	}
+
+	public String getEnchantItemAdd() {
+		return enchantItemAdd;
+	}
+
+	public String getEnchantItemUpdate() {
+		return enchantItemUpdate;
+	}
+
+	public String getEnchantItemRemove() {
+		return enchantItemRemove;
+	}
+
+	public String getShopNoPermission() {
+		return shopNoPermission;
+	}
+
+	public String getShopBuy() {
+		return shopBuy;
+	}
+
+	public String getShopNotEnough() {
+		return shopNotEnough;
+	}
+
 }

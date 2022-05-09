@@ -78,4 +78,9 @@ public class Converter extends Gadget {
 		return true;
 	}
 
+	@Override
+	public boolean setup() {
+		return false;
+	}
+
 }

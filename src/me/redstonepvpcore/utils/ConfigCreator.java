@@ -64,6 +64,22 @@ public class ConfigCreator {
 		return createdConfigFiles;
 	}
 	
+	public static Map<String, FileConfiguration> copyAndSaveDefaults(boolean ignoreComments, String... configNames) {
+		Map<String, FileConfiguration> createdConfigFiles = Maps.newHashMap();
+		for (String configName : configNames) {
+			createdConfigFiles.put(configName, copyAndSaveDefaults(configName, ignoreComments));
+		}
+		return createdConfigFiles;
+	}
+	
+	public static Map<String, FileConfiguration> copyAndSaveDefaults(List<String> ignoredSections, String... configNames) {
+		Map<String, FileConfiguration> createdConfigFiles = Maps.newHashMap();
+		for (String configName : configNames) {
+			createdConfigFiles.put(configName, copyAndSaveDefaults(configName, ignoredSections));
+		}
+		return createdConfigFiles;
+	}
+	
 	/**
 	 * Creates a config file and load it if it doesn't exist. Otherwise, just load it.
 	 * <p>This is equivalent to: {
@@ -214,10 +230,17 @@ public class ConfigCreator {
 		File pathName = options.hasCustomPath() ? new File(options.getCustomPath()) : PLUGIN.getDataFolder();
 		File file = new File(pathName, configName);
 		if(!options.isIgnoreComments()) {
+			if(!file.exists()) {
+				copyAndSaveDefaults(configName);
+			}
 			try {
 				ConfigUpdaterInternal.update(PLUGIN, configName, file, options.getIgnoredSections());
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+		} else {
+			if(!file.exists()) {
+				copyAndSaveDefaults(configName, true);
 			}
 		}
 		configYaml = YamlConfiguration.loadConfiguration(file);

@@ -22,6 +22,11 @@ import xyz.xenondevs.particle.ParticleBuilder;
 public class RepairAnvil extends Gadget {
 
 	final static ItemStack AIR = new ItemStack(Material.AIR);
+	private Record animationSound;
+	private Location centerLocation;
+	private Location particleLocation;
+	private Location particleLocation2;
+	private List<ParticleBuilder> particles;
 
 	public RepairAnvil(Location location) {
 		super(GadgetType.REPAIR_ANVIL, location);
@@ -35,9 +40,6 @@ public class RepairAnvil extends Gadget {
 		AtomicInteger counter = new AtomicInteger(0);
 		AtomicReference<BukkitTask> animationTask = new AtomicReference<>();
 		AtomicReference<Item> droppedItem = new AtomicReference<>();
-		Location centerLocation = getLocation().clone().add(0.50, 1, 0.50);
-		Location particleLocation = getLocation().clone().add(0.75, 1, 0.25);
-		Location particleLocation2 = getLocation().clone().add(0.25, 1, 0.75);
 		boolean playOnce = getParent().getRepairAnvilMother().isPlayOnce();
 		getParent().doSync(() -> {
 			if(itemStack.getType() != Material.AIR) {
@@ -46,24 +48,27 @@ public class RepairAnvil extends Gadget {
 				droppedItem.get().setVelocity(new Vector(0, 0, 0));
 			}
 		});
-		Record animationSound = getParent().getRepairAnvilMother().getAnimationSound();
 		animationTask.set(getParent().doAsyncRepeating(() -> {
-			List<ParticleBuilder> particles = getParent().getRepairAnvilMother().getParticles();
 			ParticleReader.spawnParticles(centerLocation, particles);
 			ParticleReader.spawnParticles(particleLocation, particles);
 			ParticleReader.spawnParticles(particleLocation2, particles);
 			if(counter.get() < 5)
-			if(animationSound != null)
-			if(!playOnce) 
-				getParent().getRepairAnvilMother().getAnimationSound().atLocation(centerLocation).play();
+				if(animationSound != null)
+					if(!playOnce) 
+						getParent().getRepairAnvilMother().getAnimationSound().atLocation(centerLocation).play();
 			if(counter.incrementAndGet() == 6) {
 				if(itemStack.getType() != Material.AIR)
-				getParent().doSync(() -> droppedItem.get().remove());
+					getParent().doSync(() -> droppedItem.get().remove());
 				taskFinishFuture.complete(null);
 				animationTask.get().cancel();
 			}
 		}, 0, speed));
 		return taskFinishFuture;
+	}
+
+	public boolean isInventoryFull(Player player)
+	{
+		return player.getInventory().firstEmpty() == -1;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -106,13 +111,26 @@ public class RepairAnvil extends Gadget {
 		player.setItemInHand(AIR);
 		player.updateInventory();
 		playAnvilAnimation(itemInHand, 10).thenRun(() -> {
-			Record animationSound = getParent().getRepairAnvilMother().getAnimationSound();
+			animationSound = getParent().getRepairAnvilMother().getAnimationSound();
 			if(animationSound != null)
-			if(getParent().getRepairAnvilMother().isPlayOnce()) animationSound.atLocation(getLocation()).play();
+				if(getParent().getRepairAnvilMother().isPlayOnce()) animationSound.atLocation(getLocation()).play();
 			itemInHand.setDurability((short)0);
-			player.getInventory().addItem(itemInHand);
+			if(isInventoryFull(player)) 
+				player.getWorld().dropItem(player.getLocation(), itemInHand);
+			else
+				player.getInventory().addItem(itemInHand);
 			sendMessage(player, getParent().getMessages().getRepairAnvilRepaired());
 		});
+		return true;
+	}
+
+	@Override
+	public boolean setup() {
+		animationSound = getParent().getRepairAnvilMother().getAnimationSound();
+		centerLocation = getLocation().clone().add(0.50, 1, 0.50);
+		particleLocation = getLocation().clone().add(0.75, 1, 0.25);
+		particleLocation2 = getLocation().clone().add(0.25, 1, 0.75);
+		particles = getParent().getRepairAnvilMother().getParticles();
 		return true;
 	}
 

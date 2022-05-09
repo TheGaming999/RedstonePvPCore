@@ -1,24 +1,27 @@
 package me.redstonepvpcore.mothers;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
+import me.redstonepvpcore.sounds.SoundInfo;
+import me.redstonepvpcore.sounds.SoundParser;
 import me.redstonepvpcore.utils.ConfigCreator;
 import me.redstonepvpcore.utils.ItemStackParser;
-import me.redstonepvpcore.utils.XSound;
-import me.redstonepvpcore.utils.XSound.Record;
 
 public class DropPartyActivatorMother {
 
-	private Record useRecord;
-	private Record readyRecord;
-	private Record endRecord;
-	private Record dropRecord;
+	private SoundInfo useRecord;
+	private SoundInfo readyRecord;
+	private SoundInfo endRecord;
+	private SoundInfo dropRecord;
+	private SoundInfo waterSpawnRecord;
 	private boolean broadcastStartSound;
 	private boolean broadcastReadySound;
 	private boolean broadcastStartMessage;
@@ -31,6 +34,9 @@ public class DropPartyActivatorMother {
 	private List<ItemStack> itemsToDrop;
 	private Set<Integer> waterSpawnDurations;
 	private int waterRemoveDuration;
+	private boolean changeBetweenDropsSpeed;
+	private Map<Integer, Integer> changeBetweenDropsSpeedAtTick;
+	private boolean debugTicks;
 
 	public DropPartyActivatorMother() {
 		setup();	
@@ -42,38 +48,30 @@ public class DropPartyActivatorMother {
 		ConfigurationSection readySoundSection = config.getConfigurationSection("ready-sound");
 		ConfigurationSection endSoundSection = config.getConfigurationSection("end-sound");
 		ConfigurationSection dropSoundSection = config.getConfigurationSection("drop-sound");
-		Record record = new Record(XSound.matchXSound(useSoundSection.getString("name")).orElse(null),
-				null, 
-				null, 
-				(float)useSoundSection.getDouble("volume"), 
-				(float)useSoundSection.getDouble("pitch"), 
-				useSoundSection.getBoolean("3d", true));
-		if(record.sound != null) useRecord = record;
+		ConfigurationSection waterSpawnSoundSection = config.getConfigurationSection("water-spawn-sound");
 		
-		record = new Record(XSound.matchXSound(readySoundSection.getString("name")).orElse(null),
-				null, 
-				null, 
-				(float)readySoundSection.getDouble("volume"), 
-				(float)readySoundSection.getDouble("pitch"), 
-				readySoundSection.getBoolean("3d", true));
-		if(record.sound != null) readyRecord = record;
+		changeBetweenDropsSpeedAtTick = new HashMap<>();
 		
-		record = new Record(XSound.matchXSound(endSoundSection.getString("name")).orElse(null),
-				null, 
-				null, 
-				(float)endSoundSection.getDouble("volume"), 
-				(float)endSoundSection.getDouble("pitch"), 
-				endSoundSection.getBoolean("3d", true));
-		if(record.sound != null) endRecord = record;
+		useRecord = SoundParser.parse(useSoundSection);
 		
-		record = new Record(XSound.matchXSound(dropSoundSection.getString("name")).orElse(null),
-				null, 
-				null, 
-				(float)dropSoundSection.getDouble("volume"), 
-				(float)dropSoundSection.getDouble("pitch"), 
-				dropSoundSection.getBoolean("3d", true));
-		if(record.sound != null) dropRecord = record;
-		
+		if(SoundParser.isNBSParse(useSoundSection)) {
+			String unformattedChangeBetweenDrops = useSoundSection.getString("change-between-drops-speed-at-tick", "");
+			if(!unformattedChangeBetweenDrops.equals("")) changeBetweenDropsSpeed = true;
+			String[] split = unformattedChangeBetweenDrops.split(",");
+			for(String tickAndSpeed : split) {
+				String[] splitTickAndSpeed = tickAndSpeed.split("->");
+				String tick = splitTickAndSpeed[0];
+				String speed = splitTickAndSpeed[1];
+				changeBetweenDropsSpeedAtTick.put(Integer.parseInt(tick), Integer.valueOf(speed));
+			}
+			debugTicks = config.getBoolean("debug-ticks");
+		}
+
+		readyRecord = SoundParser.parse(readySoundSection);
+		endRecord = SoundParser.parse(endSoundSection);
+		dropRecord = SoundParser.parse(dropSoundSection);
+		waterSpawnRecord = SoundParser.parse(waterSpawnSoundSection);
+
 		broadcastStartSound = config.getBoolean("broadcast-start-sound");
 		broadcastStartMessage = config.getBoolean("broadcast-start-message");
 		broadcastReadySound = config.getBoolean("broadcast-ready-sound");
@@ -93,36 +91,44 @@ public class DropPartyActivatorMother {
 		}
 	}
 
-	public void setUseSound(Record record) {
+	public void setUseSound(SoundInfo record) {
 		this.useRecord = record;
 	}
 
-	public Record getUseSound() {
+	public SoundInfo getUseSound() {
 		return useRecord;
 	}
 
-	public void setReadySound(Record record) {
+	public void setReadySound(SoundInfo record) {
 		this.readyRecord = record;
 	}
 
-	public Record getReadySound() {
+	public SoundInfo getReadySound() {
 		return readyRecord;
 	}
 
-	public void setEndSound(Record record) {
+	public void setEndSound(SoundInfo record) {
 		this.endRecord = record;
 	}
-	
-	public Record getEndSound() {
+
+	public SoundInfo getEndSound() {
 		return endRecord;
 	}
-	
-	public void setDropSound(Record record) {
+
+	public void setDropSound(SoundInfo record) {
 		this.dropRecord = record;
 	}
-	
-	public Record getDropSound() {
+
+	public SoundInfo getDropSound() {
 		return dropRecord;
+	}
+
+	public void setWaterSpawnSound(SoundInfo record) {
+		this.waterSpawnRecord = record;
+	}
+
+	public SoundInfo getWaterSpawnSound() {
+		return waterSpawnRecord;
 	}
 
 	public boolean isBroadcastStartSound() {
@@ -204,13 +210,45 @@ public class DropPartyActivatorMother {
 	public void setItemsToDrop(List<ItemStack> itemsToDrop) {
 		this.itemsToDrop = itemsToDrop;
 	}
-	
+
 	public Set<Integer> getWaterSpawnDurations() {
 		return waterSpawnDurations;
 	}
-	
+
 	public int getWaterRemoveDuration() {
 		return waterRemoveDuration;
 	}
-	
+
+	public boolean isChangeBetweenDropsSpeed() {
+		return changeBetweenDropsSpeed;
+	}
+
+	public void setChangeBetweenDropsSpeed(boolean changeBetweenDropsSpeed) {
+		this.changeBetweenDropsSpeed = changeBetweenDropsSpeed;
+	}
+
+	public Map<Integer, Integer> getChangeBetweenDropsSpeedAtTick() {
+		return changeBetweenDropsSpeedAtTick;
+	}
+
+	public void setChangeBetweenDropsSpeedAtTick(Map<Integer, Integer> changeBetweenDropsSpeedAtTick) {
+		this.changeBetweenDropsSpeedAtTick = changeBetweenDropsSpeedAtTick;
+	}
+
+	public Integer getDroppingSpeed(int tick) {
+		return changeBetweenDropsSpeedAtTick.get(tick);
+	}
+
+	public void setDroppingSpeed(int tick, int newDroppingSpeed) {
+		changeBetweenDropsSpeedAtTick.put(tick, newDroppingSpeed);
+	}
+
+	public boolean isDebugTicks() {
+		return debugTicks;
+	}
+
+	public void setDebugTicks(boolean debugTicks) {
+		this.debugTicks = debugTicks;
+	}
+
 }
