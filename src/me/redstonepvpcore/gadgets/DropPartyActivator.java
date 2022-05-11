@@ -23,6 +23,7 @@ import me.redstonepvpcore.messages.TimeFormatter;
 import me.redstonepvpcore.mothers.DropPartyActivatorMother;
 import me.redstonepvpcore.player.BypassManager;
 import me.redstonepvpcore.player.Permissions;
+import me.redstonepvpcore.utils.ActionBar;
 import me.redstonepvpcore.utils.CooldownScheduler;
 import me.redstonepvpcore.utils.CooldownScheduler.AsyncCooldownEntry;
 import xyz.xenondevs.particle.ParticleEffect;
@@ -63,7 +64,7 @@ public class DropPartyActivator extends Gadget {
 	}
 
 	public Location getRandomDropLocation(Location loc) {
-		return loc.clone().add(ThreadLocalRandom.current().nextDouble(-1, 1), 1, ThreadLocalRandom.current().nextDouble(-1, 1));
+		return loc.clone().add(ThreadLocalRandom.current().nextDouble(-1, 2), 1, ThreadLocalRandom.current().nextDouble(-1, 2));
 	}
 
 	public void deactivate() {
@@ -106,12 +107,13 @@ public class DropPartyActivator extends Gadget {
 		boolean debugTicks = getParent().getDropPartyActivatorMother().isDebugTicks();
 		elapsedTime.set(1);
 		dropTask.set(getParent().doAsyncRepeating(() -> {
+			if(debugTicks) 
+				ActionBar.sendPlayersActionBar("Current tick: " + getParent().getDropPartyActivatorMother().getUseSound().getTicks());
 			currentTick.incrementAndGet();
 			if(mother.isChangeBetweenDropsSpeed()) {
 				Integer newDroppingSpeed = mother.getDroppingSpeed(mother.getUseSound().getTicks());
-				if(newDroppingSpeed != null) {
+				if(newDroppingSpeed != null)
 					getParent().getDropPartyActivatorMother().setBetweenDropsDuration(newDroppingSpeed);
-				}
 			}
 			if(tickCounter.incrementAndGet() 
 					>= getParent().getDropPartyActivatorMother().getBetweenDropsDuration()) {
@@ -133,8 +135,6 @@ public class DropPartyActivator extends Gadget {
 				getParent().doSyncLater(() -> 
 				getLocation().getWorld().getBlockAt(waterSpawnLocation).setType(Material.AIR),
 				mother.getWaterRemoveDuration());
-				if(debugTicks) 
-					broadcastMessage("Song tick: " + getParent().getDropPartyActivatorMother().getUseSound().getTicks());
 				waterSpawnDurations.remove(elapsedTime.get());
 			}
 			if(elapsedTime.get() < droppingDuration && !deactivateFlag) return;

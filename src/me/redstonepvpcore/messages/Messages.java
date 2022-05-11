@@ -24,7 +24,8 @@ public class Messages {
 	removeRandomBox, removeDropParty, removeExpSign, removeFrameGiver,
 	selectCancel, unknownPlayer, playerOnly, reload, cancel, bypassOn, bypassOff, bypassOnOther, bypassOffOther,
 	resetDropParty, startDropParty, noPermissionUse, enchantLevelNotNumber, enchantLevelMax, enchantItemHand, 
-	enchantItemAdd, enchantItemUpdate, enchantItemRemove, shopNoPermission, shopBuy, shopNotEnough;
+	enchantItemAdd, enchantItemUpdate, enchantItemRemove, soulboundAdd, soulboundRemove, shopNoPermission, 
+	shopBuy, shopNotEnough, listNotNumber, listLastPage, listInvalidPage;
 
 	private List<String> list;
 
@@ -122,9 +123,14 @@ public class Messages {
 		enchantItemAdd = get("enchant-item-add");
 		enchantItemUpdate = get("enchant-item-update");
 		enchantItemRemove = get("enchant-item-remove");
+		soulboundAdd = get("soulbound-add");
+		soulboundRemove = get("soulbound-remove");
 		shopNoPermission = get("shop-no-permission");
 		shopBuy = get("shop-buy");
 		shopNotEnough = get("shop-not-enough");
+		listNotNumber = get("list-not-number");
+		listLastPage = get("list-last-page");
+		listInvalidPage = get("list-invalid-page");
 		list = getList("list");
 	}
 
@@ -410,6 +416,26 @@ public class Messages {
 
 	public String getShopNotEnough() {
 		return shopNotEnough;
+	}
+
+	public String getSoulboundAdd() {
+		return soulboundAdd;
+	}
+
+	public String getSoulboundRemove() {
+		return soulboundRemove;
+	}
+
+	public String getListNotNumber() {
+		return listNotNumber;
+	}
+
+	public String getListLastPage() {
+		return listLastPage;
+	}
+
+	public String getListInvalidPage() {
+		return listInvalidPage;
 	}
 
 }

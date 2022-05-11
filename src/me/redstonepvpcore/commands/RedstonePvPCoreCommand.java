@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,6 +33,7 @@ import me.redstonepvpcore.utils.ConfigCreator;
 import me.redstonepvpcore.utils.CooldownScheduler;
 import me.redstonepvpcore.utils.NBTEditor;
 import me.redstonepvpcore.utils.PagedArrayList;
+import me.redstonepvpcore.utils.XSound;
 
 public class RedstonePvPCoreCommand implements CommandExecutor {
 
@@ -50,6 +52,7 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 	private final List<String> helpMessage2 = Colorizer.colorize("&3[&cRedstonePvPCore&3] &aHelp Page", 
 			"&2/&6{label} &9enchantments &8⎟ &7lists all available enchantments",
 			"&2/&6{label} &9enchant <enchant> [level] &8⎟ &7enchants the item you are holding",
+			"&2/&6{label} &9soulbound &8⎟ &7adds soulbound to the item you are holding",
 			"&2/&6trash &8⎟ &7opens the trash menu",
 			"&2/&6shop &9[player] &8⎟ &7opens the shop menu for you or for someone else",
 			"&2/&6{label} &9sounds &8⎟ &7lists all available sounds you can use in one of the config files",
@@ -66,6 +69,13 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 	public PagedArrayList<Gadget> pagedList;
 	private String[] romanNumerals = new String[] {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
 	private List<String> romanList = Arrays.asList(romanNumerals);
+	
+	private final List<String> sounds = Arrays.stream(me.redstonepvpcore.utils.XSound.VALUES)
+			.filter(s -> s.isSupported())
+			.map(s -> Colorizer.colorize("&c" + s.parseSound().name().toLowerCase()))
+			.collect(Collectors.toList());
+	private final String separator = Colorizer.colorize("&3, "); 
+	private final String soundsString = String.join(separator, sounds);
 
 	public RedstonePvPCoreCommand(RedstonePvPCore parent) {
 		this.parent = parent;
@@ -130,12 +140,10 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 					Messages.sendMessage(player, parent.getMessages().getCancel());
 					break;
 				case "reload": case "rl":
-					// do reload
 					parent.doAsync(() -> parent.reload());
 					Messages.sendMessage(sender, parent.getMessages().getReload());
 					break;
 				case "bypass":
-					// do bypass
 					if(!(sender instanceof Player)) {
 						Messages.sendMessage(sender, parent.getMessages().getPlayerOnly());
 						return true;
@@ -164,6 +172,23 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 					break;
 				case "enchant":
 					sender.sendMessage(helpMessage2.get(2).replace("{label}", label));
+					break;
+				case "soulbound":
+					if(!(sender instanceof Player)) {
+						Messages.sendMessage(sender, parent.getMessages().getPlayerOnly());
+						return true;
+					}
+					Player p = (Player)sender;
+					ItemStack itemInHand = p.getItemInHand();
+					if(itemInHand == null || itemInHand.getType() == Material.AIR) return true;
+					if(parent.getSoulBoundManager().isSoulBounded(itemInHand)) {
+						itemInHand = parent.getSoulBoundManager().deleteSoulBound(itemInHand);
+						Messages.sendMessage(p, parent.getMessages().getSoulboundRemove());
+					} else {
+						itemInHand = parent.getSoulBoundManager().addSoulBound(itemInHand);
+						Messages.sendMessage(p, parent.getMessages().getSoulboundAdd());
+					}
+					p.setItemInHand(itemInHand);
 					break;
 				case "list":
 					int i = 0;
@@ -203,6 +228,9 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 					});
 					sender.sendMessage(enchantmentsFooterMessage);
 					break;
+				case "sounds":
+					sender.sendMessage(soundsString);
+					break;
 				default:
 					// unknown command
 					break;
@@ -222,20 +250,36 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 				case "enchant":
 					sender.sendMessage(helpMessage2.get(2).replace("{label}", label));
 					break;
+				case "bypass":
+					Player target = Bukkit.getPlayer(args[1]);
+					if(target == null) {
+						Messages.sendMessage(sender, parent.getMessages().getUnknownPlayer().replace("%target%", args[1]));
+						return true;
+					}
+					UUID uniqueId = target.getUniqueId();
+					if(BypassManager.isBypassOn(uniqueId)) {
+						BypassManager.setBypass(uniqueId, false);
+						Messages.sendMessage(sender, parent.getMessages().getBypassOffOther().replace("%target%", target.getName()));
+					} else {
+						BypassManager.setBypass(uniqueId, true);
+						Messages.sendMessage(sender, parent.getMessages().getBypassOnOther().replace("%target%", target.getName()));
+					}
+					break;
 				case "list":
 					int pageNumber = 1;
 					try {
 						pageNumber = Integer.parseInt(args[1]);
 					} catch (NumberFormatException ex) {
-						// fail
+						Messages.sendMessage(sender, parent.getMessages().getListNotNumber());
+						return true;
 					}
 					if(pageNumber > pagedList.getLastPage()) {
-						// fail
+						Messages.sendMessage(sender, parent.getMessages().getListLastPage());
 						return true;
 					}
 					if(pageNumber < 1) {
-						// fail
-						return true;
+						pageNumber = 1;
+						Messages.sendMessage(sender, parent.getMessages().getListInvalidPage());
 					}
 					int i = 0;
 					listHeader.forEach(sender::sendMessage);
@@ -302,10 +346,42 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 						break;
 					}
 					break;
+				case "playsound":
+					XSound sound = XSound.matchXSound(args[1].toUpperCase()).orElse(null);
+					if(sound == null) {
+						sender.sendMessage("Null sound!");
+						return true;
+					}
+					if(!(sender instanceof Player)) {
+						sender.sendMessage("Not player!");
+						return true;
+					}
+					Player p = (Player)sender;
+					p.playSound(p.getLocation(), sound.parseSound(), 1.0f, 1.0f);
+					break;
 				}
 				break;
 			case 3:
 				switch (args[0].toLowerCase()) {
+				case "playsound":
+					XSound sound = XSound.matchXSound(args[1].toUpperCase()).orElse(null);
+					if(sound == null) {
+						sender.sendMessage("Null sound!");
+						return true;
+					}
+					if(!(sender instanceof Player)) {
+						sender.sendMessage("Not player!");
+						return true;
+					}
+					float volume = 1.0f;
+					try {
+						volume = Float.parseFloat(args[2]);
+					} catch (NumberFormatException ex) {
+						volume = 1.0f;
+					}
+					Player p = (Player)sender;
+					p.playSound(p.getLocation(), sound.parseSound(), volume, 1.0f);
+					break;
 				case "enchant":
 					if(!(sender instanceof Player)) {
 						Messages.sendMessage(sender, parent.getMessages().getPlayerOnly());
@@ -425,6 +501,35 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 					meta.setLore(lore);
 					itemInHand.setItemMeta(meta);
 					player.setItemInHand(itemInHand);
+					break;
+				}
+				break;
+			case 4:
+				switch (args[0].toLowerCase()) {
+				case "playsound":
+					XSound sound = XSound.matchXSound(args[1].toUpperCase()).orElse(null);
+					if(sound == null) {
+						sender.sendMessage("Null sound!");
+						return true;
+					}
+					if(!(sender instanceof Player)) {
+						sender.sendMessage("Not player!");
+						return true;
+					}
+					float volume = 1.0f;
+					try {
+						volume = Float.parseFloat(args[2]);
+					} catch (NumberFormatException ex) {
+						volume = 1.0f;
+					}
+					float pitch = 1.0f;
+					try {
+						pitch = Float.parseFloat(args[3]);
+					} catch (NumberFormatException ex) {
+						pitch = 1.0f;
+					}
+					Player p = (Player)sender;
+					p.playSound(p.getLocation(), sound.parseSound(), volume, pitch);
 					break;
 				}
 				break;

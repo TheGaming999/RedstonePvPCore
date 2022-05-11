@@ -3,14 +3,17 @@ package me.redstonepvpcore.mothers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
+import me.redstonepvpcore.RedstonePvPCore;
 import me.redstonepvpcore.sounds.SoundInfo;
 import me.redstonepvpcore.sounds.SoundParser;
 import me.redstonepvpcore.utils.ConfigCreator;
@@ -26,16 +29,19 @@ public class RandomBoxMother {
 	private double shuffleDuration;
 	private List<ItemStack> items = new ArrayList<>();
 	private List<ItemStack> displayItems = new ArrayList<>();
+	private List<ItemStack> differentItems = new ArrayList<>();
 	private Map<Integer, Actions> actions = new HashMap<>();
 
 	public RandomBoxMother() {
 		setup();	
 	}
 
+	@SuppressWarnings("deprecation")
 	public void setup() {
 		usePermissions.clear();
 		items.clear();
 		displayItems.clear();
+		differentItems.clear();
 		FileConfiguration config = ConfigCreator.getConfig("randombox.yml");
 		ConfigurationSection useSoundSection = config.getConfigurationSection("use-sound");
 		ConfigurationSection animationSoundSection = config.getConfigurationSection("animation-sound");
@@ -52,13 +58,21 @@ public class RandomBoxMother {
 		shuffleDuration = config.getDouble("shuffle-duration");
 		ConfigurationSection itemsSection = config.getConfigurationSection("items");
 		AtomicInteger positionNumber = new AtomicInteger();
+		Set<String> materials = new HashSet<>();
 		itemsSection.getKeys(false).forEach(position -> {
 			ConfigurationSection positionSection = itemsSection.getConfigurationSection(position);
-			items.add(ItemStackReader.fromConfigurationSection(positionSection, 
-				"material", "amount", "data", "name", "lore", "enchantments", "flags", " "));
-			displayItems.add(ItemStackReader.fromConfigurationSection(positionSection, 
+			ItemStack stack = ItemStackReader.fromConfigurationSection(positionSection, 
+					"material", "amount", "data", "name", "lore", "enchantments", "flags", " ");
+			stack = RedstonePvPCore.getInstance().getEnchantmentManager().enchant(stack, positionSection.getStringList("custom-enchantments"));
+			items.add(stack);
+			ItemStack displayStack = ItemStackReader.fromConfigurationSection(positionSection, 
 					"display-material", "display-amount", "display-data", "display-name", "display-lore", 
-					"display-enchantments", "display-flags", " "));
+					"display-enchantments", "display-flags", " ");
+			displayItems.add(displayStack);
+			if(!materials.contains(displayStack.getType().name() + displayStack.getDurability())) {
+				materials.add(displayStack.getType().name() + displayStack.getDurability());
+				differentItems.add(displayStack);
+			}
 			List<String> commands = positionSection.getStringList("commands");
 			List<String> broadcastMessages = positionSection.getStringList("broadcast");
 			List<String> messages = positionSection.getStringList("msg");
@@ -115,7 +129,11 @@ public class RandomBoxMother {
 	public List<ItemStack> getDisplayItems() {
 		return displayItems;
 	}
-
+	
+	public List<ItemStack> getDifferentItems() {
+		return differentItems;
+	}
+	
 	public Map<String, Integer> getUsePermissions() {
 		return usePermissions;
 	}

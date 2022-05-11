@@ -18,6 +18,7 @@ import me.redstonepvpcore.mothers.RandomBoxMother;
 import me.redstonepvpcore.player.BypassManager;
 import me.redstonepvpcore.player.Permissions;
 import me.redstonepvpcore.sounds.SoundInfo;
+import me.redstonepvpcore.utils.RandomUnique;
 import xyz.xenondevs.particle.ParticleEffect;
 
 public class RandomBox extends Gadget {
@@ -67,11 +68,11 @@ public class RandomBox extends Gadget {
 	}
 
 	public int getRandom(int from, int to) {
-		return ThreadLocalRandom.current().nextInt(from, to);
+		return ThreadLocalRandom.current().nextInt(from, to+1);
 	}
 
 	public double getRandom(double from, double to) {
-		return ThreadLocalRandom.current().nextDouble(from, to);
+		return ThreadLocalRandom.current().nextDouble(from, to+1);
 	}
 	
 	private CompletableFuture<Void> useRandomBox(Player player) {
@@ -79,21 +80,20 @@ public class RandomBox extends Gadget {
 		AtomicInteger pos = new AtomicInteger();
 		RandomBoxMother mother = getParent().getRandomBoxMother();
 		int lastIndex = mother.getDisplayItems().size()-1;
+		RandomUnique.global().setRandomLimit(lastIndex);
 		double shuffleDuration = mother.getShuffleDuration();
 		Location centerLocation = getLocation().clone().add(0.50, 1.0, 0.50);
 		AtomicInteger shuffles = new AtomicInteger();
-		mother.getDisplayItems().toString();
 		Item droppedItem = centerLocation.getWorld().dropItem(centerLocation, mother.getDisplayItems().get(0));
 		SoundInfo animationSound = mother.getAnimationSound();
 		new BukkitRunnable() {
 			public void run() {
 				if(animationSound != null) animationSound.play(centerLocation);
 				int randomIndex = pos.get();
-				ItemStack displayItemStack = mother.getDisplayItems().get(randomIndex);	
-				droppedItem.setItemStack(RepairAnvil.AIR);
+				ItemStack displayItemStack = mother.getDisplayItems().get(randomIndex);
 				droppedItem.setItemStack(displayItemStack);
-				droppedItem.setPickupDelay(1000);
 				droppedItem.setVelocity(new Vector(0, 0, 0));
+				droppedItem.setPickupDelay(1000);	
 				if(shuffles.get() >= shuffleDuration) {	
 					getParent().doSyncLater(() -> {
 						ItemStack reward = mother.getItems().get(randomIndex);
@@ -111,7 +111,7 @@ public class RandomBox extends Gadget {
 					return;
 				}
 				shuffles.incrementAndGet();
-				pos.set(getRandom(0, lastIndex));
+				pos.set(RandomUnique.global().generate());
 			}
 		}.runTaskTimer(getParent(), 0, 5);
 		return taskFinishFuture;

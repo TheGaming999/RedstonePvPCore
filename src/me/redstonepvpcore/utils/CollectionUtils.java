@@ -3,6 +3,8 @@ package me.redstonepvpcore.utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -528,6 +530,26 @@ public class CollectionUtils {
 			}
 		}
 		return found;
+	}
+	
+	public static boolean containsIgnoreCaseCollectionFromCollection(Collection<String> stringCollection, Collection<String> searchFor) {
+		Set<String> contained = new HashSet<>();
+		for(String line : searchFor) {
+			if(containsIgnoreCase(stringCollection, line)) {
+				contained.add(line);
+			}
+		}
+		return stringCollection.containsAll(contained);
+	}
+	
+	public static Set<String> containsIgnoreCaseCollectionFromCollectionReturn(Collection<String> stringCollection, Collection<String> searchFor) {
+		Set<String> contained = new LinkedHashSet<>();
+		for(String line : searchFor) {
+			if(containsIgnoreCase(stringCollection, line)) {
+				contained.add(line);
+			}
+		}
+		return contained;
 	}
 
 	public static ReplaceableList replaceCollectable(List<String> stringList, String from, String to) {

@@ -1,0 +1,9 @@
+- Sound Values:
+
+start-at-tick: 0
+change-between-drops-speed-at-tick: "33->5"
+
+- Drop Party Values:
+
+water-spawn-durations: 5,10,15
+water-remove-duration: 20

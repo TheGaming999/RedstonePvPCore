@@ -11,6 +11,7 @@ import com.xxmicloxx.NoteBlockAPI.NoteBlockAPI;
 
 import me.redstonepvpcore.commands.RedstonePvPCoreCommand;
 import me.redstonepvpcore.commands.ShopCommand;
+import me.redstonepvpcore.commands.TrashCommand;
 import me.redstonepvpcore.enchantments.EnchantmentManager;
 import me.redstonepvpcore.gadgets.DropPartyActivator;
 import me.redstonepvpcore.gadgets.GadgetManager;
@@ -18,7 +19,7 @@ import me.redstonepvpcore.gadgets.GadgetType;
 import me.redstonepvpcore.listeners.DamageListener;
 import me.redstonepvpcore.listeners.InteractListener;
 import me.redstonepvpcore.listeners.InventoryListener;
-import me.redstonepvpcore.listeners.ItemMergeListener;
+import me.redstonepvpcore.listeners.DropListener;
 import me.redstonepvpcore.messages.Messages;
 import me.redstonepvpcore.mothers.ConverterMother;
 import me.redstonepvpcore.mothers.DropPartyActivatorMother;
@@ -27,6 +28,7 @@ import me.redstonepvpcore.mothers.FrameGiverMother;
 import me.redstonepvpcore.mothers.RandomBoxMother;
 import me.redstonepvpcore.mothers.RepairAnvilMother;
 import me.redstonepvpcore.shop.Shop;
+import me.redstonepvpcore.soulbound.SoulBoundManager;
 import me.redstonepvpcore.utils.ConfigCreator;
 
 public class RedstonePvPCore extends JavaPlugin {
@@ -39,13 +41,15 @@ public class RedstonePvPCore extends JavaPlugin {
 	private ExpSignMother expSignMother;
 	private FrameGiverMother frameGiverMother;
 	private EnchantmentManager enchantmentManager;
+	private SoulBoundManager soulBoundManager;
 	private Messages messages;
 	private BukkitScheduler scheduler;
 	private InteractListener interactListener;
-	private ItemMergeListener itemMergeListener;
+	private DropListener dropListener;
 	private DamageListener damageListener;
 	private InventoryListener inventoryListener;
 	private RedstonePvPCoreCommand redstonePvPCoreCommand;
+	private TrashCommand trashCommand;
 	private Shop shop;
 	private ShopCommand shopCommand;
 	private BukkitTask dropPartyTask;
@@ -64,13 +68,14 @@ public class RedstonePvPCore extends JavaPlugin {
 				"exp-sign.yml", "frame-giver.yml", "item-bleed.yml", "randombox.yml", "repair-anvil.yml", "shop.yml",
 				"soulbound.yml", "trash.yml", "messages.yml");
 		scheduler = Bukkit.getScheduler();
+		enchantmentManager = new EnchantmentManager();
+		soulBoundManager = new SoulBoundManager();
 		repairAnvilMother = new RepairAnvilMother();
 		converterMother = new ConverterMother();
 		randomBoxMother = new RandomBoxMother();
 		dropPartyActivatorMother = new DropPartyActivatorMother();
 		expSignMother = new ExpSignMother();
 		frameGiverMother = new FrameGiverMother();
-		enchantmentManager = new EnchantmentManager();
 		messages = new Messages();
 		shop = new Shop();
 		shop.loadInventory();
@@ -80,6 +85,8 @@ public class RedstonePvPCore extends JavaPlugin {
 		registerListeners();
 		redstonePvPCoreCommand = new RedstonePvPCoreCommand(this);
 		getCommand("redstonepvpcore").setExecutor(redstonePvPCoreCommand);
+		trashCommand = new TrashCommand(this);
+		getCommand("trash").setExecutor(trashCommand);
 		startDropPartyChecker();
 		startDataSavingTask();
 		getLogger().info("Enabled.");
@@ -87,7 +94,7 @@ public class RedstonePvPCore extends JavaPlugin {
 
 	public void saveDefaultMusicFiles() {
 		new File(this.getDataFolder() + "/Music/").mkdir();
-		saveMusicFile("Dream Lover.nbs");
+		saveMusicFile("Dream Lover.nbs", "Dream Lover Values.txt");
 	}
 	
 	private void saveMusicFile(String name) {
@@ -95,7 +102,6 @@ public class RedstonePvPCore extends JavaPlugin {
 		saveResource("Music/" + name, false);
 	}
 	
-	@SuppressWarnings("unused")
 	private void saveMusicFile(String... names) {
 		for(String name : names) saveMusicFile(name);
 	}
@@ -132,11 +138,11 @@ public class RedstonePvPCore extends JavaPlugin {
 
 	public void registerListeners() {
 		interactListener = new InteractListener(this);
-		itemMergeListener = new ItemMergeListener(this);
+		dropListener = new DropListener(this);
 		damageListener = new DamageListener(this);
 		inventoryListener = new InventoryListener(this);
 		interactListener.register();
-		itemMergeListener.register();
+		dropListener.register();
 		damageListener.register();
 		inventoryListener.register();
 	}
@@ -144,8 +150,8 @@ public class RedstonePvPCore extends JavaPlugin {
 	public void unregisterListeners() {
 		if(interactListener != null)
 			interactListener.unregister();
-		if(itemMergeListener != null)
-			itemMergeListener.unregister();
+		if(dropListener != null)
+			dropListener.unregister();
 		if(damageListener != null)
 			damageListener.unregister();
 		if(inventoryListener != null)
@@ -164,11 +170,16 @@ public class RedstonePvPCore extends JavaPlugin {
 		expSignMother.setup();
 		frameGiverMother.setup();
 		enchantmentManager.setup();
+		soulBoundManager.setup();
 		messages.setup();
 		shop.loadInventory();
 		GadgetManager.loadGadgets();
 		redstonePvPCoreCommand = new RedstonePvPCoreCommand(this);
 		getCommand("redstonepvpcore").setExecutor(redstonePvPCoreCommand);
+		shopCommand = new ShopCommand(this);
+		getCommand("shop").setExecutor(shopCommand);
+		trashCommand = new TrashCommand(this);
+		getCommand("trash").setExecutor(trashCommand);
 		unregisterListeners();
 		registerListeners();
 		startDropPartyChecker();
@@ -257,6 +268,10 @@ public class RedstonePvPCore extends JavaPlugin {
 
 	public void setDropPartyRunning(boolean dropPartyRunning) {
 		this.dropPartyRunning = dropPartyRunning;
+	}
+
+	public SoulBoundManager getSoulBoundManager() {
+		return soulBoundManager;
 	}
 
 }

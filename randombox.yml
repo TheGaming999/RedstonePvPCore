@@ -39,8 +39,9 @@ items:
     data: 0
     # * the item name which will be displayed when you hold it in your hand
     name: "&eDiamond Sword"
-    lore:
-    - "&7Wither III"
+    lore: []
+    custom-enchantments:
+    - "WITHER 3"
     # * Only if you want the item to glow when it appears above the randombox
     display-enchantments:
     - "unbreaking 1"

@@ -1,5 +1,5 @@
 main: me.redstonepvpcore.RedstonePvPCore
-version: 1.1alpha
+version: 2.0
 name: RedstonePvPCore
 author: Sandwicha
 commands:
@@ -15,10 +15,25 @@ commands:
     aliases: [shopmenu, mtgr, mtjr, b8alh, supermarket]
     permission: redstonepvpcore.shop
     permission-message: "You don't have permission to use this command."
+  trash:
+    usage: /<command> [other]
+    description: Open trash menu
+    aliases: [zbalh, zbalah, rubbishbin]
+    permission: redstonepvpcore.trash
+    permission-message: "You don't have permission to use this command."
 permissions:
   redstonepvpcore.admin:
     description: Allows redstonepvpcore main command
     default: op
   redstonepvpcore.shop:
+    description: Allows redstonepvpcore shop command
+    default: true
+  redstonepvpcore.shop.other:
     description: Allows redstonepvpcore shop other command
+    default: op
+  redstonepvpcore.trash:
+    description: Allows redstonepvpcore trash command
+    default: true
+  redstonepvpcore.trash.other:
+    description: Allows redstonepvpcore trash other command
     default: op

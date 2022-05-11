@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.redstonepvpcore.RedstonePvPCore;
 import me.redstonepvpcore.gadgets.Gadget;
+import me.redstonepvpcore.player.BypassManager;
 import me.redstonepvpcore.shop.Shop;
 import me.redstonepvpcore.utils.NBTEditor;
 import me.redstonepvpcore.utils.XMaterial;
@@ -76,8 +77,9 @@ public class InventoryListener implements Listener {
 			}
 		} else {
 			if(e.getView().getTitle().equals(shop.getInventoryName())) {
+				boolean isBypassing = BypassManager.isBypassOn(p.getUniqueId());
 				String perm = NBTEditor.getString(stack, "rp-permission");
-				if(!perm.isEmpty() && !p.hasPermission(perm)) {
+				if(!isBypassing && perm != null && !p.hasPermission(perm)) {
 					e.setCancelled(true);
 					p.closeInventory();
 					Gadget.sendMessage(p, parent.getMessages().getShopNoPermission());
@@ -90,9 +92,9 @@ public class InventoryListener implements Listener {
 				if(cost < 0) return;
 				
 				ItemStack costItemStack = shop.getCostItemStacks().get(configName);
-				
-				if(p.getInventory().containsAtLeast(costItemStack, cost)) {
-					p.getInventory().removeItem(costItemStack);
+				costItemStack.setAmount(cost);
+				if(isBypassing || p.getInventory().containsAtLeast(costItemStack, cost)) {
+					if(!isBypassing) p.getInventory().removeItem(costItemStack);
 					p.getInventory().addItem(shop.getRealItemStacks().get(configName));
 					p.updateInventory();
 					p.closeInventory();

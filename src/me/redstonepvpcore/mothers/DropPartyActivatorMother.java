@@ -81,7 +81,7 @@ public class DropPartyActivatorMother {
 		droppingDuration = config.getInt("dropping-duration");
 		betweenDropsDuration = config.getInt("between-drops-duration");
 		alwaysOn = config.getBoolean("always-on");
-		itemsToDrop = ItemStackParser.parse(config.getStringList("items-to-drop"));
+		itemsToDrop = ItemStackParser.parseCustom(config.getStringList("items-to-drop"));
 		waterSpawnDurations = new HashSet<>();
 		String waterSpawnDurationsList = config.getString("water-spawn-durations");
 		String[] waterSpawnDurationsSplit = waterSpawnDurationsList.split(",");

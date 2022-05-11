@@ -8,7 +8,7 @@ broadcast-start-message: true
 broadcast-ready-sound: true
 # * true: broadcasts the messages to all online players when the drop party is ready to be turned on
 broadcast-ready-message: true
-# * true: sends a message every time a water explosion happens, so you know when to configure "change-between-drops-speed-at-tick"
+# * true: sends an actionbar message of the current song tick, so you know when to configure "change-between-drops-speed-at-tick"
 debug-ticks: false
 start-sound:
   # Download nbs files here: https://github.com/thatcraniumguy/Songs/tree/master/NBS%20files
@@ -22,10 +22,10 @@ start-sound:
   start-at-tick: 0
   # when to change speed of the dropping? Currently, it changes when the song gets fast.
   # Changes when tick reaches 33 to 5 ticks dropping speed (You can get the wanted tick from above by setting debug-ticks to true)
-  # Can change multiple times by adding commas , as follows: 
+  # Can change multiple times by adding commas , as follows:
   # "33->5,92->3,123->1"
   # to disable, make it empty: ""
-  change-between-drops-speed-at-tick: "33->5"
+  change-between-drops-speed-at-tick: 33->5
 ready-sound:
   name: CHEST_OPEN
   volume: 3.0
@@ -57,7 +57,7 @@ water-remove-duration: 20
 # makes drop party always enabled with accounting to required-players, cooldown-duration
 always-on: false
 # * format: <> = required, [] = optional
-# * item=<material> amount=<number> data=[durability] name=[name] enchantments=[enchant]:[lvl],[enchant]:[lvl] lore=[lore1],[lore2] itemflags=[flag1],[flag2] 
+# * item=<material> amount=<number> data=[durability] name=[name] enchantments=[enchant]:[lvl],[enchant]:[lvl] lore=[lore1],[lore2] itemflags=[flag1],[flag2]
 # * example format (basic format):
 # item=GOLD_INGOT amount=16
 # * example format2 (display name):
@@ -69,5 +69,26 @@ always-on: false
 # * example format5 (Orange wool):
 # item=WOOL amount=1 data=1
 items-to-drop:
-- material=GOLD_INGOT amount=64
-- material=GOLD_INGOT amount=32
+- material=GOLDEN_APPLE amount=1 data=1
+- material=GOLD_BLOCK amount=3
+- material=GOLD_INGOT amount=1
+- material=GOLD_BLOCK amount=1
+- material=GOLD_INGOT amount=2
+- material=GOLD_BLOCK amount=1
+- material=GOLD_INGOT amount=3
+- material=GOLD_BLOCK amount=1
+- material=GOLD_INGOT amount=3
+- material=GOLD_INGOT amount=1
+- material=GOLD_BLOCK amount=2
+- material=GOLD_INGOT amount=1
+- material=GOLD_BLOCK amount=1
+- material=GOLD_INGOT amount=2
+- material=GOLD_BLOCK amount=1
+- material=GOLD_INGOT amount=3
+- material=GOLD_BLOCK amount=1
+- material=GOLD_INGOT amount=1
+- material=GOLD_BLOCK amount=2
+- material=GOLD_INGOT amount=1
+- material=GOLD_BLOCK amount=1
+- material=GOLD_INGOT amount=3
+- material=GOLD_INGOT amount=3

@@ -1,6 +1,5 @@
 package me.redstonepvpcore.shop;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import me.redstonepvpcore.RedstonePvPCore;
 import me.redstonepvpcore.enchantments.EnchantmentManager.EnchantResult;
@@ -40,6 +38,10 @@ public class Shop {
 	public Shop() {
 		loadInventory();
 	}
+	
+	public static boolean isPurchased(ItemStack itemStack) {
+		return NBTEditor.contains(itemStack, "rp-configname");
+	}
 
 	public void loadInventory() {
 		config = ConfigCreator.getConfig("shop.yml");
@@ -67,9 +69,6 @@ public class Shop {
 			int cost = section.getInt(key + ".cost", 0);
 			
 			itemStack = NBTEditor.set(itemStack, configName, "rp-configname");
-			itemStack = NBTEditor.set(itemStack, slot, "rp-slot");
-			itemStack = NBTEditor.set(itemStack, permission, "rp-permission");
-			itemStack = NBTEditor.set(itemStack, cost, "rp-cost");
 			
 			List<String> customEnchantmentsList = section.getStringList(key + ".custom-enchantments");
 			if(customEnchantmentsList != null && !customEnchantmentsList.isEmpty()) {
@@ -84,17 +83,16 @@ public class Shop {
 					}
 				}
 			}
-			
 			realItemStacks.put(configName, itemStack);
 			costItemStacks.put(configName, costItemStack);
-			ItemStack shopItemStack = new ItemStack(itemStack);
-			ItemMeta im = shopItemStack.getItemMeta();
-			List<String> lore = im.getLore() == null ? new ArrayList<>() : im.getLore();
-			List<String> displayLore = section.getStringList(key + ".display-lore");
-			if(displayLore != null && !displayLore.isEmpty()) 
-				displayLore.forEach(line -> lore.add(Colorizer.colorize(line)));
-			if(!lore.isEmpty()) im.setLore(lore);
-			shopItemStack.setItemMeta(im);
+			ItemStack shopItemStack = ItemStackReader.fromConfigurationSection(section.getConfigurationSection(key), 
+					"display-material", "display-amount", "display-data", "display-name", "display-lore", 
+					"display-enchantments", "display-flags", " ");
+			
+			shopItemStack = NBTEditor.set(shopItemStack, configName, "rp-configname");
+			shopItemStack = NBTEditor.set(shopItemStack, slot, "rp-slot");
+			shopItemStack = NBTEditor.set(shopItemStack, permission, "rp-permission");
+			shopItemStack = NBTEditor.set(shopItemStack, cost, "rp-cost");
 			inventory.setItem(slot, shopItemStack);
 		}
 	}

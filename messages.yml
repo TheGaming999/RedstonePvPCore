@@ -1,111 +1,138 @@
-# Empty messages "" won't be sent.
+# Empty messages "" won't be sent. This is the way messages can be disabled.
 # ==================================
 # << Repair Anvil >>
 # ==================================
-repair-anvil-empty-hand: "&cYou can't repair your hand!"
-repair-anvil-already-repaired: "&cThe item you're holding is already repaired!"
+repair-anvil-empty-hand: '&cYou can''t repair your hand!'
+repair-anvil-already-repaired: '&cThe item you''re holding is already repaired!'
 # available variables: %item%, %item_readable%
-repair-anvil-not-repairable: "&cYou can't repair this item."
-# available variables: %item%, %item_readable%, %amount% 
-repair-anvil-not-enough: "&cYou don't have enough to repair."
-repair-anvil-repairing: "&a&oRepairing...."
-repair-anvil-repaired: ""
+repair-anvil-not-repairable: '&cYou can''t repair this item.'
+# available variables: %item%, %item_readable%, %amount%
+repair-anvil-not-enough: '&cYou don''t have enough to repair.'
+repair-anvil-repairing: '&a&oRepairing....'
+repair-anvil-repaired: ''
 # ==================================
 # << Converter >>
 # ==================================
-redstone-converter-not-enough: "&cYou need &o%amount% &credstone to convert."
-gold-converter-not-enough: "&cYou need &o%amount% &cgold to convert."
-emerald-converter-not-enough: "&cYou need &o%amount% &cemerald to convert."
-redstone-converter-use: ""
-gold-converter-use: ""
-emerald-converter-use: ""
+# available variables %amount% {
+redstone-converter-not-enough: '&7You need &c&o%amount% x redstone &7to convert.'
+gold-converter-not-enough: '&7You need &c&o%amount% x gold ingot &7to convert.'
+emerald-converter-not-enough: '&7You need &c&o%amount% x emerald &7to convert.'
+# }
+redstone-converter-use: ''
+gold-converter-use: ''
+emerald-converter-use: ''
 # ==================================
 # << Random Box >>
 # ==================================
 # available variables: %amount%, %item%, %item_readable%
-random-box-not-enough: "&cYou need &o%amount% %item_readable% &cto use a random box."
-random-box-in-use: "&cThis random box is currently being used."
-random-box-use: "&eShuffling..."
-random-box-done: ""
+random-box-not-enough: '&7You need &c&o%amount% %item_readable% &7to use a random box.'
+random-box-in-use: '&cThis random box is currently being used.'
+random-box-use: '&eShuffling...'
+random-box-done: ''
 # ==================================
 # << Drop Party >>
 # ==================================
-drop-party-not-ready: "&cYou need to wait %time% seconds to start the drop party."
-drop-party-already-running: "&cThe drop party is already running!"
-drop-party-activate: "&a&l&oDrop &f&l&oparty &a&l&ostarted!"
-drop-party-ready: "&bDrop party &ais ready to drop! Click on it to turn it on."
-drop-party-not-enough-players: "&cThere must be at least &f%amount% &cplayers online in order to activate the drop party."
+# available variables: %time% %time_long% %time_split% %time_short%
+drop-party-not-ready: '&7You need to wait &c&o%time_long% &7to start the drop party.'
+drop-party-already-running: '&cThe drop party is already running!'
+drop-party-activate: '&f&l[&a&k&li&f&l]&r &a&l&oDROP &f&l&oPARTY &a&l&oSTARTED!'
+drop-party-ready: '&bDrop party &ais ready to drop! Click on it to turn it on!'
+# available variables: %amount%
+drop-party-not-enough-players: '&cThere must be at least &f&o%amount% &cplayers online
+  in order to activate the drop party.'
 # ==================================
 # << Frame Giver >>
 # ==================================
-frame-giver-use: "&aYou have taken an item."
+frame-giver-use: '&f&o[&e&k&oi&f&o] &b&oYou have taken an item.'
 # ==================================
 # << Exp Sign >>
 # ==================================
-exp-sign-not-enough: "&cYou need %amount% to use the exp sign."
-exp-sign-use: ""
+# available variables: %amount%
+exp-sign-not-enough: '&cYou need %amount% to use the exp sign.'
+exp-sign-use: ''
 # =============================
 # COMMAND /rpcore set <gadget> and admin stuff
 # =============================
-select-repair-anvil: "&cSelect a block by clicking with your mouse to set a &7Repair Anvil&c."
-select-redstone-converter: "&cSelect a block by clicking with your mouse to set a &4Redstone Converter&c."
-select-gold-converter: "&cSelect a block by clicking with your mouse to set a &6Gold Converter&c."
-select-emerald-converter: "&cSelect a block by clicking with your mouse to set an &aEmerald Converter&c."
-select-random-box: "&cSelect a block by clicking with your mouse to set a &eRandom Box&c."
-select-drop-party: "&cSelect a block by clicking with your mouse to set a &bDrop Party Activator&c."
-select-exp-sign: "&cSelect a block/sign by clicking with your mouse to set an &2Exp Sign&c."
-select-frame-giver: "&cSelect an item frame by clicking with your mouse to set a &9Frame Giver&c."
+select-repair-anvil: '&a&lSELECT&c a block by clicking with your mouse to set a &7Repair
+  Anvil&c.'
+select-redstone-converter: '&a&lSELECT&c a block by clicking with your mouse to set a
+  &4Redstone Converter&c.'
+select-gold-converter: '&a&lSELECT&c a block by clicking with your mouse to set a &6Gold
+  Converter&c.'
+select-emerald-converter: '&a&lSELECT&c a block by clicking with your mouse to set an
+  &aEmerald Converter&c.'
+select-random-box: '&a&lSELECT&c a block by clicking with your mouse to set a &eRandom
+  Box&c.'
+select-drop-party: '&a&lSELECT&c a block by clicking with your mouse to set a &bDrop Party
+  Activator&c.'
+select-exp-sign: '&a&lSELECT&c a block/sign by clicking with your mouse to set an &2Exp
+  Sign&c.'
+select-frame-giver: '&a&lSELECT&c an item frame by clicking with your mouse to set a &9Frame
+  Giver&c.'
 # available variables: %location% {
-set-repair-anvil: "&cSuccessfully set &7Repair Anvil &cat &o&n%location%&c."
-set-redstone-converter: "&cSuccessfully set &4Redstone Converter &cat &o&n%location%&c."
-set-gold-converter: "&cSuccessfully set &6Gold Converter &cat &o&n%location%&c."
-set-emerald-converter: "&cSuccessfully set &aEmerald Converter &cat &o&n%location%&c."
-set-random-box: "&cSuccessfully set &eRandom Box &cat &o&n%location%&c."
-set-drop-party: "&cSuccessfully set &bDrop Party Activator &cat &o&n%location%&c."
-set-exp-sign: "&cSuccessfully set &2Exp Sign &cat &o&n%location%&c."
-set-frame-giver: "&cSuccessfully set &9Frame Giver &cat &o&n%location%&c."
-remove-repair-anvil: "&cSuccessfully removed &7Repair Anvil &cat &o&n%location%&c."
-remove-redstone-converter: "&cSuccessfully removed &4Redstone Converter &cat &o&n%location%&c."
-remove-gold-converter: "&cSuccessfully removed &6Gold Converter &cat &o&n%location%&c."
-remove-emerald-converter: "&cSuccessfully removed &aEmerald Converter &cat &o&n%location%&c."
-remove-random-box: "&cSuccessfully removed &eRandom Box &cat &o&n%location%&c."
-remove-drop-party: "&cSuccessfully removed &bDrop Party Activator &cat &o&n%location%&c."
-remove-exp-sign: "&cSuccessfully removed &2Exp Sign &cat &o&n%location%&c."
-remove-frame-giver: "&cSuccessfully removed &9Frame Giver &cat &o&n%location%&c."
+set-repair-anvil: '&cSuccessfully set &7Repair Anvil &cat &o&n%location%&c.'
+set-redstone-converter: '&cSuccessfully set &4Redstone Converter &cat &o&n%location%&c.'
+set-gold-converter: '&cSuccessfully set &6Gold Converter &cat &o&n%location%&c.'
+set-emerald-converter: '&cSuccessfully set &aEmerald Converter &cat &o&n%location%&c.'
+set-random-box: '&cSuccessfully set &eRandom Box &cat &o&n%location%&c.'
+set-drop-party: '&cSuccessfully set &bDrop Party Activator &cat &o&n%location%&c.'
+set-exp-sign: '&cSuccessfully set &2Exp Sign &cat &o&n%location%&c.'
+set-frame-giver: '&cSuccessfully set &9Frame Giver &cat &o&n%location%&c.'
+remove-repair-anvil: '&cSuccessfully removed &7Repair Anvil &cat &o&n%location%&c.'
+remove-redstone-converter: '&cSuccessfully removed &4Redstone Converter &cat &o&n%location%&c.'
+remove-gold-converter: '&cSuccessfully removed &6Gold Converter &cat &o&n%location%&c.'
+remove-emerald-converter: '&cSuccessfully removed &aEmerald Converter &cat &o&n%location%&c.'
+remove-random-box: '&cSuccessfully removed &eRandom Box &cat &o&n%location%&c.'
+remove-drop-party: '&cSuccessfully removed &bDrop Party Activator &cat &o&n%location%&c.'
+remove-exp-sign: '&cSuccessfully removed &2Exp Sign &cat &o&n%location%&c.'
+remove-frame-giver: '&cSuccessfully removed &9Frame Giver &cat &o&n%location%&c.'
 # }
-select-cancel: "&cor write &o/rpcore cancel &cto cancel the process."
-unknown-player: "&cThe player &o&n%target% &cis not online."
-player-only: "&cThis command can only be run by a player."
-reload: "&aSuccessfully reloaded config files."
-cancel: "&cCancelled set command."
-bypass-on: "&7Bypass has been &aenabled &7for you."
-bypass-off: "&7Bypass has been &cdisabled &7for you."
+select-cancel: '&cor write &o/rpcore cancel &cto cancel the process.'
+# available variables: %target%
+unknown-player: '&7The player &c&o&n%target% &7is not online.'
+player-only: '&cThis command can only be run by a player.'
+reload: '&aSuccessfully reloaded config files.'
+cancel: '&cCancelled set command.'
+bypass-on: '&7Bypass has been &aenabled &7for &ayou&7.'
+bypass-off: '&7Bypass has been &cdisabled &7for &ayou&7.'
 # available variables: %target% {
-bypass-on-other: "&7Bypass has been &aenabled &7for &a%target%&7."
-bypass-off-other: "&7Bypass has been &cdisabled &7for &c%target%&7."
+bypass-on-other: '&7Bypass has been &aenabled &7for &a%target%&7.'
+bypass-off-other: '&7Bypass has been &cdisabled &7for &c%target%&7.'
 # }
-reset-drop-party: "&7Drop party timer has been reset."
-start-drop-party: "&7Drop party has been forcefully activated."
-no-permission-use: "&cYou don't have permission to use this gadget."
-enchant-level-not-number: "&cSorry, but the level number you have written is invalid."
-enchant-level-max: "&cSorry, but the level number exceeds maximum level of the enchantment."
-enchant-item-hand: "&cSorry, but you can't enchant your hand."
-enchant-item-add: "&aAdded [%enchantment_display_name%&a] [&e%enchantment_level%&a] to the item you're holding."
-enchant-item-update: "&aUpdated [%enchantment_display_name%&a] enchantment level to [&e%enchantment_level%&a]."
-enchant-item-remove: "&aRemoved [%enchantment_display_name%&a] from the item you're holding."
-shop-no-permission: "&cYou don't have permission to buy this item."
-shop-buy: "&aPurchase successful."
-shop-not-enough: "&cYou don't have enough money to buy this item."
+reset-drop-party: '&7Drop party timer has been reset.'
+start-drop-party: '&7Drop party has been forcefully activated.'
+no-permission-use: '&cYou don''t have permission to use this gadget.'
+enchant-level-not-number: '&cSorry, but the level number you have written is invalid.'
+enchant-level-max: '&cSorry, but the level number exceeds maximum level of the enchantment.'
+enchant-item-hand: '&cSorry, but you can''t enchant your hand.'
+# available variables: %enchantment_display_name% %enchantment_level% {
+enchant-item-add: '&bAdded [%enchantment_display_name%&b] [&e%enchantment_level%&b]
+  to the item you''re holding.'
+enchant-item-update: '&bUpdated [%enchantment_display_name%&b] enchantment level to
+  [&e%enchantment_level%&b].'
+# }
+# available variables: %enchantment_display_name%
+enchant-item-remove: '&cRemoved [%enchantment_display_name%&c] from the item you''re
+  holding.'
+soulbound-add: '&aAdded soulbound to the item in your hand.'
+soulbound-remove: '&aRemoved soulbound from the item in your hand.'
+shop-no-permission: '&cYou don''t have permission to buy this item.'
+shop-buy: '&aPurchase successful.'
+shop-not-enough: '&cYou don''t have enough money to buy this item.'
+list-not-number: '&cYou have entered an invalid number in the page argument.'
+list-last-page: '&cYou have reached the last page.'
+list-invalid-page: '&cYou entered an invalid page number. It must be above zero.'
+# available variables: %pos.<number>% %gadget.<number>%
 list:
-- "&3[&cRedstonePvPCore&3] &aLoaded Gadgets:-"
-- "%pos.1% %gadget.1%"
-- "%pos.2% %gadget.2%"
-- "%pos.3% %gadget.3%"
-- "%pos.4% %gadget.4%"
-- "%pos.5% %gadget.5%"
-- "%pos.6% %gadget.6%"
-- "%pos.7% %gadget.7%"
-- "%pos.8% %gadget.8%"
-- "%pos.9% %gadget.9%"
-- "%pos.10% %gadget.10%"
-- "&3[&c%page%&3/&c%lastpage%&3]"
+- '&3[&cRedstonePvPCore&3] &aLoaded Gadgets:-'
+- '&6%pos.1% &7-> &e%gadget.1%'
+- '&6%pos.2% &7-> &e%gadget.2%'
+- '&6%pos.3% &7-> &e%gadget.3%'
+- '&6%pos.4% &7-> &e%gadget.4%'
+- '&6%pos.5% &7-> &e%gadget.5%'
+- '&6%pos.6% &7-> &e%gadget.6%'
+- '&6%pos.7% &7-> &e%gadget.7%'
+- '&6%pos.8% &7-> &e%gadget.8%'
+- '&6%pos.9% &7-> &e%gadget.9%'
+- '&6%pos.10% &7-> &e%gadget.10%'
+- '&3[&c%page%&3/&c%lastpage%&3]'

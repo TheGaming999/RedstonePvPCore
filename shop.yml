@@ -1,25 +1,25 @@
 open-sound:
-  name: "CHEST_OPEN"
+  name: CHEST_CLOSE
   volume: 1.0
-  pitch: 1.0
+  pitch: 1.75
 close-sound:
-  name: "CHEST_CLOSE"
+  name: ''
   volume: 1.0
-  pitch: 1.0
+  pitch: 0.1
 buy-sound:
-  name: ""
+  name: SHEEP_SHEAR
   volume: 1.0
-  pitch: 1.0
+  pitch: 0.1
 not-enough-sound:
-  name: ""
+  name: FIRE_IGNITE
   volume: 1.0
-  pitch: 1.0
+  pitch: 0.5
 no-permission-sound:
-  name: ""
+  name: BURP
   volume: 1.0
-  pitch: 1.0
+  pitch: 0.5
 gui:
-  title: "&6&l&n&oSHOP &e&l:D"
+  title: '&f&l<&r &3&lSHOP &f&l>'
   size: 54
   items:
     poisonaxe:
@@ -31,26 +31,26 @@ gui:
       amount: 1
       data: 0
       # * item display name that shows on the shop gui
-      display-name: "&aPoison Axe"
+      display-name: '&aPoison Axe'
       # * the actual item display name that you will see once you purchase the item
-      name: "&aPoison Axe"
+      name: '&aPoison Axe'
       # * item lore that shows on the shop gui
       display-lore:
-      - "&7Poison II"
-      - "&6Cost: &f32 x GOLD_INGOT"
+      - '&7Poison II'
+      - '&6Cost: &f32 x GOLD_INGOT'
       # * the actual lore that you will see once you purchase the item
       lore: []
       # * custom enchantments provided from the plugin
       custom-enchantments:
-      - "POISON 2"
+      - POISON 2
       # * same as above
       display-enchantments:
-      - "Unbreaking 1"
+      - Unbreaking 1
       # * same as above
       enchantments:
-      - "Sharpness 3"
+      - Sharpness 3
       slot: 0
-      permission: "shop.poisonaxe"
+      permission: shop.poisonaxe
       cost-material: GOLD_INGOT
       # cost-name: "&6Custom name"
       # cost-lore:
@@ -65,19 +65,19 @@ gui:
       display-amount: 1
       amount: 1
       data: 0
-      display-name: "&7&kii&f&lHunger Axe&7&kii"
-      name: "&7&kii&f&lHunger Axe&7&kii"
+      display-name: '&7&kii&f&lHunger Axe&7&kii'
+      name: '&7&kii&f&lHunger Axe&7&kii'
       display-lore:
-      - "&7Hunger III"
-      - "&6Cost: &f32 x GOLD_INGOT"
+      - '&7Hunger III'
+      - '&6Cost: &f32 x GOLD_INGOT'
       lore: []
       display-enchantments:
-      - "Unbreaking 1"
+      - Unbreaking 1
       enchantments:
-      - "Sharpness 3"
+      - Sharpness 3
       custom-enchantments:
-      - "HUNGER 3"
+      - HUNGER 3
       slot: 1
-      permission: "shop.hungeraxe"
+      permission: shop.hungeraxe
       cost-material: GOLD_INGOT
       cost: 32

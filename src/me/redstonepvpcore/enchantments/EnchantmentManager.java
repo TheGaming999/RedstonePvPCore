@@ -1,20 +1,26 @@
 package me.redstonepvpcore.enchantments;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 
+import me.redstonepvpcore.utils.CollectionUtils;
+import me.redstonepvpcore.utils.Colorizer;
 import me.redstonepvpcore.utils.ConfigCreator;
 import me.redstonepvpcore.utils.NBTEditor;
 
@@ -137,6 +143,32 @@ public class EnchantmentManager {
 		return Integer.parseInt(roman);
 	}
 	
+	@Nullable
+	public int[] getEnchantmentsIDs(@Nonnull ItemStack itemStack) {
+		return NBTEditor.getIntArray(itemStack, "rpids");
+	}
+	
+	@Nullable
+	public int[] getEnchantmentsLevels(@Nonnull ItemStack itemStack) {
+		return NBTEditor.getIntArray(itemStack, "rplvls");
+	}
+	
+	public ItemStack enchant(ItemStack itemStack, List<String> stringList) {
+		if(stringList == null || stringList.isEmpty()) return itemStack;
+		for(String line : stringList) {
+			String[] split = line.split(" ");
+			String ench = split[0];
+			int lvl = parse(split[1]);
+			itemStack = enchant(itemStack, ench, lvl, true).getItemStack();
+		}
+		return itemStack;
+	}
+	
+	public List<ItemStack> enchant(List<ItemStack> itemStack, List<String> stringList) {
+		if(itemStack == null || itemStack.isEmpty()) return itemStack;
+		return itemStack.stream().map(is -> enchant(is, stringList)).collect(Collectors.toList());
+	}
+	
 	public EnchantResult enchant(ItemStack itemStack, String name, int lvl) {
 		return enchant(itemStack, name, lvl, false);
 	}
@@ -178,6 +210,25 @@ public class EnchantmentManager {
 		if(IntStream.of(enchantmentLvls).sum() <= -1) enchantmentLvls = null;
 		itemStack = NBTEditor.set(itemStack, enchantmentIds, "rpids");
 		itemStack = NBTEditor.set(itemStack, enchantmentLvls, "rplvls");
+		ItemMeta meta = itemStack.getItemMeta();
+		List<String> lore = meta.getLore();
+		if(lore == null) lore = new ArrayList<>();
+		String displayName = Colorizer.colorize(enchantment.getDisplayName());
+		if(CollectionUtils.containsIgnoreCase(lore, displayName)) {
+			if(lvl > 0) {
+				lore = CollectionUtils.replaceContainsIgnoreCase(lore, displayName, displayName + " " + getRomanNumeral(lvl));
+			} else {
+				String lineToRemove = lore.stream().filter(line -> line.contains(displayName)).findFirst().get();
+				lore.remove(lineToRemove);
+			}
+		} else {
+			if(lvl > 0) {
+				lore.add(displayName + " " + getRomanNumeral(lvl));
+			} else {
+			}
+		}
+		meta.setLore(lore);
+		itemStack.setItemMeta(meta);
 		return EnchantResult.SUCCESS.setItemStack(itemStack);
 	}
 	
