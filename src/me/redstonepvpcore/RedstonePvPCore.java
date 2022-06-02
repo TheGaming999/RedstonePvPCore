@@ -64,7 +64,7 @@ public class RedstonePvPCore extends JavaPlugin {
 		instance = this;
 		noteBlockAPI = new NoteBlockAPI();
 		noteBlockAPI.onEnable();
-		ConfigCreator.copyAndSaveDefaults(false, "converters.yml", "data.yml", "drop-party.yml", "enchantments.yml",
+		ConfigCreator.copyAndSaveDefaults(true, "converters.yml", "data.yml", "drop-party.yml", "enchantments.yml",
 				"exp-sign.yml", "frame-giver.yml", "item-bleed.yml", "randombox.yml", "repair-anvil.yml", "shop.yml",
 				"soulbound.yml", "trash.yml", "messages.yml");
 		scheduler = Bukkit.getScheduler();
