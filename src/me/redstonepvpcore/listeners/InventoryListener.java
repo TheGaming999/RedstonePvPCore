@@ -1,5 +1,6 @@
 package me.redstonepvpcore.listeners;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -68,7 +69,7 @@ public class InventoryListener implements Listener {
 	public void onInventoryItem(InventoryClickEvent e) {
 		Inventory inv = e.getClickedInventory();
 		ItemStack stack = e.getCurrentItem();
-		if(stack == null) return;
+		if(stack == null || stack.getType() == Material.AIR) return;
 		Player p = (Player)e.getWhoClicked();
 		if(inv.getType() == InventoryType.ENCHANTING) {
 			if(stack.isSimilar(lapis)) {
@@ -79,6 +80,10 @@ public class InventoryListener implements Listener {
 			if(e.getView().getTitle().equals(shop.getInventoryName())) {
 				boolean isBypassing = BypassManager.isBypassOn(p.getUniqueId());
 				String perm = NBTEditor.getString(stack, "rp-permission");
+				if(perm == null) {
+					e.setCancelled(true);
+					return;
+				}
 				if(!isBypassing && perm != null && !p.hasPermission(perm)) {
 					e.setCancelled(true);
 					p.closeInventory();
@@ -88,10 +93,14 @@ public class InventoryListener implements Listener {
 				}
 				String configName = NBTEditor.getString(stack, "rp-configname");
 				int cost = NBTEditor.getInt(stack, "rp-cost");
-
+				
 				if(cost < 0) return;
 				
 				ItemStack costItemStack = shop.getCostItemStacks().get(configName);
+				if(costItemStack == null) {
+					e.setCancelled(true);
+					return;
+				}
 				costItemStack.setAmount(cost);
 				if(isBypassing || p.getInventory().containsAtLeast(costItemStack, cost)) {
 					if(!isBypassing) p.getInventory().removeItem(costItemStack);

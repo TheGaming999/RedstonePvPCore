@@ -22,7 +22,7 @@ gui:
   title: '&f&l<&r &3&lSHOP &f&l>'
   size: 54
   items:
-    poisonaxe:
+    PoisonAxe:
       # * material that will show on the shop gui
       display-material: DIAMOND_AXE
       # * the actual material that you will get once you purchase the item
@@ -31,13 +31,13 @@ gui:
       amount: 1
       data: 0
       # * item display name that shows on the shop gui
-      display-name: '&aPoison Axe'
+      display-name: '&2&kii&r &aPoison Axe &2&kii&r'
       # * the actual item display name that you will see once you purchase the item
-      name: '&aPoison Axe'
+      name: '&2&kii&r &aPoison Axe &2&kii&r'
       # * item lore that shows on the shop gui
       display-lore:
       - '&7Poison II'
-      - '&6Cost: &f32 x GOLD_INGOT'
+      - '&6Cost: &f16 x GOLD_INGOT'
       # * the actual lore that you will see once you purchase the item
       lore: []
       # * custom enchantments provided from the plugin
@@ -45,7 +45,7 @@ gui:
       - POISON 2
       # * same as above
       display-enchantments:
-      - Unbreaking 1
+      - Sharpness 3
       # * same as above
       enchantments:
       - Sharpness 3
@@ -58,26 +58,118 @@ gui:
       # - "lore line2"
       # cost-enchantments: []
       # etc.... same format but every key starts with cost-
-      cost: 32
-    hungeraxe:
+      cost: 16
+    WitherAxe:
       display-material: DIAMOND_AXE
       material: DIAMOND_AXE
-      display-amount: 1
       amount: 1
-      data: 0
-      display-name: '&7&kii&f&lHunger Axe&7&kii'
-      name: '&7&kii&f&lHunger Axe&7&kii'
+      display-name: '&7&kii&r &f&lWither Axe&r &7&kii'
+      name: '&7&kii&r &f&lWither Axe&r &7&kii'
+      display-lore:
+      - '&7Wither III'
+      - '&6Cost: &f30 x GOLD_INGOT'
+      display-enchantments:
+      - Sharpness 3
+      enchantments:
+      - Sharpness 3
+      custom-enchantments:
+      - WITHER 3
+      slot: 1
+      permission: shop.witheraxe
+      cost-material: GOLD_INGOT
+      cost: 30
+    HungerAxe:
+      display-material: DIAMOND_AXE
+      material: DIAMOND_AXE
+      amount: 1
+      display-name: '&1&kii&r &9Hunger Axe&r &1&kii'
+      name: '&1&kii&r &9Hunger Axe&r &1&kii'
       display-lore:
       - '&7Hunger III'
       - '&6Cost: &f32 x GOLD_INGOT'
-      lore: []
       display-enchantments:
-      - Unbreaking 1
+      - Sharpness 3
       enchantments:
       - Sharpness 3
       custom-enchantments:
       - HUNGER 3
-      slot: 1
+      slot: 2
       permission: shop.hungeraxe
       cost-material: GOLD_INGOT
       cost: 32
+    NauseaAxe:
+      display-material: DIAMOND_AXE
+      material: DIAMOND_AXE
+      amount: 1
+      display-name: '&d&kii&r &5Nausea Axe&r &d&kii'
+      name: '&d&kii&r &5Nausea Axe&r &d&kii'
+      display-lore:
+      - '&7Nausea III'
+      - '&6Cost: &f50 x GOLD_INGOT'
+      display-enchantments:
+      - Sharpness 3
+      enchantments:
+      - Sharpness 3
+      custom-enchantments:
+      - NAUSEA 3
+      slot: 3
+      permission: shop.nauseaaxe
+      cost-material: GOLD_INGOT
+      cost: 50
+    SlownessAxe:
+      display-material: DIAMOND_AXE
+      material: DIAMOND_AXE
+      amount: 1
+      display-name: '&8&kii&r &7Slowness Axe&r &8&kii'
+      name: '&8&kii&r &7Slowness Axe&r &8&kii'
+      display-lore:
+      - '&7Slowness III'
+      - '&6Cost: &f50 x GOLD_INGOT'
+      display-enchantments:
+      - Sharpness 3
+      enchantments:
+      - Sharpness 3
+      custom-enchantments:
+      - SLOWNESS 3
+      slot: 4
+      permission: shop.slownessaxe
+      cost-material: GOLD_INGOT
+      cost: 50
+    BlindnessAxe:
+      display-material: DIAMOND_AXE
+      material: DIAMOND_AXE
+      amount: 1
+      display-name: '&3&kii&r &bBlindness Axe&r &3&kii'
+      name: '&3&kii&r &bBlindness Axe&r &3&kii'
+      display-lore:
+      - '&7Blindness III'
+      - '&6Cost: &f62 x GOLD_INGOT'
+      display-enchantments:
+      - Sharpness 3
+      enchantments:
+      - Sharpness 3
+      custom-enchantments:
+      - BLINDNESS 3
+      slot: 5
+      permission: shop.blindnessaxe
+      cost-material: GOLD_INGOT
+      cost: 62
+    ExtraDamageAxe:
+      display-material: DIAMOND_AXE
+      material: DIAMOND_AXE
+      amount: 1
+      display-name: '&4&kii&r &cExtra Damage Axe&r &4&kii'
+      name: '&4&kii&r &cExtra Damage Axe&r &4&kii'
+      display-lore:
+      - '&7Extradamage III'
+      - '&6Cost: &f64 x GOLD_INGOT'
+      display-enchantments:
+      - Sharpness 3
+      enchantments:
+      - Sharpness 3
+      custom-enchantments:
+      - EXTRADAMAGE 3
+      slot: 6
+      permission: shop.extradamageaxe
+      cost-material: GOLD_INGOT
+      cost: 64
