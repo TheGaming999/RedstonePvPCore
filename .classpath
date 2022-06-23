@@ -1,7 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/spigot-api-1.18.2-R0.1-SNAPSHOT-shaded.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/spigot-api-1.19-R0.1-SNAPSHOT-shaded.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/asm-9.3.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/authlib-3.5.41.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/brigadier-1.0.18.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/bungeecord-chat-1.16-R0.4.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/checker-qual-3.12.0.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/commons-codec-1.11.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/commons-io-2.11.0.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/commons-lang3-3.12.0.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/datafixerupper-5.0.28.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/error_prone_annotations-2.7.1.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/failureaccess-1.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/fastutil-8.5.6.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/gson-2.8.9.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/guava-31.0.1-jre.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/httpclient-4.5.13.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/httpcore-4.4.14.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/j2objc-annotations-1.3.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/javabridge-1.2.24.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/javax.inject-1.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/jcl-over-slf4j-1.7.32.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/jline-2.12.1.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/jna-5.10.0.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/jna-platform-5.10.0.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/jopt-simple-5.0.4.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/jsr305-3.0.2.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/log4j-api-2.17.0.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/log4j-core-2.17.0.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/log4j-iostreams-2.17.0.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/log4j-slf4j18-impl-2.17.0.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/logging-1.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-artifact-3.8.5.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-builder-support-3.8.5.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-model-3.8.5.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-model-builder-3.8.5.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-repository-metadata-3.8.5.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-resolver-api-1.6.3.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-resolver-connector-basic-1.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-resolver-impl-1.6.3.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-resolver-provider-3.8.5.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-resolver-spi-1.6.3.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-resolver-transport-http-1.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/maven-resolver-util-1.6.3.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/mysql-connector-java-8.0.29.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/netty-buffer-4.1.77.Final.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/netty-codec-4.1.77.Final.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/netty-common-4.1.77.Final.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/netty-handler-4.1.77.Final.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/netty-resolver-4.1.77.Final.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/netty-transport-4.1.77.Final.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/netty-transport-classes-epoll-4.1.77.Final.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/netty-transport-native-epoll-4.1.77.Final-linux-aarch_64.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/netty-transport-native-epoll-4.1.77.Final-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/netty-transport-native-unix-common-4.1.77.Final.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/org.eclipse.sisu.inject-0.3.5.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/oshi-core-5.8.5.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/plexus-interpolation-1.26.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/plexus-utils-3.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/protobuf-java-3.19.4.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/slf4j-api-1.8.0-beta4.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/snakeyaml-1.30.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/spigot-api-1.19-R0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/MyFiles/Programs/BuildTools/Spigot/Spigot-API/target/extract/sqlite-jdbc-3.36.0.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
