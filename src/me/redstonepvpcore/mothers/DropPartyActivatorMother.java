@@ -39,7 +39,7 @@ public class DropPartyActivatorMother {
 	private boolean debugTicks;
 
 	public DropPartyActivatorMother() {
-		setup();	
+		setup();
 	}
 
 	public void setup() {
@@ -49,16 +49,16 @@ public class DropPartyActivatorMother {
 		ConfigurationSection endSoundSection = config.getConfigurationSection("end-sound");
 		ConfigurationSection dropSoundSection = config.getConfigurationSection("drop-sound");
 		ConfigurationSection waterSpawnSoundSection = config.getConfigurationSection("water-spawn-sound");
-		
+
 		changeBetweenDropsSpeedAtTick = new HashMap<>();
-		
+
 		useRecord = SoundParser.parse(useSoundSection);
-		
-		if(SoundParser.isNBSParse(useSoundSection)) {
+
+		if (SoundParser.isNBSParse(useSoundSection)) {
 			String unformattedChangeBetweenDrops = useSoundSection.getString("change-between-drops-speed-at-tick", "");
-			if(!unformattedChangeBetweenDrops.equals("")) changeBetweenDropsSpeed = true;
+			if (!unformattedChangeBetweenDrops.equals("")) changeBetweenDropsSpeed = true;
 			String[] split = unformattedChangeBetweenDrops.split(",");
-			for(String tickAndSpeed : split) {
+			for (String tickAndSpeed : split) {
 				String[] splitTickAndSpeed = tickAndSpeed.split("->");
 				String tick = splitTickAndSpeed[0];
 				String speed = splitTickAndSpeed[1];
@@ -86,7 +86,7 @@ public class DropPartyActivatorMother {
 		String waterSpawnDurationsList = config.getString("water-spawn-durations");
 		String[] waterSpawnDurationsSplit = waterSpawnDurationsList.split(",");
 		waterRemoveDuration = config.getInt("water-remove-duration");
-		for(int i = 0; i < waterSpawnDurationsSplit.length; i++) {
+		for (int i = 0; i < waterSpawnDurationsSplit.length; i++) {
 			waterSpawnDurations.add(Integer.parseInt(waterSpawnDurationsSplit[i]));
 		}
 	}

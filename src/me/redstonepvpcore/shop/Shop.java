@@ -22,7 +22,6 @@ import me.redstonepvpcore.utils.NBTEditor;
 
 public class Shop {
 
-
 	private Inventory inventory;
 	private String invName;
 	private int slots;
@@ -38,7 +37,7 @@ public class Shop {
 	public Shop() {
 		loadInventory();
 	}
-	
+
 	public static boolean isPurchased(ItemStack itemStack) {
 		return NBTEditor.contains(itemStack, "rp-configname");
 	}
@@ -57,38 +56,42 @@ public class Shop {
 		noPermissionSound = SoundParser.parse(config.getConfigurationSection("no-permission-sound"));
 		ConfigurationSection section = config.getConfigurationSection("gui.items");
 		Set<String> shopMenuItems = section.getKeys(false);
-		for(String key : shopMenuItems) {
+		for (String key : shopMenuItems) {
 			String configName = key;
-			ItemStack itemStack = ItemStackReader.fromConfigurationSection(section.getConfigurationSection(key), 
+			ItemStack itemStack = ItemStackReader.fromConfigurationSection(section.getConfigurationSection(key),
 					"material", "amount", "data", "name", "lore", "enchantments", "flags", " ");
-			ItemStack costItemStack = ItemStackReader.fromConfigurationSection(section.getConfigurationSection(key), 
+			ItemStack costItemStack = ItemStackReader.fromConfigurationSection(section.getConfigurationSection(key),
 					"cost-material", "cost-amount", "cost-data", "cost-name", "cost-lore", "cost-enchantments",
 					"cost-flags", " ");
 			int slot = section.getInt(key + ".slot", 0);
 			String permission = section.getString(key + ".permission", "");
 			int cost = section.getInt(key + ".cost", 0);
-			
+
 			itemStack = NBTEditor.set(itemStack, configName, "rp-configname");
-			
+
 			List<String> customEnchantmentsList = section.getStringList(key + ".custom-enchantments");
-			if(customEnchantmentsList != null && !customEnchantmentsList.isEmpty()) {
-				for(String enchantment : customEnchantmentsList) {
+			if (customEnchantmentsList != null && !customEnchantmentsList.isEmpty()) {
+				for (String enchantment : customEnchantmentsList) {
 					String[] split = enchantment.split(" ");
 					String name = split[0];
 					int lvl = RedstonePvPCore.getInstance().getEnchantmentManager().parse(split[1]);
-					EnchantResult result = RedstonePvPCore.getInstance().getEnchantmentManager()
+					EnchantResult result = RedstonePvPCore.getInstance()
+							.getEnchantmentManager()
 							.enchant(itemStack, name, lvl, true);
-					if(result.isSuccessful()) {
+					if (result.isSuccessful()) {
 						itemStack = result.getItemStack();
 					}
 				}
 			}
+			boolean soulBound = section.getBoolean(key + ".soulbound");
+			if (soulBound) itemStack = RedstonePvPCore.getInstance().getSoulBoundManager().addSoulBound(itemStack);
+
 			realItemStacks.put(configName, itemStack);
 			costItemStacks.put(configName, costItemStack);
-			ItemStack shopItemStack = ItemStackReader.fromConfigurationSection(section.getConfigurationSection(key), 
-					"display-material", "display-amount", "display-data", "display-name", "display-lore", 
+			ItemStack shopItemStack = ItemStackReader.fromConfigurationSection(section.getConfigurationSection(key),
+					"display-material", "display-amount", "display-data", "display-name", "display-lore",
 					"display-enchantments", "display-flags", " ");
-			
+
 			shopItemStack = NBTEditor.set(shopItemStack, configName, "rp-configname");
 			shopItemStack = NBTEditor.set(shopItemStack, slot, "rp-slot");
 			shopItemStack = NBTEditor.set(shopItemStack, permission, "rp-permission");
@@ -164,7 +167,7 @@ public class Shop {
 	public void setRealItemStacks(Map<String, ItemStack> realItemStacks) {
 		this.realItemStacks = realItemStacks;
 	}
-	
+
 	public Map<String, ItemStack> getCostItemStacks() {
 		return costItemStacks;
 	}

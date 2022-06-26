@@ -2,3 +2,5 @@
 title: "&6Trash"
 # * gui size
 size: 54
+disabled-worlds:
+- "myworld"

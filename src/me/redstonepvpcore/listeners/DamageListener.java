@@ -1,9 +1,12 @@
 package me.redstonepvpcore.listeners;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -17,6 +20,8 @@ import org.bukkit.inventory.ItemStack;
 
 import me.redstonepvpcore.RedstonePvPCore;
 import me.redstonepvpcore.enchantments.EnchantmentManager;
+import me.redstonepvpcore.player.BypassManager;
+import me.redstonepvpcore.utils.CollectionUtils;
 import me.redstonepvpcore.utils.ConfigCreator;
 import me.redstonepvpcore.utils.ItemStackReader;
 import me.redstonepvpcore.utils.NBTEditor;
@@ -30,6 +35,7 @@ public class DamageListener implements Listener {
 	private int dropChance;
 	private EnchantmentManager enchantmentManager;
 	private Set<Player> effectDamage = new HashSet<>();
+	private Set<String> disabledWorlds = new HashSet<>();
 
 	public DamageListener(RedstonePvPCore parent) {
 		this.parent = parent;
@@ -43,6 +49,14 @@ public class DamageListener implements Listener {
 		minimumAmount = Integer.parseInt(amountRange[0]);
 		maximumAmount = Integer.parseInt(amountRange[1]);
 		dropChance = config.getInt("item.drop-chance");
+		List<String> disabledWorldsList = config.getStringList("disabled-worlds");
+		disabledWorlds.clear();
+		if (disabledWorldsList != null && !disabledWorldsList.isEmpty()) {
+			Bukkit.getWorlds().forEach(world -> {
+				String worldName = world.getName();
+				if (CollectionUtils.hasIgnoreCase(disabledWorldsList, worldName)) disabledWorlds.add(worldName);
+			});
+		}
 		enchantmentManager = parent.getEnchantmentManager();
 		effectDamage.clear();
 		parent.getServer().getPluginManager().registerEvents(this, parent);
@@ -83,6 +97,10 @@ public class DamageListener implements Listener {
 		}
 	}
 
+	private Location randomizeLocation(LivingEntity entity) {
+		return entity.getLocation().clone().add(getRandom(-1, 1), 0, getRandom(-1, 1));
+	}
+
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityDamage(EntityDamageByEntityEvent e) {
@@ -103,14 +121,13 @@ public class DamageListener implements Listener {
 			activateEnchantments(entity, damager, customEnchantments, levels);
 			removeEffectDamage(damager);
 		}
-		if (!(targetEntity instanceof Player)) return;
-		Player target = (Player) targetEntity;
-		if (e.getDamage() >= 0.01 && getRandom(1, 100) <= dropChance) {
-			damager.getWorld()
-					.dropItemNaturally(target.getLocation().add(getRandom(-1, 1), 0, getRandom(-1, 1)), bleedItemStack)
-					.getItemStack()
-					.setAmount(getRandom(minimumAmount, maximumAmount));
-		}
+		if (BypassManager.isBypassOff(damager) && disabledWorlds.contains(damager.getWorld().getName())
+				&& !(targetEntity instanceof Player))
+			return;
+		if (e.getDamage() >= 0.01 && getRandom(1, 100) <= dropChance) damager.getWorld()
+				.dropItemNaturally(randomizeLocation(entity), bleedItemStack)
+				.getItemStack()
+				.setAmount(getRandom(minimumAmount, maximumAmount));
 	}
 
 }

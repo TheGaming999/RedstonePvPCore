@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import me.redstonepvpcore.mothers.Actions;
 import me.redstonepvpcore.mothers.RandomBoxMother;
 import me.redstonepvpcore.player.BypassManager;
 import me.redstonepvpcore.player.Permissions;
@@ -103,7 +104,8 @@ public class RandomBox extends Gadget {
 					getParent().doSyncLater(() -> {
 						ItemStack reward = mother.getItems().get(randomIndex);
 						ParticleEffect.FLAME.display(centerLocation.clone().add(0.0, 0.5, 0.0));
-						mother.getActions(randomIndex).execute(player);
+						Actions actions = mother.getActions(randomIndex);
+						if (actions != null) actions.execute(player);
 						if (!isInventoryFull(player)) {
 							player.getInventory().addItem(reward);
 						} else {

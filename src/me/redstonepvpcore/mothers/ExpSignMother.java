@@ -15,16 +15,16 @@ public class ExpSignMother {
 	private ItemStack takeItemStack;
 	private int giveAmount;
 	private boolean giveLevels;
-	
+
 	public ExpSignMother() {
-		setup();	
+		setup();
 	}
 
 	public void setup() {
 		FileConfiguration config = ConfigCreator.getConfig("exp-sign.yml");
 		ConfigurationSection useSoundSection = config.getConfigurationSection("use-sound");
 		useSound = SoundParser.parse(useSoundSection);
-		takeItemStack = ItemStackReader.fromConfigurationSection(config.getConfigurationSection("take-item"), 
+		takeItemStack = ItemStackReader.fromConfigurationSection(config.getConfigurationSection("take-item"),
 				"material", "amount", "data", "name", "lore", "enchantments", "flags", " ");
 		setGiveAmount(config.getInt("give.amount"));
 		setGiveLevels(config.getString("give.type").startsWith("L"));
@@ -61,5 +61,5 @@ public class ExpSignMother {
 	public void setGiveLevels(boolean giveLevels) {
 		this.giveLevels = giveLevels;
 	}
-	
+
 }

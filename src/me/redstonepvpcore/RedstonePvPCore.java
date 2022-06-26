@@ -17,9 +17,9 @@ import me.redstonepvpcore.gadgets.DropPartyActivator;
 import me.redstonepvpcore.gadgets.GadgetManager;
 import me.redstonepvpcore.gadgets.GadgetType;
 import me.redstonepvpcore.listeners.DamageListener;
+import me.redstonepvpcore.listeners.DropListener;
 import me.redstonepvpcore.listeners.InteractListener;
 import me.redstonepvpcore.listeners.InventoryListener;
-import me.redstonepvpcore.listeners.DropListener;
 import me.redstonepvpcore.messages.Messages;
 import me.redstonepvpcore.mothers.ConverterMother;
 import me.redstonepvpcore.mothers.DropPartyActivatorMother;
@@ -96,32 +96,35 @@ public class RedstonePvPCore extends JavaPlugin {
 		new File(this.getDataFolder() + "/Music/").mkdir();
 		saveMusicFile("Dream Lover.nbs", "Dream Lover Values.txt");
 	}
-	
+
 	private void saveMusicFile(String name) {
-		if(new File(musicPath + name).exists()) return;
+		if (new File(musicPath + name).exists()) return;
 		saveResource("Music/" + name, false);
 	}
-	
+
 	private void saveMusicFile(String... names) {
-		for(String name : names) saveMusicFile(name);
+		for (String name : names)
+			saveMusicFile(name);
 	}
-	
+
 	/**
 	 * Only for always on option.
 	 */
 	public void startDropPartyChecker() {
 		dropPartyTask = doAsyncRepeating(() -> {
-			if(dropPartyActivatorMother.isAlwaysOn()) {
-				GadgetManager.getGadgets().values().stream()
-				.filter(gadget -> gadget.getType() == GadgetType.DROP_PARTY_ACTIVATOR)
-				.map(gadget -> (DropPartyActivator)gadget)
-				.forEach(gadget -> gadget.perform(null));
+			if (dropPartyActivatorMother.isAlwaysOn()) {
+				GadgetManager.getGadgets()
+						.values()
+						.stream()
+						.filter(gadget -> gadget.getType() == GadgetType.DROP_PARTY_ACTIVATOR)
+						.map(gadget -> (DropPartyActivator) gadget)
+						.forEach(gadget -> gadget.perform(null));
 			} else {
-				if(dropPartyTask != null) dropPartyTask.cancel();
+				if (dropPartyTask != null) dropPartyTask.cancel();
 			}
 		}, 20, 20);
 	}
-	
+
 	// Every 10 minutes
 	public void startDataSavingTask() {
 		dataSavingTask = doAsyncRepeating(() -> {
@@ -129,11 +132,11 @@ public class RedstonePvPCore extends JavaPlugin {
 			GadgetManager.saveGadgets();
 			ConfigCreator.saveConfig("data.yml");
 			getLogger().info("Data saved.");
-		}, 600*20, 600*20);
+		}, 600 * 20, 600 * 20);
 	}
-	
+
 	public void stopDataSavingTask() {
-		if(dataSavingTask != null) dataSavingTask.cancel();
+		if (dataSavingTask != null) dataSavingTask.cancel();
 	}
 
 	public void registerListeners() {
@@ -148,14 +151,10 @@ public class RedstonePvPCore extends JavaPlugin {
 	}
 
 	public void unregisterListeners() {
-		if(interactListener != null)
-			interactListener.unregister();
-		if(dropListener != null)
-			dropListener.unregister();
-		if(damageListener != null)
-			damageListener.unregister();
-		if(inventoryListener != null)
-			inventoryListener.unregister();
+		if (interactListener != null) interactListener.unregister();
+		if (dropListener != null) dropListener.unregister();
+		if (damageListener != null) damageListener.unregister();
+		if (inventoryListener != null) inventoryListener.unregister();
 	}
 
 	public void reload() {
@@ -233,11 +232,11 @@ public class RedstonePvPCore extends JavaPlugin {
 	public DropPartyActivatorMother getDropPartyActivatorMother() {
 		return dropPartyActivatorMother;
 	}
-	
+
 	public ExpSignMother getExpSignMother() {
 		return expSignMother;
 	}
-	
+
 	public FrameGiverMother getFrameGiverMother() {
 		return frameGiverMother;
 	}
@@ -245,15 +244,15 @@ public class RedstonePvPCore extends JavaPlugin {
 	public EnchantmentManager getEnchantmentManager() {
 		return enchantmentManager;
 	}
-	
+
 	public RedstonePvPCoreCommand getMainCommand() {
 		return redstonePvPCoreCommand;
 	}
-	
+
 	public Shop getShop() {
 		return shop;
 	}
-	
+
 	public Messages getMessages() {
 		return messages;
 	}

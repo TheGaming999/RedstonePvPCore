@@ -1,3 +1,5 @@
+disabled-worlds:
+- "myworld"
 open-sound:
   name: CHEST_CLOSE
   volume: 1.0

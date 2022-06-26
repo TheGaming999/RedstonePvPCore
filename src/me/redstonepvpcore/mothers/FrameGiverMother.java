@@ -11,9 +11,9 @@ public class FrameGiverMother {
 
 	private SoundInfo useSound;
 	private boolean giveStack;
-	
+
 	public FrameGiverMother() {
-		setup();	
+		setup();
 	}
 
 	public void setup() {
@@ -38,5 +38,5 @@ public class FrameGiverMother {
 	public void setGiveStack(boolean giveStack) {
 		this.giveStack = giveStack;
 	}
-	
+
 }

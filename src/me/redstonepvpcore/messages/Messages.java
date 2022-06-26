@@ -14,18 +14,19 @@ public class Messages {
 	private FileConfiguration config;
 
 	private String repairAnvilEmptyHand, repairAnvilAlreadyRepaired, repairAnvilNotRepairable, repairAnvilNotEnough,
-	repairAnvilRepairing, repairAnvilRepaired, redstoneConverterNotEnough, goldConverterNotEnough, 
-	emeraldConverterNotEnough, redstoneConverterUse, goldConverterUse, emeraldConverterUse, randomBoxNotEnough, 
-	randomBoxInUse, randomBoxUse, randomBoxDone, dropPartyNotReady, dropPartyAlreadyRunning, dropPartyActivate, 
-	dropPartyReady, dropPartyNotEnoughPlayers, frameGiverUse, expSignNotEnough, expSignUse, selectRepairAnvil, selectRedstoneConverter, 
-	selectGoldConverter, selectEmeraldConverter, selectRandomBox, selectDropParty, selectExpSign, selectFrameGiver, 
-	setRepairAnvil, setRedstoneConverter, setGoldConverter, setEmeraldConverter, setRandomBox, setDropParty, setExpSign,
-	setFrameGiver, removeRepairAnvil, removeRedstoneConverter, removeGoldConverter, removeEmeraldConverter, 
-	removeRandomBox, removeDropParty, removeExpSign, removeFrameGiver,
-	selectCancel, unknownPlayer, playerOnly, reload, cancel, bypassOn, bypassOff, bypassOnOther, bypassOffOther,
-	resetDropParty, startDropParty, noPermissionUse, enchantLevelNotNumber, enchantLevelMax, enchantItemHand, 
-	enchantItemAdd, enchantItemUpdate, enchantItemRemove, soulboundAdd, soulboundRemove, shopNoPermission, 
-	shopBuy, shopNotEnough, listNotNumber, listLastPage, listInvalidPage;
+			repairAnvilRepairing, repairAnvilRepaired, redstoneConverterNotEnough, goldConverterNotEnough,
+			emeraldConverterNotEnough, redstoneConverterUse, goldConverterUse, emeraldConverterUse, randomBoxNotEnough,
+			randomBoxInUse, randomBoxUse, randomBoxDone, dropPartyNotReady, dropPartyAlreadyRunning, dropPartyActivate,
+			dropPartyReady, dropPartyNotEnoughPlayers, frameGiverUse, expSignNotEnough, expSignUse, selectRepairAnvil,
+			selectRedstoneConverter, selectGoldConverter, selectEmeraldConverter, selectRandomBox, selectDropParty,
+			selectExpSign, selectFrameGiver, setRepairAnvil, setRedstoneConverter, setGoldConverter,
+			setEmeraldConverter, setRandomBox, setDropParty, setExpSign, setFrameGiver, removeRepairAnvil,
+			removeRedstoneConverter, removeGoldConverter, removeEmeraldConverter, removeRandomBox, removeDropParty,
+			removeExpSign, removeFrameGiver, selectCancel, unknownPlayer, playerOnly, reload, cancel, bypassOn,
+			bypassOff, bypassOnOther, bypassOffOther, resetDropParty, startDropParty, noPermissionUse,
+			enchantLevelNotNumber, enchantLevelMax, enchantItemHand, enchantItemAdd, enchantItemUpdate,
+			enchantItemRemove, soulboundAdd, soulboundRemove, shopNoPermission, shopBuy, shopNotEnough, listNotNumber,
+			listLastPage, listInvalidPage;
 
 	private List<String> list;
 
@@ -34,13 +35,13 @@ public class Messages {
 	}
 
 	public final static boolean sendMessage(Player player, String message) {
-		if(message == null || message.isEmpty()) return false;
+		if (message == null || message.isEmpty()) return false;
 		player.sendMessage(message);
 		return true;
 	}
 
 	public final static boolean sendMessage(CommandSender sender, String message) {
-		if(message == null || message.isEmpty()) return false;
+		if (message == null || message.isEmpty()) return false;
 		sender.sendMessage(message);
 		return true;
 	}

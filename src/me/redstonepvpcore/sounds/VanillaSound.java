@@ -9,21 +9,21 @@ import me.redstonepvpcore.utils.XSound.Record;
 public class VanillaSound implements SoundInfo {
 
 	private Record record;
-	
+
 	public VanillaSound(Record record) {
 		this.record = record;
 	}
-	
+
 	@Override
 	public boolean play(Location location) {
-		if(record == null || location == null || record.sound == null) return false;
+		if (record == null || location == null || record.sound == null) return false;
 		record.atLocation(location).play();
 		return true;
 	}
 
 	@Override
 	public boolean play(Player player) {
-		if(record == null || player == null || record.sound == null) return false;
+		if (record == null || player == null || record.sound == null) return false;
 		record.forPlayer(player).play();
 		return true;
 	}
@@ -40,7 +40,7 @@ public class VanillaSound implements SoundInfo {
 
 	@Override
 	public boolean broadcast() {
-		if(record == null || record.sound == null) return false;
+		if (record == null || record.sound == null) return false;
 		Bukkit.getOnlinePlayers().forEach(player -> {
 			player.playSound(player.getLocation(), record.sound.parseSound(), record.volume, record.pitch);
 		});

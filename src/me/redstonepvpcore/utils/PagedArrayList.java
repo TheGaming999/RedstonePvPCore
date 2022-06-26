@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.Lists;
 
-
 public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 
 	private List<T> completeList = Lists.newArrayList();
@@ -24,24 +23,27 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 
 	class PagedIterator implements Iterator<T> {
 
-        private int index = 0;
+		private int index = 0;
 
-        public boolean hasNext() {
-            return index < size();
-        }
+		@Override
+		public boolean hasNext() {
+			return index < size();
+		}
 
-        public T next() {
-            return get(index++);
-        }
+		@Override
+		public T next() {
+			return get(index++);
+		}
 
-        public void remove() {
-            throw new UnsupportedOperationException("not supported yet");
-        }
-        
-   }
-	
-	public final static int paginateIndex(final int index, final int entryPerPage, final int page) {	
-		return page > 1 ? index + (entryPerPage*(page-1)) : index;
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException("not supported yet");
+		}
+
+	}
+
+	public final static int paginateIndex(final int index, final int entryPerPage, final int page) {
+		return page > 1 ? index + (entryPerPage * (page - 1)) : index;
 	}
 
 	/**
@@ -54,7 +56,8 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 	}
 
 	/**
-	 * Constructs an array list from the specified list with a capacity of 10 for each page
+	 * Constructs an array list from the specified list with a capacity of 10 for
+	 * each page
 	 */
 	public PagedArrayList(List<T> list) {
 		List<T> pageList = new ArrayList<>();
@@ -63,13 +66,13 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 		completeList = list;
 		elementsPerPage = 10;
 		lastPage = 1;
-		int elementCounter = 0;	
+		int elementCounter = 0;
 		int size = completeList.size();
-		int finalPageElement = elementsPerPage > size-1 ? size : elementsPerPage;
+		int finalPageElement = elementsPerPage > size - 1 ? size : elementsPerPage;
 		pages.add(completeList.subList(0, finalPageElement));
-		for(int i = 0; i < size; i++) {
-			if(elementCounter == elementsPerPage) {
-				finalPageElement = i+elementCounter > size-1 ? size : i+elementCounter;
+		for (int i = 0; i < size; i++) {
+			if (elementCounter == elementsPerPage) {
+				finalPageElement = i + elementCounter > size - 1 ? size : i + elementCounter;
 				virtualList = completeList.subList(i, finalPageElement);
 				pageList = virtualList;
 				pages.add(pageList);
@@ -82,7 +85,8 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 	}
 
 	/**
-	 * Constructs an array list from the specified collection with a capacity of 10 for each page
+	 * Constructs an array list from the specified collection with a capacity of 10
+	 * for each page
 	 */
 	public PagedArrayList(Collection<T> collection) {
 		List<T> pageList = new ArrayList<>();
@@ -91,13 +95,13 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 		completeList = new ArrayList<>(collection);
 		elementsPerPage = 10;
 		lastPage = 1;
-		int elementCounter = 0;	
+		int elementCounter = 0;
 		int size = completeList.size();
-		int finalPageElement = elementsPerPage > size-1 ? size : elementsPerPage;
+		int finalPageElement = elementsPerPage > size - 1 ? size : elementsPerPage;
 		pages.add(completeList.subList(0, finalPageElement));
-		for(int i = 0; i < size; i++) {
-			if(elementCounter == elementsPerPage) {
-				finalPageElement = i+elementCounter > size-1 ? size : i+elementCounter;
+		for (int i = 0; i < size; i++) {
+			if (elementCounter == elementsPerPage) {
+				finalPageElement = i + elementCounter > size - 1 ? size : i + elementCounter;
 				virtualList = completeList.subList(i, finalPageElement);
 				pageList = virtualList;
 				pages.add(pageList);
@@ -110,7 +114,8 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 	}
 
 	/**
-	 * Constructs an array list from the specified list with the specified maxElementsPerPage as a capacity for each page
+	 * Constructs an array list from the specified list with the specified
+	 * maxElementsPerPage as a capacity for each page
 	 */
 	public PagedArrayList(int maxElementsPerPage, List<T> list) {
 		List<T> pageList = new ArrayList<>();
@@ -119,13 +124,13 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 		completeList = list;
 		elementsPerPage = maxElementsPerPage;
 		lastPage = 1;
-		int elementCounter = 0;	
+		int elementCounter = 0;
 		int size = completeList.size();
-		int finalPageElement = elementsPerPage > size-1 ? size : elementsPerPage;
+		int finalPageElement = elementsPerPage > size - 1 ? size : elementsPerPage;
 		pages.add(completeList.subList(0, finalPageElement));
-		for(int i = 0; i < size; i++) {
-			if(elementCounter == elementsPerPage) {
-				finalPageElement = i+elementCounter > size-1 ? size : i+elementCounter;
+		for (int i = 0; i < size; i++) {
+			if (elementCounter == elementsPerPage) {
+				finalPageElement = i + elementCounter > size - 1 ? size : i + elementCounter;
 				virtualList = completeList.subList(i, finalPageElement);
 				pageList = virtualList;
 				pages.add(pageList);
@@ -136,9 +141,10 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 		}
 		currentPage = 1;
 	}
-	
+
 	/**
-	 * Constructs an array list from the specified collection with the specified maxElementsPerPage as a capacity for each page
+	 * Constructs an array list from the specified collection with the specified
+	 * maxElementsPerPage as a capacity for each page
 	 */
 	public PagedArrayList(int maxElementsPerPage, Collection<T> collection) {
 		List<T> pageList = new ArrayList<>();
@@ -147,13 +153,13 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 		completeList = new ArrayList<T>(collection);
 		elementsPerPage = maxElementsPerPage;
 		lastPage = 1;
-		int elementCounter = 0;	
+		int elementCounter = 0;
 		int size = completeList.size();
-		int finalPageElement = elementsPerPage > size-1 ? size : elementsPerPage;
+		int finalPageElement = elementsPerPage > size - 1 ? size : elementsPerPage;
 		pages.add(completeList.subList(0, finalPageElement));
-		for(int i = 0; i < size; i++) {
-			if(elementCounter == elementsPerPage) {
-				finalPageElement = i+elementCounter > size-1 ? size : i+elementCounter;
+		for (int i = 0; i < size; i++) {
+			if (elementCounter == elementsPerPage) {
+				finalPageElement = i + elementCounter > size - 1 ? size : i + elementCounter;
 				virtualList = completeList.subList(i, finalPageElement);
 				pageList = virtualList;
 				pages.add(pageList);
@@ -178,13 +184,13 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 		completeList = Lists.newArrayList(elements);
 		elementsPerPage = maxElementsPerPage;
 		lastPage = 1;
-		int elementCounter = 0;	
+		int elementCounter = 0;
 		int size = completeList.size();
-		int finalPageElement = elementsPerPage > size-1 ? size : elementsPerPage;
+		int finalPageElement = elementsPerPage > size - 1 ? size : elementsPerPage;
 		pages.add(completeList.subList(0, finalPageElement));
-		for(int i = 0; i < size; i++) {
-			if(elementCounter == elementsPerPage) {
-				finalPageElement = i+elementCounter > size-1 ? size : i+elementCounter;
+		for (int i = 0; i < size; i++) {
+			if (elementCounter == elementsPerPage) {
+				finalPageElement = i + elementCounter > size - 1 ? size : i + elementCounter;
 				virtualList = completeList.subList(i, finalPageElement);
 				pageList = virtualList;
 				pages.add(pageList);
@@ -219,7 +225,7 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 	 * @return this PagedArrayList
 	 */
 	public PagedArrayList<T> navigate(int page) {
-		if(page <= lastPage && page > 0) currentPage = page;
+		if (page <= lastPage && page > 0) currentPage = page;
 		return this;
 	}
 
@@ -229,7 +235,7 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 	 * @return this PagedArrayList
 	 */
 	public PagedArrayList<T> next() {
-		if(currentPage <= lastPage) currentPage += 1;
+		if (currentPage <= lastPage) currentPage += 1;
 		return this;
 	}
 
@@ -239,7 +245,7 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 	 * @return this PagedArrayList
 	 */
 	public PagedArrayList<T> back() {
-		if(currentPage > 1) currentPage -= 1;
+		if (currentPage > 1) currentPage -= 1;
 		return this;
 	}
 
@@ -252,11 +258,12 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 	}
 
 	/**
-	 * @param page the page to retrieve elements from <i>(Starting from 1 to lastPage)</i>
+	 * @param page the page to retrieve elements from <i>(Starting from 1 to
+	 *             lastPage)</i>
 	 * @return all elements in a page
 	 */
 	public List<T> getElements(int page) {
-		return pages.get(page-1);
+		return pages.get(page - 1);
 	}
 
 	/**
@@ -264,91 +271,105 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 	 * @return elements of the current page
 	 */
 	public List<T> getElements() {
-		return pages.get(currentPage-1);
+		return pages.get(currentPage - 1);
 	}
 
 	/**
 	 * Gets the element with the specified index from current page
-	 * @return the element at the specified position in the current page after navigation
+	 * 
+	 * @return the element at the specified position in the current page after
+	 *         navigation
 	 */
 	@Override
 	public T get(int index) {
-		return pages.get(currentPage-1).get(index);
+		return pages.get(currentPage - 1).get(index);
 	}
 
 	/**
 	 * Sets the element to the specified index in the current page
-	 * @return the element at the specified position in the current page after navigation
+	 * 
+	 * @return the element at the specified position in the current page after
+	 *         navigation
 	 */
+	@Override
 	public T set(int index, T element) {
-		return pages.get(currentPage-1).set(index, element);
+		return pages.get(currentPage - 1).set(index, element);
 	}
 
+	@Override
 	public T remove(int index) {
-		return pages.get(currentPage-1).remove(index);
+		return pages.get(currentPage - 1).remove(index);
 	}
 
+	@Override
 	public boolean contains(Object element) {
-		return pages.get(currentPage-1).indexOf(element) >= 0;
+		return pages.get(currentPage - 1).indexOf(element) >= 0;
 	}
 
+	@Override
 	public int indexOf(Object element) {
-		return pages.get(currentPage-1).indexOf(element);
+		return pages.get(currentPage - 1).indexOf(element);
 	}
 
 	public List<T> findFirst(T element) {
-		for(List<T> page : pages) 
-			if(page.contains(element)) return page;
+		for (List<T> page : pages)
+			if (page.contains(element)) return page;
 		return null;
 	}
 
 	public List<T> findLast(T element) {
 		List<T> found = null;
-		for(List<T> page : pages) 
-			if(page.contains(element)) found = page;
+		for (List<T> page : pages)
+			if (page.contains(element)) found = page;
 		return found;
 	}
 
 	/**
-	 * Appends the specified element to the end of the latest page with an unoccupied place.
+	 * Appends the specified element to the end of the latest page with an
+	 * unoccupied place.
 	 */
+	@Override
 	public synchronized boolean add(T element) {
-		int elementsCount = pages.get(lastPage-1).size();
-		if(elementsCount > elementsPerPage-1) {
+		int elementsCount = pages.get(lastPage - 1).size();
+		if (elementsCount > elementsPerPage - 1) {
 			pages.add(new ArrayList<>());
 			lastPage += 1;
 		}
 		completeList.add(element);
-		return pages.get(lastPage-1).add(element);
+		return pages.get(lastPage - 1).add(element);
 	}
 
 	/**
-	 * Appends the specified elements to the end of the latest page with an unoccupied place.
+	 * Appends the specified elements to the end of the latest page with an
+	 * unoccupied place.
 	 */
 	public synchronized void add(@SuppressWarnings("unchecked") T... element) {
-		for(T elem : element) 
+		for (T elem : element)
 			add(elem);
 	}
 
 	/**
-	 * Appends the specified element to the end of the last page with an unoccupied place.
-	 * @param element element to be appended to this list
+	 * Appends the specified element to the end of the last page with an unoccupied
+	 * place.
+	 * 
+	 * @param element  element to be appended to this list
 	 * @param navigate whether to navigate to the next page when necessary
 	 */
 	public boolean add(T element, boolean navigate) {
-		if(!navigate) return add(element);
-		int elementsCount = pages.get(lastPage-1).size();
-		if(elementsCount > elementsPerPage) {
+		if (!navigate) return add(element);
+		int elementsCount = pages.get(lastPage - 1).size();
+		if (elementsCount > elementsPerPage) {
 			pages.add(new ArrayList<>());
 			lastPage++;
 		}
-		navigate(lastPage-1);
+		navigate(lastPage - 1);
 		completeList.add(element);
-		return pages.get(lastPage-1).add(element);
+		return pages.get(lastPage - 1).add(element);
 	}
 
+	@Override
 	public void forEach(Consumer<? super T> consumer) {
-		for(T t : pages.get(currentPage-1)) 
+		for (T t : pages.get(currentPage - 1))
 			consumer.accept(t);
 	}
 
@@ -363,6 +384,5 @@ public class PagedArrayList<T> extends ArrayList<T> implements Iterable<T> {
 	public int getCurrentPage() {
 		return currentPage;
 	}
-
 
 }

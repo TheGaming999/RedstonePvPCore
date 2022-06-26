@@ -36,25 +36,25 @@ public class DropListener implements Listener {
 
 	@EventHandler
 	public void onItemMerge(ItemMergeEvent e) {
-		if(!parent.isDropPartyRunning()) return;
+		if (!parent.isDropPartyRunning()) return;
 		e.setCancelled(true);
 	}
-	
+
 	@EventHandler
 	public void onDrop(PlayerDropItemEvent e) {
 		Item dropItem = e.getItemDrop();
-		if(dropItem == null) return;
+		if (dropItem == null) return;
 		ItemStack stack = dropItem.getItemStack();
-		if(!soulBoundManager.isAllowDrop() && soulBoundManager.isSoulBounded(stack)) e.setCancelled(true);
+		if (!soulBoundManager.isAllowDrop() && soulBoundManager.isSoulBounded(stack)) e.setCancelled(true);
 	}
-	
+
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
-		if(soulBoundManager.isDropOnDeath()) return;
+		if (soulBoundManager.isDropOnDeath()) return;
 		List<ItemStack> drops = e.getDrops();
 		drops.forEach(drop -> {
-			if(soulBoundManager.isSoulBounded(drop)) drop.setType(Material.AIR);
+			if (soulBoundManager.isSoulBounded(drop)) drop.setType(Material.AIR);
 		});
 	}
-	
+
 }

@@ -17,17 +17,17 @@ public class NBSSound implements SoundInfo {
 	private PositionSongPlayer psp;
 	private RadioSongPlayer rsp;
 	private boolean broadcasted;
-	
+
 	public NBSSound(String fileLocation) {
 		song = NBSDecoder.parse(new File(fileLocation));
 		psp = new PositionSongPlayer(song);
 		rsp = new RadioSongPlayer(song);
 		psp.setDistance(5);
 	}
-	
+
 	@Override
 	public boolean play(Location location) {
-		if(location == null) return false;
+		if (location == null) return false;
 		psp.setTargetLocation(location);
 		psp.setPlaying(true);
 		broadcasted = false;
@@ -36,7 +36,7 @@ public class NBSSound implements SoundInfo {
 
 	@Override
 	public boolean play(Player player) {
-		if(player == null) return false;
+		if (player == null) return false;
 		psp.addPlayer(player);
 		psp.setPlaying(true);
 		broadcasted = false;
@@ -45,9 +45,7 @@ public class NBSSound implements SoundInfo {
 
 	@Override
 	public boolean broadcast() {
-		Bukkit.getOnlinePlayers().forEach(player -> {
-			addPlayer(player);
-		});
+		Bukkit.getOnlinePlayers().forEach(player -> addPlayer(player));
 		rsp.setPlaying(true, false);
 		broadcasted = true;
 		return true;
@@ -55,7 +53,7 @@ public class NBSSound implements SoundInfo {
 
 	@Override
 	public boolean addPlayer(Player player) {
-		if(player == null) return false;
+		if (player == null) return false;
 		psp.addPlayer(player);
 		rsp.addPlayer(player);
 		return true;
@@ -65,8 +63,12 @@ public class NBSSound implements SoundInfo {
 	public boolean stop() {
 		psp.setPlaying(false, false);
 		rsp.setPlaying(false, false);
-		psp.setTick((short)0);
-		rsp.setTick((short)0);
+		psp.setTick((short) 0);
+		rsp.setTick((short) 0);
+		if (broadcasted) {
+			psp.getPlayerUUIDs().clear();
+			rsp.getPlayerUUIDs().clear();
+		}
 		return true;
 	}
 
@@ -83,13 +85,14 @@ public class NBSSound implements SoundInfo {
 
 	@Override
 	public int getTicks() {
-		if(broadcasted) return rsp.getTick();
+		if (broadcasted) return rsp.getTick();
 		return psp.getTick();
 	}
-	
+
+	@Override
 	public void setTicks(int ticks) {
-		psp.setTick((short)ticks);
-		rsp.setTick((short)ticks);
+		psp.setTick((short) ticks);
+		rsp.setTick((short) ticks);
 	}
 
 	public boolean isBroadcasted() {
@@ -100,5 +103,5 @@ public class NBSSound implements SoundInfo {
 	public Object get() {
 		return song;
 	}
-	
+
 }

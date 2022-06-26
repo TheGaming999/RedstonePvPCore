@@ -1,3 +1,5 @@
+disabled-worlds:
+- "myworld"
 item:
   # * item to drop
   material: "GOLD_INGOT"

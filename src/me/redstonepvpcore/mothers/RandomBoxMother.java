@@ -1,6 +1,5 @@
 package me.redstonepvpcore.mothers;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +32,7 @@ public class RandomBoxMother {
 	private Map<Integer, Actions> actions = new HashMap<>();
 
 	public RandomBoxMother() {
-		setup();	
+		setup();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -49,7 +48,7 @@ public class RandomBoxMother {
 		useSound = SoundParser.parse(useSoundSection);
 		animationSound = SoundParser.parse(animationSoundSection);
 		endSound = SoundParser.parse(endSoundSection);
-		takeItemStack = ItemStackReader.fromConfigurationSection(config.getConfigurationSection("take-item"), 
+		takeItemStack = ItemStackReader.fromConfigurationSection(config.getConfigurationSection("take-item"),
 				"material", "amount", "data", "name", "lore", "enchantments", "flags", " ");
 		ConfigurationSection usePermissionsSection = config.getConfigurationSection("use-permissions");
 		usePermissionsSection.getKeys(false).forEach(cost -> {
@@ -61,15 +60,20 @@ public class RandomBoxMother {
 		Set<String> materials = new HashSet<>();
 		itemsSection.getKeys(false).forEach(position -> {
 			ConfigurationSection positionSection = itemsSection.getConfigurationSection(position);
-			ItemStack stack = ItemStackReader.fromConfigurationSection(positionSection, 
-					"material", "amount", "data", "name", "lore", "enchantments", "flags", " ");
-			stack = RedstonePvPCore.getInstance().getEnchantmentManager().enchant(stack, positionSection.getStringList("custom-enchantments"));
+			ItemStack stack = ItemStackReader.fromConfigurationSection(positionSection, "material", "amount", "data",
+					"name", "lore", "enchantments", "flags", " ");
+			stack = RedstonePvPCore.getInstance()
+					.getEnchantmentManager()
+					.enchant(stack, positionSection.getStringList("custom-enchantments"));
+			if (positionSection.getBoolean("soulbound", false))
+				stack = RedstonePvPCore.getInstance().getSoulBoundManager().addSoulBound(stack);
+
 			items.add(stack);
-			ItemStack displayStack = ItemStackReader.fromConfigurationSection(positionSection, 
-					"display-material", "display-amount", "display-data", "display-name", "display-lore", 
-					"display-enchantments", "display-flags", " ");
+			ItemStack displayStack = ItemStackReader.fromConfigurationSection(positionSection, "display-material",
+					"display-amount", "display-data", "display-name", "display-lore", "display-enchantments",
+					"display-flags", " ");
 			displayItems.add(displayStack);
-			if(!materials.contains(displayStack.getType().name() + displayStack.getDurability())) {
+			if (!materials.contains(displayStack.getType().name() + displayStack.getDurability())) {
 				materials.add(displayStack.getType().name() + displayStack.getDurability());
 				differentItems.add(displayStack);
 			}
@@ -77,7 +81,7 @@ public class RandomBoxMother {
 			List<String> broadcastMessages = positionSection.getStringList("broadcast");
 			List<String> messages = positionSection.getStringList("msg");
 			Actions actions = new Actions(broadcastMessages, commands, messages, true);
-			if(actions.hasExecutors()) this.actions.put(positionNumber.get(), actions);
+			if (actions.hasExecutors()) this.actions.put(positionNumber.get(), actions);
 			positionNumber.incrementAndGet();
 		});
 	}
@@ -125,21 +129,21 @@ public class RandomBoxMother {
 	public List<ItemStack> getItems() {
 		return items;
 	}
-	
+
 	public List<ItemStack> getDisplayItems() {
 		return displayItems;
 	}
-	
+
 	public List<ItemStack> getDifferentItems() {
 		return differentItems;
 	}
-	
+
 	public Map<String, Integer> getUsePermissions() {
 		return usePermissions;
 	}
-	
+
 	public Actions getActions(int index) {
 		return actions.get(index);
 	}
-	
+
 }

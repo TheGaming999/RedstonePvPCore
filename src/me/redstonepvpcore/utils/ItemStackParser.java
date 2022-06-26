@@ -11,8 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.redstonepvpcore.RedstonePvPCore;
 
-
-
 public class ItemStackParser {
 
 	private static String c(String string) {
@@ -21,7 +19,7 @@ public class ItemStackParser {
 
 	private static boolean isNumber(String number) {
 		try {
-			Integer.parseInt(number);	
+			Integer.parseInt(number);
 		} catch (NumberFormatException ex) {
 			return false;
 		}
@@ -36,77 +34,84 @@ public class ItemStackParser {
 		int data = 0;
 		String displayName = "";
 		List<String> lore = new ArrayList<>();
-		for(String stringMeta : stringValue.split(" ")) {
-			if(stringMeta.startsWith("material=")) { //item stack with data support
+		for (String stringMeta : stringValue.split(" ")) {
+			if (stringMeta.startsWith("material=")) { // item stack with data support
 				String itemNameWithData = stringMeta.substring(9);
-				if(itemNameWithData.contains("#")) {
-					String itemName = itemNameWithData.split("#")[0];
-					short itemData = Short.parseShort(itemNameWithData.split("#")[1]);
-					stringStack = new ItemStack(Material.valueOf(itemName), 1, itemData);
+				if (itemNameWithData.contains("#")) {
+					String[] itemNameAndDataSplit = itemNameWithData.split("#");
+					String itemName = itemNameAndDataSplit[0];
+					short itemData = Short.parseShort(itemNameAndDataSplit[1]);
+					stringStack = new ItemStack(Material.matchMaterial(itemName), 1, itemData);
 				} else {
 					String itemName = itemNameWithData;
 					stringStack = XMaterial.matchXMaterial(itemName).get().parseItem();
 				}
 				stackMeta = stringStack.getItemMeta();
-			} //item stack check
-			if(stringMeta.startsWith("amount=")) {
-				if(isNumber(stringMeta.substring(7))) {
+			} // item stack check
+			if (stringMeta.startsWith("amount=")) {
+				if (isNumber(stringMeta.substring(7))) {
 					amount = Integer.parseInt(stringMeta.substring(7));
 				} else {
 					amount = 1;
 				}
 				stringStack.setAmount(amount);
-			} //amount check
-			if(stringMeta.startsWith("data=")) {
-				if(isNumber(stringMeta.substring(5))) {
+			} // amount check
+			if (stringMeta.startsWith("data=")) {
+				if (isNumber(stringMeta.substring(5))) {
 					data = Integer.parseInt(stringMeta.substring(5));
 				}
-				stringStack.setDurability((short)data);
+				stringStack.setDurability((short) data);
 			}
-			if(stringMeta.startsWith("name=")) {
+			if (stringMeta.startsWith("name=")) {
 				displayName = c(stringMeta.substring(5));
 				stackMeta.setDisplayName(displayName.replace("_", " "));
-			} //name check
-			if(stringMeta.startsWith("lore=")) {
+			} // name check
+			if (stringMeta.startsWith("lore=")) {
 				String fullLore = stringMeta.substring(5);
-				if(fullLore.contains(",")) {
-					for(String loreLine : fullLore.split("\\,")) {
+				if (fullLore.contains(",")) {
+					for (String loreLine : fullLore.split("\\,")) {
 						lore.add(c(loreLine).replace("_", " "));
 					}
 				} else {
 					lore.add(c(fullLore).replace("_", " "));
 				}
 				stackMeta.setLore(lore);
-			} //lore check
-			if(stringMeta.startsWith("enchantments=")) {
+			} // lore check
+			if (stringMeta.startsWith("enchantments=")) {
 				String fullEnchantmentWithLvl = stringMeta.substring(13);
-				if(fullEnchantmentWithLvl.contains(",")) {
-					for(String singleEnchantmentWithLvl : fullEnchantmentWithLvl.split("\\,")) {
-						String enchantment = singleEnchantmentWithLvl.split("\\:")[0];
-						Integer lvl = Integer.valueOf(singleEnchantmentWithLvl.split("\\:")[1]);
-						stackMeta.addEnchant(XEnchantment.matchXEnchantment(enchantment).orElse(XEnchantment.DURABILITY).getEnchant(), lvl, true);
+				if (fullEnchantmentWithLvl.contains(",")) {
+					for (String singleEnchantmentWithLvl : fullEnchantmentWithLvl.split("\\,")) {
+						String[] enchantmentSplit = singleEnchantmentWithLvl.split("\\:");
+						String enchantment = enchantmentSplit[0];
+						int lvl = Integer.parseInt(enchantmentSplit[1]);
+						stackMeta.addEnchant(XEnchantment.matchXEnchantment(enchantment)
+								.orElse(XEnchantment.DURABILITY)
+								.getEnchant(), lvl, true);
 					}
 				} else {
-					String enchantment = fullEnchantmentWithLvl.split("\\:")[0];
-					Integer lvl = Integer.valueOf(fullEnchantmentWithLvl.split("\\:")[1]);
-					stackMeta.addEnchant(XEnchantment.matchXEnchantment(enchantment).orElse(XEnchantment.DURABILITY).getEnchant(), lvl, true);
+					String[] enchantmentSplit = fullEnchantmentWithLvl.split("\\:");
+					String enchantment = enchantmentSplit[0];
+					int lvl = Integer.parseInt(enchantmentSplit[1]);
+					stackMeta.addEnchant(
+							XEnchantment.matchXEnchantment(enchantment).orElse(XEnchantment.DURABILITY).getEnchant(),
+							lvl, true);
 				}
-			} //enchantments check
-			if(stringMeta.startsWith("flags=")) {
+			} // enchantments check
+			if (stringMeta.startsWith("flags=")) {
 				String flagsList = stringMeta.substring(6);
-				if(flagsList.contains(",")) {
-					for(String singleFlag : flagsList.split("\\,")) {
+				if (flagsList.contains(",")) {
+					for (String singleFlag : flagsList.split("\\,")) {
 						stackMeta.addItemFlags(ItemFlag.valueOf(singleFlag.toUpperCase()));
 					}
 				} else {
 					stackMeta.addItemFlags(ItemFlag.valueOf(flagsList.toUpperCase()));
 				}
-			} //item flags check
+			} // item flags check
 			stringStack.setItemMeta(stackMeta);
 		}
 		return stringStack;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static ItemStack parseCustom(String stringValue) {
 		ItemStack stringStack = new ItemStack(Material.STONE, 1);
@@ -115,86 +120,104 @@ public class ItemStackParser {
 		int data = 0;
 		String displayName = "";
 		List<String> lore = new ArrayList<>();
-		for(String stringMeta : stringValue.split(" ")) {
-			if(stringMeta.startsWith("material=")) { //item stack with data support
+		for (String stringMeta : stringValue.split(" ")) {
+			if (stringMeta.startsWith("material=")) { // item stack with data support
 				String itemNameWithData = stringMeta.substring(9);
-				if(itemNameWithData.contains("#")) {
-					String itemName = itemNameWithData.split("#")[0];
-					short itemData = Short.parseShort(itemNameWithData.split("#")[1]);
-					stringStack = new ItemStack(Material.valueOf(itemName), 1, itemData);
+				if (itemNameWithData.contains("#")) {
+					String[] itemNameAndDataSplit = itemNameWithData.split("#");
+					String itemName = itemNameAndDataSplit[0];
+					short itemData = Short.parseShort(itemNameAndDataSplit[1]);
+					stringStack = new ItemStack(Material.matchMaterial(itemName), 1, itemData);
 				} else {
 					String itemName = itemNameWithData;
 					stringStack = XMaterial.matchXMaterial(itemName).get().parseItem();
 				}
 				stackMeta = stringStack.getItemMeta();
-			} //item stack check
-			if(stringMeta.startsWith("amount=")) {
-				if(isNumber(stringMeta.substring(7))) {
+			} // item stack check
+			if (stringMeta.startsWith("amount=")) {
+				if (isNumber(stringMeta.substring(7))) {
 					amount = Integer.parseInt(stringMeta.substring(7));
 				} else {
 					amount = 1;
 				}
 				stringStack.setAmount(amount);
-			} //amount check
-			if(stringMeta.startsWith("data=")) {
-				if(isNumber(stringMeta.substring(5))) {
+			} // amount check
+			if (stringMeta.startsWith("data=")) {
+				if (isNumber(stringMeta.substring(5))) {
 					data = Integer.parseInt(stringMeta.substring(5));
 				}
-				stringStack.setDurability((short)data);
+				stringStack.setDurability((short) data);
 			}
-			if(stringMeta.startsWith("name=")) {
+			if (stringMeta.startsWith("name=")) {
 				displayName = c(stringMeta.substring(5));
 				stackMeta.setDisplayName(displayName.replace("_", " "));
-			} //name check
-			if(stringMeta.startsWith("lore=")) {
+			} // name check
+			if (stringMeta.startsWith("lore=")) {
 				String fullLore = stringMeta.substring(5);
-				if(fullLore.contains(",")) {
-					for(String loreLine : fullLore.split("\\,")) {
+				if (fullLore.contains(",")) {
+					for (String loreLine : fullLore.split("\\,")) {
 						lore.add(c(loreLine).replace("_", " "));
 					}
 				} else {
 					lore.add(c(fullLore).replace("_", " "));
 				}
 				stackMeta.setLore(lore);
-			} //lore check
-			if(stringMeta.startsWith("enchantments=")) {
+			} // lore check
+			if (stringMeta.startsWith("enchantments=")) {
 				String fullEnchantmentWithLvl = stringMeta.substring(13);
-				if(fullEnchantmentWithLvl.contains(",")) {
-					for(String singleEnchantmentWithLvl : fullEnchantmentWithLvl.split("\\,")) {
-						String enchantment = singleEnchantmentWithLvl.split("\\:")[0];
-						Integer lvl = Integer.valueOf(singleEnchantmentWithLvl.split("\\:")[1]);
-						stackMeta.addEnchant(XEnchantment.matchXEnchantment(enchantment).orElse(XEnchantment.DURABILITY).getEnchant(), lvl, true);
+				if (fullEnchantmentWithLvl.contains(",")) {
+					for (String singleEnchantmentWithLvl : fullEnchantmentWithLvl.split("\\,")) {
+						String[] enchantmentSplit = singleEnchantmentWithLvl.split("\\:");
+						String enchantment = enchantmentSplit[0];
+						int lvl = Integer.parseInt(enchantmentSplit[1]);
+						stackMeta.addEnchant(XEnchantment.matchXEnchantment(enchantment)
+								.orElse(XEnchantment.DURABILITY)
+								.getEnchant(), lvl, true);
 					}
 				} else {
-					String enchantment = fullEnchantmentWithLvl.split("\\:")[0];
-					Integer lvl = Integer.valueOf(fullEnchantmentWithLvl.split("\\:")[1]);
-					stackMeta.addEnchant(XEnchantment.matchXEnchantment(enchantment).orElse(XEnchantment.DURABILITY).getEnchant(), lvl, true);
+					String[] enchantmentSplit = fullEnchantmentWithLvl.split("\\:");
+					String enchantment = enchantmentSplit[0];
+					int lvl = Integer.parseInt(enchantmentSplit[1]);
+					stackMeta.addEnchant(
+							XEnchantment.matchXEnchantment(enchantment).orElse(XEnchantment.DURABILITY).getEnchant(),
+							lvl, true);
 				}
-			} //enchantments check
-			if(stringMeta.startsWith("custom-enchantments=")) {
+			} // enchantments check
+			if (stringMeta.startsWith("custom-enchantments=")) {
 				String fullEnchantmentWithLvl = stringMeta.substring(20);
-				if(fullEnchantmentWithLvl.contains(",")) {
-					for(String singleEnchantmentWithLvl : fullEnchantmentWithLvl.split("\\,")) {
-						String enchantment = singleEnchantmentWithLvl.split("\\:")[0];
-						Integer lvl = Integer.valueOf(singleEnchantmentWithLvl.split("\\:")[1]);
-						stringStack = RedstonePvPCore.getInstance().getEnchantmentManager().enchant(stringStack, enchantment, lvl, true).getItemStack();
+				if (fullEnchantmentWithLvl.contains(",")) {
+					for (String singleEnchantmentWithLvl : fullEnchantmentWithLvl.split("\\,")) {
+						String[] enchantmentSplit = singleEnchantmentWithLvl.split("\\:");
+						String enchantment = enchantmentSplit[0];
+						int lvl = Integer.parseInt(enchantmentSplit[1]);
+						stringStack = RedstonePvPCore.getInstance()
+								.getEnchantmentManager()
+								.enchant(stringStack, enchantment, lvl, true)
+								.getItemStack();
 					}
 				} else {
-					String enchantment = fullEnchantmentWithLvl.split("\\:")[0];
-					Integer lvl = Integer.valueOf(fullEnchantmentWithLvl.split("\\:")[1]);
-					stringStack = RedstonePvPCore.getInstance().getEnchantmentManager().enchant(stringStack, enchantment, lvl, true).getItemStack();
+					String[] enchantmentSplit = fullEnchantmentWithLvl.split("\\:");
+					String enchantment = enchantmentSplit[0];
+					int lvl = Integer.parseInt(enchantmentSplit[1]);
+					stringStack = RedstonePvPCore.getInstance()
+							.getEnchantmentManager()
+							.enchant(stringStack, enchantment, lvl, true)
+							.getItemStack();
 				}
 			}
-			if(stringMeta.startsWith("flags=")) {
+			if (stringMeta.startsWith("soulbound=")) {
+				stringStack = RedstonePvPCore.getInstance().getSoulBoundManager().addSoulBound(stringStack);
+			}
+			if (stringMeta.startsWith("flags=")) {
 				String flagsList = stringMeta.substring(6);
-				if(flagsList.contains(",")) {
-					for(String singleFlag : flagsList.split("\\,")) {
+				if (flagsList.contains(",")) {
+					for (String singleFlag : flagsList.split("\\,")) {
 						stackMeta.addItemFlags(ItemFlag.valueOf(singleFlag.toUpperCase()));
 					}
 				} else {
 					stackMeta.addItemFlags(ItemFlag.valueOf(flagsList.toUpperCase()));
 				}
-			} //item flags check
+			} // item flags check
 			stringStack.setItemMeta(stackMeta);
 		}
 		return stringStack;
@@ -205,7 +228,7 @@ public class ItemStackParser {
 		stringList.forEach(string -> itemStacks.add(parse(string)));
 		return itemStacks;
 	}
-	
+
 	public static List<ItemStack> parseCustom(List<String> stringList) {
 		List<ItemStack> itemStacks = new ArrayList<>();
 		stringList.forEach(string -> itemStacks.add(parseCustom(string)));

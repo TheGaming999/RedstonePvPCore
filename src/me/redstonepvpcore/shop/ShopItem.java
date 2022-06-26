@@ -4,16 +4,19 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class ShopItem {
-	
+
 	private String configName;
 	private ItemStack itemStack;
 	private int slot;
 	private String permission;
 	private Material costItem;
 	private int cost;
-	
+
 	public ShopItem() {}
-	public ShopItem(String configName) {this.configName = configName;}
+
+	public ShopItem(String configName) {
+		this.configName = configName;
+	}
 
 	public String getConfigName() {
 		return configName;
@@ -62,5 +65,5 @@ public class ShopItem {
 	public void setCost(int cost) {
 		this.cost = cost;
 	}
-	
+
 }

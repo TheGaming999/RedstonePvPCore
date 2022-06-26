@@ -24,77 +24,76 @@ public class ParticleReader {
 
 	private final static Plugin PLUGIN = JavaPlugin.getProvidingPlugin(ParticleReader.class);
 	private final static BukkitScheduler SCHEDULER = PLUGIN.getServer().getScheduler();
-	
+
 	// simple: <ParticleName>
-	// with stuff: <ParticleName> <property>=<value> <property2>=<value2> <property....>
+	// with stuff: <ParticleName> <property>=<value> <property2>=<value2>
+	// <property....>
 	public static ParticleBuilder parse(String particleName) {
-		if(particleName == null || particleName.isEmpty())
-			return null;
-		if(!particleName.contains(" "))
-			return new ParticleBuilder(ParticleEffect.valueOf(particleName.toUpperCase()))
-					.setLocation(new Location(null, 0d, 0d, 0d));
+		if (particleName == null || particleName.isEmpty()) return null;
+		if (!particleName.contains(" ")) return new ParticleBuilder(ParticleEffect.valueOf(particleName.toUpperCase()))
+				.setLocation(new Location(null, 0d, 0d, 0d));
 		String[] properties = particleName.split(" ");
 		ParticleEffect particleEffect = null;
 		ParticleBuilder builder = null;
-		for(String property : properties) {
-			if(!property.contains("=")) {
+		for (String property : properties) {
+			if (!property.contains("=")) {
 				particleEffect = ParticleEffect.valueOf(property.toUpperCase());
-				builder = new ParticleBuilder(particleEffect)
-						.setLocation(new Location(null, 0d, 0d, 0d));
+				builder = new ParticleBuilder(particleEffect).setLocation(new Location(null, 0d, 0d, 0d));
 			} else {
 				String propertyName = property.split("=")[0];
 				String value = property.split("=")[1];
-				if(particleEffect.hasProperty(PropertyType.COLORABLE)) {
-					if(propertyName.equalsIgnoreCase("color")) {
+				if (particleEffect.hasProperty(PropertyType.COLORABLE)) {
+					if (propertyName.equalsIgnoreCase("color")) {
 						builder = builder.setColor(parseColor(value));
 					}
 				}
-				if(particleEffect.hasProperty(PropertyType.RESIZEABLE)) {
-					if(propertyName.equalsIgnoreCase("size")) {
+				if (particleEffect.hasProperty(PropertyType.RESIZEABLE)) {
+					if (propertyName.equalsIgnoreCase("size")) {
 						builder = builder.setOffsetX(Float.valueOf(value));
 					}
 				}
-				if(particleEffect.hasProperty(PropertyType.DIRECTIONAL)) {
-					if(propertyName.equalsIgnoreCase("direction")) {
+				if (particleEffect.hasProperty(PropertyType.DIRECTIONAL)) {
+					if (propertyName.equalsIgnoreCase("direction")) {
 						builder = builder.setOffset(parseVector(value));
 					}
 				}
-				if(propertyName.equalsIgnoreCase("location") || propertyName.equalsIgnoreCase("loc")) {
+				if (propertyName.equalsIgnoreCase("location") || propertyName.equalsIgnoreCase("loc")) {
 					builder = builder.setLocation(parseLocation(value));
 				}
-				if(propertyName.equalsIgnoreCase("speed")) {
+				if (propertyName.equalsIgnoreCase("speed")) {
 					builder = builder.setSpeed(Float.valueOf(value));
 				}
-				if(propertyName.equalsIgnoreCase("amount")) {
+				if (propertyName.equalsIgnoreCase("amount")) {
 					builder = builder.setAmount(Integer.parseInt(value));
 				}
-				if(particleEffect.hasProperty(PropertyType.DUST)) {
-					if(propertyName.equalsIgnoreCase("dust")) {
+				if (particleEffect.hasProperty(PropertyType.DUST)) {
+					if (propertyName.equalsIgnoreCase("dust")) {
 						builder = builder.setParticleData(new NoteColor(Integer.parseInt(value)));
 					}
 				}
-				if(particleEffect.hasProperty(PropertyType.REQUIRES_BLOCK)) {
-					if(propertyName.equalsIgnoreCase("texture")) {
+				if (particleEffect.hasProperty(PropertyType.REQUIRES_BLOCK)) {
+					if (propertyName.equalsIgnoreCase("texture")) {
 						builder = builder.setParticleData(new BlockTexture(Material.matchMaterial(value)));
 					}
 				}
-				if(particleEffect.hasProperty(PropertyType.REQUIRES_ITEM)) {
-					if(propertyName.equalsIgnoreCase("texture")) {
-						builder = builder.setParticleData(new ItemTexture(new ItemStack(Material.matchMaterial(value))));
+				if (particleEffect.hasProperty(PropertyType.REQUIRES_ITEM)) {
+					if (propertyName.equalsIgnoreCase("texture")) {
+						builder = builder
+								.setParticleData(new ItemTexture(new ItemStack(Material.matchMaterial(value))));
 					}
 				}
-			}	
+			}
 		}
 		return builder;
 	}
 
 	public static List<ParticleBuilder> parseAll(String particleString) {
 		List<ParticleBuilder> list = null;
-		if(particleString != null && !particleString.isEmpty()) {
-			if(particleString.contains("|")) {
+		if (particleString != null && !particleString.isEmpty()) {
+			if (particleString.contains("|")) {
 				list = new ArrayList<>();
 				String[] particleNames = particleString.split("\\|");
-				for(String particleName : particleNames) {
+				for (String particleName : particleNames) {
 					list.add(parse(particleName));
 				}
 			} else {
@@ -104,42 +103,41 @@ public class ParticleReader {
 		}
 		return list;
 	}
-	
+
 	public static boolean sendParticlesAsynchronously(Player player, List<ParticleBuilder> particles) {
-		if(particles == null || particles.isEmpty())
-			return true;
+		if (particles == null || particles.isEmpty()) return true;
 		SCHEDULER.runTaskAsynchronously(PLUGIN, () -> particles.forEach(particle -> spawnParticle(player, particle)));
 		return true;
 	}
-	
+
 	public static boolean sendParticles(Player player, List<ParticleBuilder> particles) {
-		if(particles == null || particles.isEmpty())
-			return true;
+		if (particles == null || particles.isEmpty()) return true;
 		particles.forEach(particle -> spawnParticle(player, particle));
 		return true;
 	}
-	
+
 	public static void spawnParticle(Player player, ParticleBuilder particleBuilder) {
 		Location loc = particleBuilder.getLocation();
 		loc.setWorld(player.getWorld());
 		particleBuilder.setLocation(player.getLocation().add(loc)).display();
 		particleBuilder.setLocation(loc);
 	}
-	
+
 	public static void spawnParticle(Location loc, ParticleBuilder particleBuilder) {
 		particleBuilder.setLocation(loc).display();
 	}
-	
+
 	public static void spawnParticles(Location loc, List<ParticleBuilder> particleBuilders) {
 		particleBuilders.forEach(particle -> particle.setLocation(loc).display());
 	}
-	
+
 	public static Color parseColor(String colorString) {
 		colorString = colorString.replace(", ", ",");
-		if(colorString.contains(",")) {
+		if (colorString.contains(",")) {
 			String[] split = colorString.split(",");
 			float[] values = new float[3];
-			values = Color.RGBtoHSB(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), null);
+			values = Color.RGBtoHSB(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]),
+					null);
 			return Color.getHSBColor(values[0], values[1], values[2]);
 		} else if (colorString.contains("~")) {
 			String[] split = colorString.split("~");
@@ -157,7 +155,8 @@ public class ParticleReader {
 	public static Location parseLocation(String locationString) {
 		locationString = locationString.replace(", ", ",");
 		String[] offsets = locationString.split(",");
-		return new Location(null, Double.parseDouble(offsets[0]), Double.parseDouble(offsets[1]), Double.parseDouble(offsets[2]));
+		return new Location(null, Double.parseDouble(offsets[0]), Double.parseDouble(offsets[1]),
+				Double.parseDouble(offsets[2]));
 	}
 
 }

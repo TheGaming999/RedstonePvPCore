@@ -35,28 +35,23 @@ public class RepairAnvilMother {
 		FileConfiguration config = ConfigCreator.getConfig("repair-anvil.yml");
 		ConfigurationSection useSoundSection = config.getConfigurationSection("use-sound");
 		ConfigurationSection animationSoundSection = config.getConfigurationSection("animation-sound");
-		Record record = new Record(XSound.matchXSound(useSoundSection.getString("name")).orElse(null),
-				null, 
-				null, 
-				(float)useSoundSection.getDouble("volume"), 
-				(float)useSoundSection.getDouble("pitch"), 
+		Record record = new Record(XSound.matchXSound(useSoundSection.getString("name")).orElse(null), null, null,
+				(float) useSoundSection.getDouble("volume"), (float) useSoundSection.getDouble("pitch"),
 				useSoundSection.getBoolean("3d", true));
-		if(record.sound != null) useRecord = record;
-		record = new Record(XSound.matchXSound(animationSoundSection.getString("name")).orElse(null),
-				null, 
-				null, 
-				(float)animationSoundSection.getDouble("volume"), 
-				(float)animationSoundSection.getDouble("pitch"), 
+		if (record.sound != null) useRecord = record;
+		record = new Record(XSound.matchXSound(animationSoundSection.getString("name")).orElse(null), null, null,
+				(float) animationSoundSection.getDouble("volume"), (float) animationSoundSection.getDouble("pitch"),
 				animationSoundSection.getBoolean("3d", true));
-		if(record.sound != null) animationRecord = record;
+		if (record.sound != null) animationRecord = record;
 		repairableItems = new HashSet<>();
-		config.getStringList("repairable-items").stream()
-		.map(XMaterial::matchXMaterial)
-		.map(Optional<XMaterial>::get)
-		.map(XMaterial::parseMaterial)
-		.forEach(repairableItems::add);
+		config.getStringList("repairable-items")
+				.stream()
+				.map(XMaterial::matchXMaterial)
+				.map(Optional<XMaterial>::get)
+				.map(XMaterial::parseMaterial)
+				.forEach(repairableItems::add);
 		particles = ParticleReader.parseAll("BLOCK_CRACK texture=ANVIL");
-		takeItemStack = ItemStackReader.fromConfigurationSection(config.getConfigurationSection("take-item"), 
+		takeItemStack = ItemStackReader.fromConfigurationSection(config.getConfigurationSection("take-item"),
 				"material", "amount", "data", "name", "lore", "enchantments", "flags", " ");
 		playOnce = animationSoundSection.getBoolean("play-once");
 	}
@@ -120,7 +115,7 @@ public class RepairAnvilMother {
 	public void setParticles(List<ParticleBuilder> particles) {
 		this.particles = particles;
 	}
-	
+
 	public List<ParticleBuilder> getParticles() {
 		return this.particles;
 	}

@@ -33,13 +33,13 @@ public class SoulBoundManager {
 	}
 
 	public ItemStack addSoulBound(ItemStack itemStack) {
-		if(itemStack == null || itemStack.getType() == Material.AIR) return null;
+		if (itemStack == null || itemStack.getType() == Material.AIR) return null;
 		ItemStack soulBounded = NBTEditor.set(itemStack, true, "rp-soulbound");
 		ItemMeta meta = soulBounded.getItemMeta();
-		if(useLore) {
+		if (useLore) {
 			List<String> metaLore = meta.getLore();
 			List<String> itemLore = metaLore == null ? new ArrayList<>() : metaLore;
-			List<String> check = new ArrayList<>(CollectionUtils.containsIgnoreCaseCollectionFromCollectionReturn(itemLore, lore));
+			List<String> check = new ArrayList<>(CollectionUtils.getContainsIgnoreCaseCollection(itemLore, lore));
 			itemLore.removeAll(check);
 			lore.forEach(line -> itemLore.add(Colorizer.colorize(line)));
 			meta.setLore(itemLore);
@@ -47,28 +47,28 @@ public class SoulBoundManager {
 		}
 		return soulBounded;
 	}
-	
+
 	public ItemStack deleteSoulBound(ItemStack itemStack) {
-		if(itemStack == null || itemStack.getType() == Material.AIR) return null;
+		if (itemStack == null || itemStack.getType() == Material.AIR) return null;
 		ItemStack soulBounded = NBTEditor.set(itemStack, null, "rp-soulbound");
 		ItemMeta meta = soulBounded.getItemMeta();
-		if(useLore) {
+		if (useLore) {
 			List<String> metaLore = meta.getLore();
 			List<String> itemLore = metaLore == null ? new ArrayList<>() : metaLore;
-			List<String> check = new ArrayList<>(CollectionUtils.containsIgnoreCaseCollectionFromCollectionReturn(itemLore, lore));
+			List<String> check = new ArrayList<>(CollectionUtils.getContainsIgnoreCaseCollection(itemLore, lore));
 			itemLore.removeAll(check);
 			meta.setLore(itemLore);
 			soulBounded.setItemMeta(meta);
 		}
 		return soulBounded;
 	}
-	
+
 	public ItemStack setSoulBound(ItemStack itemStack, boolean add) {
 		return add ? addSoulBound(itemStack) : deleteSoulBound(itemStack);
 	}
-	
+
 	public boolean isSoulBounded(ItemStack itemStack) {
-		if(itemStack == null || itemStack.getType() == Material.AIR) return false;
+		if (itemStack == null || itemStack.getType() == Material.AIR) return false;
 		return NBTEditor.contains(itemStack, "rp-soulbound");
 	}
 
