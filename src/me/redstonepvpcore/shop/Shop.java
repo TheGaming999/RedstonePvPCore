@@ -67,8 +67,6 @@ public class Shop {
 			String permission = section.getString(key + ".permission", "");
 			int cost = section.getInt(key + ".cost", 0);
 
-			itemStack = NBTEditor.set(itemStack, configName, "rp-configname");
-
 			List<String> customEnchantmentsList = section.getStringList(key + ".custom-enchantments");
 			if (customEnchantmentsList != null && !customEnchantmentsList.isEmpty()) {
 				for (String enchantment : customEnchantmentsList) {
@@ -78,9 +76,7 @@ public class Shop {
 					EnchantResult result = RedstonePvPCore.getInstance()
 							.getEnchantmentManager()
 							.enchant(itemStack, name, lvl, true);
-					if (result.isSuccessful()) {
-						itemStack = result.getItemStack();
-					}
+					if (result.isSuccessful()) itemStack = result.getItemStack();
 				}
 			}
 			boolean soulBound = section.getBoolean(key + ".soulbound");

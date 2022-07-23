@@ -19,8 +19,8 @@ public class Permissions {
 	public static final String REDSTONEPVP_CORE_ADMIN = "redstonepvpcore.admin";
 	public static final String SHOP = "redstonepvpcore.shop";
 	public static final String SHOP_OTHER = "redstonepvpcore.shop.other";
-	public static final String TRASH = "redstonepvp.trash";
-	public static final String TRASH_OTHER = "redstonepvp.trash.other";
+	public static final String TRASH = "redstonepvpcore.trash";
+	public static final String TRASH_OTHER = "redstonepvpcore.trash.other";
 
 	private static final Set<String> PERMISSIONS = new HashSet<>();
 

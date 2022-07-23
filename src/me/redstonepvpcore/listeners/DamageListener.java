@@ -118,7 +118,7 @@ public class DamageListener implements Listener {
 			int[] levels = getLevels(itemInHand);
 			if (e.getDamage() <= 0.99) return;
 			setEffectDamage(damager);
-			activateEnchantments(entity, damager, customEnchantments, levels);
+			parent.doSync(() -> activateEnchantments(entity, damager, customEnchantments, levels));
 			removeEffectDamage(damager);
 		}
 		if (BypassManager.isBypassOff(damager) && disabledWorlds.contains(damager.getWorld().getName())
