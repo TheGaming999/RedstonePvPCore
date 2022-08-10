@@ -110,10 +110,7 @@ public class EnchantmentManager {
 
 	public void register(String name, RPEnchantment enchantment, int id) {
 		enchantments.put(name, enchantment);
-		if (id <= 0)
-			enchantmentsIds.put(enchantment.getId(), name);
-		else
-			enchantmentsIds.put(id, name);
+		enchantmentsIds.put(id <= 0 ? enchantment.getId() : id, name);
 	}
 
 	public Map<String, RPEnchantment> getEnchantmentsMap() {

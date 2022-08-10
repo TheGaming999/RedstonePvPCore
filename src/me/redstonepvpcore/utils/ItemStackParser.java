@@ -60,7 +60,13 @@ public class ItemStackParser {
 				if (isNumber(stringMeta.substring(5))) {
 					data = Integer.parseInt(stringMeta.substring(5));
 				}
-				stringStack.setDurability((short) data);
+				if (XMaterial.supports(13) && stringStack.getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
+					if (data == 1) {
+						stringStack.setType(XMaterial.ENCHANTED_GOLDEN_APPLE.parseMaterial());
+					}
+				} else {
+					stringStack.setDurability((short) data);
+				}
 			}
 			if (stringMeta.startsWith("name=")) {
 				displayName = c(stringMeta.substring(5));
@@ -146,7 +152,13 @@ public class ItemStackParser {
 				if (isNumber(stringMeta.substring(5))) {
 					data = Integer.parseInt(stringMeta.substring(5));
 				}
-				stringStack.setDurability((short) data);
+				if (XMaterial.supports(13) && stringStack.getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
+					if (data == 1) {
+						stringStack.setType(XMaterial.ENCHANTED_GOLDEN_APPLE.parseMaterial());
+					}
+				} else {
+					stringStack.setDurability((short) data);
+				}
 			}
 			if (stringMeta.startsWith("name=")) {
 				displayName = c(stringMeta.substring(5));

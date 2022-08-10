@@ -103,8 +103,7 @@ public class RedstonePvPCore extends JavaPlugin {
 	}
 
 	private void saveMusicFile(String... names) {
-		for (String name : names)
-			saveMusicFile(name);
+		for (String name : names) saveMusicFile(name);
 	}
 
 	/**
@@ -120,9 +119,19 @@ public class RedstonePvPCore extends JavaPlugin {
 						.map(gadget -> (DropPartyActivator) gadget)
 						.forEach(gadget -> gadget.perform(null));
 			} else {
-				if (dropPartyTask != null) dropPartyTask.cancel();
+				if (dropPartyTask != null) {
+					dropPartyTask.cancel();
+					dropPartyTask = null;
+				}
 			}
 		}, 20, 20);
+	}
+
+	public void stopDropPartyChecker() {
+		if (dropPartyTask != null) {
+			dropPartyTask.cancel();
+			dropPartyTask = null;
+		}
 	}
 
 	// Every 10 minutes
@@ -136,7 +145,10 @@ public class RedstonePvPCore extends JavaPlugin {
 	}
 
 	public void stopDataSavingTask() {
-		if (dataSavingTask != null) dataSavingTask.cancel();
+		if (dataSavingTask != null) {
+			dataSavingTask.cancel();
+			dataSavingTask = null;
+		}
 	}
 
 	public void registerListeners() {
@@ -159,8 +171,7 @@ public class RedstonePvPCore extends JavaPlugin {
 
 	public void reload() {
 		stopDataSavingTask();
-		GadgetManager.saveGadgets();
-		ConfigCreator.saveConfig("data.yml");
+		stopDropPartyChecker();
 		ConfigCreator.reloadConfigs();
 		repairAnvilMother.setup();
 		randomBoxMother.setup();
@@ -188,8 +199,7 @@ public class RedstonePvPCore extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		stopDataSavingTask();
-		GadgetManager.saveGadgets();
-		ConfigCreator.saveConfig("data.yml");
+		stopDropPartyChecker();
 		noteBlockAPI.onDisable();
 	}
 

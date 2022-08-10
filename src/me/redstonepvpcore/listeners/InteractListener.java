@@ -23,6 +23,7 @@ import me.redstonepvpcore.gadgets.Gadget;
 import me.redstonepvpcore.gadgets.GadgetManager;
 import me.redstonepvpcore.messages.Messages;
 import me.redstonepvpcore.player.GadgetSetterManager;
+import me.redstonepvpcore.utils.ConfigCreator;
 
 public class InteractListener implements Listener {
 
@@ -65,6 +66,8 @@ public class InteractListener implements Listener {
 			GadgetManager.addGadget(gadget, stringLocation, GadgetSetterManager.getAssignedSubType(uniqueId));
 			Messages.sendMessage(player,
 					gadget.getMessagesHolder().getMessage(0).replace("%location%", stringLocation));
+			GadgetManager.saveGadgets();
+			ConfigCreator.saveConfig("data.yml");
 			getParent().getMainCommand().updatePagedList();
 			// Remove assigned gadget from player because he did set the gadget from the
 			// code above
@@ -86,6 +89,8 @@ public class InteractListener implements Listener {
 					gadget.getMessagesHolder()
 							.getMessage(1)
 							.replace("%location%", GadgetManager.deparseLocation(location)));
+			GadgetManager.saveGadgets();
+			ConfigCreator.saveConfig("data.yml");
 			getParent().getMainCommand().updatePagedList();
 		}
 	}
@@ -104,6 +109,8 @@ public class InteractListener implements Listener {
 			Messages.sendMessage(player,
 					gadget.getMessagesHolder().getMessage(0).replace("%location%", stringLocation));
 			GadgetManager.addFrameGiver(stringLocation);
+			GadgetManager.saveGadgets();
+			ConfigCreator.saveConfig("data.yml");
 			getParent().getMainCommand().updatePagedList();
 			GadgetSetterManager.cancel(uniqueId);
 			e.setCancelled(true);
@@ -155,6 +162,8 @@ public class InteractListener implements Listener {
 					gadget.getMessagesHolder()
 							.getMessage(1)
 							.replace("%location%", GadgetManager.deparseLocation(location)));
+			GadgetManager.saveGadgets();
+			ConfigCreator.saveConfig("data.yml");
 			getParent().getMainCommand().updatePagedList();
 		}
 	}

@@ -124,10 +124,11 @@ public class DamageListener implements Listener {
 		if (BypassManager.isBypassOff(damager) && disabledWorlds.contains(damager.getWorld().getName())
 				&& !(targetEntity instanceof Player))
 			return;
-		if (e.getDamage() >= 0.01 && getRandom(1, 100) <= dropChance) damager.getWorld()
-				.dropItemNaturally(randomizeLocation(entity), bleedItemStack)
-				.getItemStack()
-				.setAmount(getRandom(minimumAmount, maximumAmount));
+		if (e.getDamage() >= 0.01 && getRandom(1, 100) <= dropChance && bleedItemStack.getType() != Material.AIR)
+			damager.getWorld()
+					.dropItemNaturally(randomizeLocation(entity), bleedItemStack)
+					.getItemStack()
+					.setAmount(getRandom(minimumAmount, maximumAmount));
 	}
 
 }

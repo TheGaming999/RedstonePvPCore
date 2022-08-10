@@ -62,6 +62,10 @@ public class ItemStackReader {
 		return textToTranslate;
 	}
 
+	private static Material getMaterial(String string) {
+		return XMaterial.matchXMaterial(string).orElse(XMaterial.APPLE).parseMaterial();
+	}
+
 	/**
 	 * 
 	 * @param string the string where the itemstack gets parsed from
@@ -106,11 +110,17 @@ public class ItemStackReader {
 		ItemMeta meta = stack.getItemMeta();
 		for (String key : string.split(metaSeparator)) {
 			if (key.startsWith("item=")) {
-				stack.setType(Material.matchMaterial(key.substring(5)));
+				stack.setType(XMaterial.matchXMaterial(key.substring(5)).get().parseMaterial());
 			} else if (key.startsWith("amount=")) {
 				stack.setAmount(Integer.valueOf(key.substring(7)));
 			} else if (key.startsWith("data=")) {
-				stack.setDurability(Short.valueOf(key.substring(5)));
+				if (XMaterial.supports(13) && stack.getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
+					if (Short.parseShort(key.substring(5)) == 1) {
+						stack.setType(XMaterial.ENCHANTED_GOLDEN_APPLE.parseMaterial());
+					}
+				} else {
+					stack.setDurability(Short.parseShort(key.substring(5)));
+				}
 			} else if (key.startsWith("name=")) {
 				meta.setDisplayName(c(key.substring(5)));
 			} else if (key.startsWith("lore=")) {
@@ -194,11 +204,17 @@ public class ItemStackReader {
 		ItemMeta meta = stack.getItemMeta();
 		for (String key : string.split(" ")) {
 			if (key.startsWith("item=")) {
-				stack.setType(Material.matchMaterial(key.substring(5)));
+				stack.setType(getMaterial(key.substring(5)));
 			} else if (key.startsWith("amount=")) {
 				stack.setAmount(Integer.valueOf(key.substring(7)));
 			} else if (key.startsWith("data=")) {
-				stack.setDurability(Short.valueOf(key.substring(5)));
+				if (XMaterial.supports(13) && stack.getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
+					if (Short.parseShort(key.substring(5)) == 1) {
+						stack.setType(XMaterial.ENCHANTED_GOLDEN_APPLE.parseMaterial());
+					}
+				} else {
+					stack.setDurability(Short.parseShort(key.substring(5)));
+				}
 			} else if (key.startsWith("name=")) {
 				meta.setDisplayName(c(key.substring(5)));
 			} else if (key.startsWith("lore=")) {
@@ -281,11 +297,17 @@ public class ItemStackReader {
 		ItemMeta meta = stack.getItemMeta();
 		for (String key : string.split(" ")) {
 			if (key.startsWith("item=")) {
-				stack.setType(Material.matchMaterial(key.substring(5)));
+				stack.setType(getMaterial(key.substring(5)));
 			} else if (key.startsWith("amount=")) {
 				stack.setAmount(Integer.valueOf(key.substring(7)));
 			} else if (key.startsWith("data=")) {
-				stack.setDurability(Short.valueOf(key.substring(5)));
+				if (XMaterial.supports(13) && stack.getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
+					if (Short.parseShort(key.substring(5)) == 1) {
+						stack.setType(XMaterial.ENCHANTED_GOLDEN_APPLE.parseMaterial());
+					}
+				} else {
+					stack.setDurability(Short.parseShort(key.substring(5)));
+				}
 			} else if (key.startsWith("name=")) {
 				meta.setDisplayName(c(key.substring(5), player));
 			} else if (key.startsWith("lore=")) {
@@ -355,7 +377,7 @@ public class ItemStackReader {
 		ItemMeta meta = stack.getItemMeta();
 		for (String key : section.getKeys(false)) {
 			if (key.startsWith("item")) {
-				stack.setType(Material.matchMaterial(section.getString(key)));
+				stack.setType(getMaterial(section.getString(key)));
 			} else if (key.startsWith("amount")) {
 				stack.setAmount(section.getInt(key));
 			} else if (key.startsWith("data")) {
@@ -435,11 +457,17 @@ public class ItemStackReader {
 		ItemMeta meta = stack.getItemMeta();
 		for (String key : section.getKeys(false)) {
 			if (key.startsWith(itemKey)) {
-				stack.setType(Material.matchMaterial(section.getString(key)));
+				stack.setType(getMaterial(section.getString(key)));
 			} else if (key.startsWith(amountKey)) {
 				stack.setAmount(section.getInt(key));
 			} else if (key.startsWith(dataKey)) {
-				stack.setDurability((short) section.getInt(key));
+				if (XMaterial.supports(13) && stack.getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
+					if (section.getInt(key) == 1) {
+						stack.setType(XMaterial.ENCHANTED_GOLDEN_APPLE.parseMaterial());
+					}
+				} else {
+					stack.setDurability((short) section.getInt(key));
+				}
 			} else if (key.startsWith(nameKey)) {
 				meta.setDisplayName(c(section.getString(key)));
 			} else if (key.startsWith(loreKey)) {
@@ -517,11 +545,17 @@ public class ItemStackReader {
 		ItemMeta meta = stack.getItemMeta();
 		for (String key : section.getKeys(false)) {
 			if (key.startsWith(itemKey)) {
-				stack.setType(Material.matchMaterial(section.getString(key)));
+				stack.setType(getMaterial(section.getString(key)));
 			} else if (key.startsWith(amountKey)) {
 				stack.setAmount(section.getInt(key));
 			} else if (key.startsWith(dataKey)) {
-				stack.setDurability((short) section.getInt(key));
+				if (XMaterial.supports(13) && stack.getType() == XMaterial.GOLDEN_APPLE.parseMaterial()) {
+					if (section.getInt(key) == 1) {
+						stack.setType(XMaterial.ENCHANTED_GOLDEN_APPLE.parseMaterial());
+					}
+				} else {
+					stack.setDurability((short) section.getInt(key));
+				}
 			} else if (key.startsWith(nameKey)) {
 				meta.setDisplayName(c(section.getString(key)));
 			} else if (key.startsWith(loreKey)) {
@@ -586,7 +620,7 @@ public class ItemStackReader {
 		ItemMeta meta = stack.getItemMeta();
 		for (String key : map.keySet()) {
 			if (key.startsWith("item")) {
-				stack.setType(Material.matchMaterial((String) map.get(key)));
+				stack.setType(getMaterial((String) map.get(key)));
 			} else if (key.startsWith("amount")) {
 				stack.setAmount((int) map.get(key));
 			} else if (key.startsWith("data")) {
