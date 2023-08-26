@@ -23,6 +23,7 @@ public class ShopCommand implements CommandExecutor {
 
 	private RedstonePvPCore plugin;
 	private Set<String> disabledWorlds = new HashSet<>();
+	private Inventory shopInv;
 
 	public ShopCommand(RedstonePvPCore plugin) {
 		this.plugin = plugin;
@@ -34,6 +35,8 @@ public class ShopCommand implements CommandExecutor {
 				if (CollectionUtils.hasIgnoreCase(disabledWorldsList, worldName)) disabledWorlds.add(worldName);
 			});
 		}
+		shopInv = Bukkit.createInventory(null, getShop().getSlots(), getShop().getInventoryName());
+		shopInv.setContents(getShop().getInventory().getContents());
 	}
 
 	public Shop getShop() {
@@ -55,9 +58,7 @@ public class ShopCommand implements CommandExecutor {
 				if (!BypassManager.isBypassOn(player.getUniqueId())
 						&& disabledWorlds.contains(player.getWorld().getName()))
 					return true;
-				Inventory newInv = Bukkit.createInventory(player, getShop().getSlots(), getShop().getInventoryName());
-				newInv.setContents(getShop().getInventory().getContents());
-				player.openInventory(newInv);
+				player.openInventory(shopInv);
 				break;
 			case 1:
 				if (!sender.hasPermission(Permissions.SHOP_OTHER)) {
@@ -68,10 +69,7 @@ public class ShopCommand implements CommandExecutor {
 					Messages.sendMessage(sender, plugin.getMessages().getUnknownPlayer().replace("%target%", args[0]));
 					return true;
 				}
-				Inventory targetInv = Bukkit.createInventory(target, getShop().getSlots(),
-						getShop().getInventoryName());
-				targetInv.setContents(getShop().getInventory().getContents());
-				target.openInventory(targetInv);
+				target.openInventory(shopInv);
 				break;
 			default:
 				break;

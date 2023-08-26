@@ -229,11 +229,9 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 						case "save":
 							GadgetManager.saveGadgets();
 							ConfigCreator.saveConfigs();
-							sender.sendMessage(GadgetManager.getGadgetsLocations().toString());
 							break;
 						case "load":
 							GadgetManager.loadGadgets();
-							sender.sendMessage(GadgetManager.getGadgetsLocations().toString());
 							break;
 						case "enchantments":
 							sender.sendMessage(enchantmentsHeaderMessage);

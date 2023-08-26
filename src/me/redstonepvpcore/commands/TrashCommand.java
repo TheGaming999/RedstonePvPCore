@@ -25,6 +25,7 @@ public class TrashCommand implements CommandExecutor {
 	private String name;
 	private int size;
 	private Set<String> disabledWorlds = new HashSet<>();
+	private Inventory trashInv;
 
 	public TrashCommand(RedstonePvPCore plugin) {
 		name = Colorizer.colorize(ConfigCreator.getConfig("trash.yml").getString("title"));
@@ -38,6 +39,7 @@ public class TrashCommand implements CommandExecutor {
 			});
 		}
 		this.plugin = plugin;
+		trashInv = Bukkit.createInventory(null, size, name);
 	}
 
 	@Override
@@ -55,8 +57,7 @@ public class TrashCommand implements CommandExecutor {
 				if (!BypassManager.isBypassOn(player.getUniqueId())
 						&& disabledWorlds.contains(player.getWorld().getName()))
 					return true;
-				Inventory newInv = Bukkit.createInventory(player, size, name);
-				player.openInventory(newInv);
+				player.openInventory(trashInv);
 				break;
 			case 1:
 				if (!sender.hasPermission(Permissions.TRASH_OTHER)) {
@@ -67,8 +68,7 @@ public class TrashCommand implements CommandExecutor {
 					Messages.sendMessage(sender, plugin.getMessages().getUnknownPlayer().replace("%target%", args[0]));
 					return true;
 				}
-				Inventory targetInv = Bukkit.createInventory(target, size, name);
-				target.openInventory(targetInv);
+				target.openInventory(trashInv);
 				break;
 			default:
 				break;

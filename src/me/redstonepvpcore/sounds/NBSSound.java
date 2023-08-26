@@ -66,8 +66,8 @@ public class NBSSound implements SoundInfo {
 		psp.setTick((short) 0);
 		rsp.setTick((short) 0);
 		if (broadcasted) {
-			psp.getPlayerUUIDs().clear();
-			rsp.getPlayerUUIDs().clear();
+			psp.getPlayerUUIDs().forEach(psp::removePlayer);
+			rsp.getPlayerUUIDs().forEach(rsp::removePlayer);
 		}
 		return true;
 	}
