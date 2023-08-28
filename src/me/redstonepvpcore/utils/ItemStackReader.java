@@ -437,10 +437,10 @@ public class ItemStackReader {
 	 * - "HIDE_ENCHANTS"}
 	 * </pre>
 	 * 
-	 * Optional keys: everything except <b>item:</b>
-	 * <p>
-	 * Setting a key to null will use the default key
-	 * for example if amountKey is null we will just use the key "amount"
+	 *         Optional keys: everything except <b>item:</b>
+	 *         <p>
+	 *         Setting a key to null will use the default key
+	 *         for example if amountKey is null we will just use the key "amount"
 	 */
 	public static ItemStack fromConfigurationSection(ConfigurationSection configurationSection,
 			@Nullable String itemKey, @Nullable String amountKey, @Nullable String dataKey, @Nullable String nameKey,
@@ -453,7 +453,7 @@ public class ItemStackReader {
 		loreKey = loreKey == null ? "lore" : loreKey;
 		enchantmentsKey = enchantmentsKey == null ? "enchantments" : enchantmentsKey;
 		flagsKey = flagsKey == null ? "flags" : flagsKey;
-		ItemStack stack = new ItemStack(Material.STONE, 1);
+		ItemStack stack = XMaterial.STONE.parseItem();
 		ItemMeta meta = stack.getItemMeta();
 		for (String key : section.getKeys(false)) {
 			if (key.startsWith(itemKey)) {
@@ -524,10 +524,10 @@ public class ItemStackReader {
 	 * - "HIDE_ENCHANTS"}
 	 * </pre>
 	 * 
-	 * Optional keys: everything except <b>item:</b>
-	 * <p>
-	 * Setting a key to null will use the default key
-	 * for example if amountKey is null we will just use the key "amount"
+	 *         Optional keys: everything except <b>item:</b>
+	 *         <p>
+	 *         Setting a key to null will use the default key
+	 *         for example if amountKey is null we will just use the key "amount"
 	 */
 	public static ItemStack fromConfigurationSection(ConfigurationSection configurationSection,
 			@Nullable String itemKey, @Nullable String amountKey, @Nullable String dataKey, @Nullable String nameKey,

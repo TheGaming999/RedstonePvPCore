@@ -29,6 +29,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import xyz.xenondevs.particle.data.ParticleData;
+import xyz.xenondevs.particle.data.SculkChargeData;
+import xyz.xenondevs.particle.data.ShriekData;
 import xyz.xenondevs.particle.data.VibrationData;
 import xyz.xenondevs.particle.data.color.*;
 import xyz.xenondevs.particle.data.texture.BlockTexture;
@@ -110,13 +112,19 @@ import static xyz.xenondevs.particle.PropertyType.*;
  * <li>{@link #REDSTONE}</li>
  * <li>{@link #REVERSE_PORTAL}</li>
  * <li>{@link #SCRAPE}</li>
+ * <li>{@link #SCULK_CHARGE}</li>
+ * <li>{@link #SCULK_CHARGE_POP}</li>
+ * <li>{@link #SCULK_SOUL}</li>
+ * <li>{@link #SHRIEK}</li>
  * <li>{@link #SLIME}</li>
+ * <li>{@link #SMALL_FLAME}</li>
  * <li>{@link #SMOKE_LARGE}</li>
  * <li>{@link #SMOKE_NORMAL}</li>
  * <li>{@link #SNEEZE}</li>
  * <li>{@link #SNOWBALL}</li>
  * <li>{@link #SNOWFLAKE}</li>
  * <li>{@link #SNOW_SHOVEL}</li>
+ * <li>{@link #SONIC_BOOM}</li>
  * <li>{@link #SOUL}</li>
  * <li>{@link #SOUL_FIRE_FLAME}</li>
  * <li>{@link #SPELL}</li>
@@ -218,7 +226,7 @@ public enum ParticleEffect {
     BUBBLE_COLUMN_UP(version -> version < 13 ? "NONE" : "bubble_column_up", DIRECTIONAL),
     /**
      * In vanilla, this particle is displayed by barrier blocks when a player
-     * holds a barrier item in the main or off hand or by the light block.
+     * holds a barrier item in the main- or off-hand or by the light block.
      * <p>
      * <p>
      * <b>Information</b>:
@@ -819,6 +827,47 @@ public enum ParticleEffect {
      */
     SCRAPE(version -> version < 17 ? "NONE" : "scrape", DIRECTIONAL),
     /**
+     * <p>
+     * <b>Information</b>:
+     * <ul>
+     * <li>Appearance: Blue dust turning into a circle.</li>
+     * <li>Speed value: Influences the velocity at which the particle flies off.</li>
+     * <li>Extra: You can use the {@link SculkChargeData} class to change the roll of this particle.</li>
+     * <li>Extra: The velocity of this particle can be set. The amount has to be 0.</li>
+     * </ul>
+     */
+    SCULK_CHARGE(version -> version < 19 ? "NONE" : "sculk_charge", DIRECTIONAL),
+    /**
+     * <p>
+     * <b>Information</b>:
+     * <ul>
+     * <li>Appearance: A blue circle popping.</li>
+     * <li>Speed value: Influences the velocity at which the particle flies off.</li>
+     * <li>Extra: The velocity of this particle can be set. The amount has to be 0.</li>
+     * </ul>
+     */
+    SCULK_CHARGE_POP(version -> version < 19 ? "NONE" : "sculk_charge_pop", DIRECTIONAL),
+    /**
+     * <p>
+     * <b>Information</b>:
+     * <ul>
+     * <li>Appearance: A blue soul.</li>
+     * <li>Speed value: Influences the velocity at which the particle flies off.</li>
+     * <li>Extra: The velocity of this particle can be set. The amount has to be 0.</li>
+     * </ul>
+     */
+    SCULK_SOUL(version -> version < 19 ? "NONE" : "sculk_soul", DIRECTIONAL),
+    /**
+     * <p>
+     * <b>Information</b>:
+     * <ul>
+     * <li>Appearance: A blue circle flying up.</li>
+     * <li>Speed value: Doesn't influence the particle.</li>
+     * <li>Extra: You can set the delay before the particle appears using the {@link ShriekData} class.</li>
+     * </ul>
+     */
+    SHRIEK(version -> version < 19 ? "NONE" : "shriek"),
+    /**
      * In vanilla, this particle is displayed by jumping slimes.
      * <p>
      * The particle originates from the nms EntitySlime class.
@@ -830,6 +879,16 @@ public enum ParticleEffect {
      * </ul>
      */
     SLIME(version -> version < 8 ? "NONE" : (version < 13 ? "SLIME" : "item_slime")),
+    /**
+     * <p>
+     * <b>Information</b>:
+     * <ul>
+     * <li>Appearance: A small flame.</li>
+     * <li>Speed value: Influences the velocity at which the particle flies off.</li>
+     * <li>Extra: The velocity of this particle can be set. The amount has to be 0.</li>
+     * </ul>
+     */
+    SMALL_FLAME(version -> version < 17 ? "NONE" : "small_flame", DIRECTIONAL),
     /**
      * In vanilla, this particle is randomly displayed by fire, furnace
      * minecarts and blazes. It's also displayed when trying to place water
@@ -902,6 +961,15 @@ public enum ParticleEffect {
      * </ul>
      */
     SNOW_SHOVEL(version -> version < 8 ? "NONE" : (version < 13 ? "SNOW_SHOVEL" : "poof"), DIRECTIONAL),
+    /**
+     * <p>
+     * <b>Information</b>:
+     * <ul>
+     * <li>Appearance: A blue explosion.</li>
+     * <li>Speed value: Doesn't influence the particle.</li>
+     * </ul>
+     */
+    SONIC_BOOM(version -> version < 19 ? "NONE" : "sonic_boom"),
     /**
      * In vanilla, this particle is displayed when a player walks
      * on soulsand with the soul speed enchantment.
@@ -1211,11 +1279,12 @@ public enum ParticleEffect {
      * An {@link IntFunction} to get the name of the particle by checking the version.
      */
     private final DoubleFunction<String> fieldNameMapper;
+    
     /**
      * A list of {@link PropertyType properties}
      * the current particle instance supports.
      */
-    private final PropertyType[] properties;
+    private final List<PropertyType> properties;
     
     /**
      * An array with all {@link ParticleEffect ParticleEffects}.
@@ -1254,7 +1323,7 @@ public enum ParticleEffect {
      */
     ParticleEffect(DoubleFunction<String> fieldNameMapper, PropertyType... properties) {
         this.fieldNameMapper = fieldNameMapper;
-        this.properties = properties;
+        this.properties = Collections.unmodifiableList(Arrays.asList(properties));
     }
     
     /**
@@ -1268,13 +1337,21 @@ public enum ParticleEffect {
     }
     
     /**
+     * Gets a list of properties the current particle instance supports.
+     * @return a list of supported {@link PropertyType properties}
+     */
+    public List<PropertyType> getProperties() {
+        return properties;
+    }
+    
+    /**
      * Checks if the current {@link ParticleEffect} instance has a specific {@link PropertyType}.
      *
      * @param propertyType the {@link PropertyType} that should be searched.
      * @return {@code true} if the current {@link ParticleEffect} instance supports the given {@link PropertyType}.
      */
     public boolean hasProperty(PropertyType propertyType) {
-        return propertyType != null && Arrays.asList(properties).contains(propertyType);
+        return propertyType != null && properties.contains(propertyType);
     }
     
     /**

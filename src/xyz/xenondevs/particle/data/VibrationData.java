@@ -33,16 +33,13 @@ import xyz.xenondevs.particle.utils.ReflectionUtils;
 import java.util.Objects;
 
 /**
- * This class holds all data that is needed
- * by the client to display a {@link ParticleEffect#VIBRATION}
- * particle. The required information is:
- * The start {@link Location}, The destination
- * and the amount of ticks it will take the
- * particle to fly this path.
+ * This class holds all data that is needed by the client to display a {@link ParticleEffect#VIBRATION}
+ * particle. The required information is: The start {@link Location} (<b>Only for pre 1.19 version</b>), The destination
+ * and the amount of ticks it will take the particle to fly this path.
  * <p>
- * Minecraft only supports full block coordinates
- * for the start and destination location. So any
- * particle will spawn at the center of a block.
+ * Minecraft only supports full block coordinates for the start and destination location. So any
+ * particle will spawn at the center of a block. (<b>Again, only for pre 1.19 versions. The client uses the normal spawn
+ * location of the particle since 1.19</b>)
  *
  * @author ByteZ
  * @see ParticleEffect#VIBRATION
@@ -69,7 +66,7 @@ public final class VibrationData extends ParticleData {
     /**
      * Creates a new {@link VibrationData} instance.
      *
-     * @param start       the start {@link Location} of the particle.
+     * @param start       the start {@link Location} of the particle. (<b>Not needed since 1.19</b>)
      * @param destination the destination {@link Location} of the particle.
      * @param ticks       the amount of ticks it will take the particle to reach the {@link #blockDestination}
      */
@@ -83,12 +80,38 @@ public final class VibrationData extends ParticleData {
     /**
      * Creates a new {@link VibrationData} instance.
      *
-     * @param start       the start {@link Location} of the particle.
+     * @param destination the destination {@link Location} of the particle.
+     * @param ticks       the amount of ticks it will take the particle to reach the {@link #blockDestination}
+     */
+    public VibrationData(Location destination, int ticks) {
+        this.start = null;
+        this.blockDestination = Objects.requireNonNull(destination);
+        this.entitydestination = null;
+        this.ticks = ticks;
+    }
+    
+    /**
+     * Creates a new {@link VibrationData} instance.
+     *
+     * @param start       the start {@link Location} of the particle. (<b>Not needed since 1.19</b>)
      * @param destination the destination {@link Entity} of the particle.
      * @param ticks       the amount of ticks it will take the particle to reach the {@link #blockDestination}
      */
     public VibrationData(Location start, Entity destination, int ticks) {
         this.start = Objects.requireNonNull(start);
+        this.entitydestination = Objects.requireNonNull(destination);
+        this.blockDestination = null;
+        this.ticks = ticks;
+    }
+    
+    /**
+     * Creates a new {@link VibrationData} instance.
+     *
+     * @param destination the destination {@link Entity} of the particle.
+     * @param ticks       the amount of ticks it will take the particle to reach the {@link #blockDestination}
+     */
+    public VibrationData(Entity destination, int ticks) {
+        this.start = null;
         this.entitydestination = Objects.requireNonNull(destination);
         this.blockDestination = null;
         this.ticks = ticks;
@@ -147,15 +170,24 @@ public final class VibrationData extends ParticleData {
         boolean isBlockDest = blockDestination != null;
         Object start = ReflectionUtils.createBlockPosition(getStart());
         try {
-            Object source;
-            if (isBlockDest) {
-                Object dest = ReflectionUtils.createBlockPosition(getBlockDestination());
-                source = ParticleConstants.BLOCK_POSITION_SOURCE_CONSTRUCTOR.newInstance(dest);
-            } else
-                source = ParticleConstants.ENTITY_POSITION_SOURCE_CONSTRUCTOR.newInstance(getEntityDestination().getEntityId());
-            
-            Object path = ParticleConstants.VIBRATION_PATH_CONSTRUCTOR.newInstance(start, source, getTicks());
-            return ParticleConstants.PARTICLE_PARAM_VIBRATION_CONSTRUCTOR.newInstance(path);
+            if (ReflectionUtils.MINECRAFT_VERSION < 19) {
+                Object source;
+                if (isBlockDest) {
+                    Object dest = ReflectionUtils.createBlockPosition(getBlockDestination());
+                    source = ParticleConstants.BLOCK_POSITION_SOURCE_CONSTRUCTOR.newInstance(dest);
+                } else
+                    source = ParticleConstants.ENTITY_POSITION_SOURCE_CONSTRUCTOR.newInstance(getEntityDestination().getEntityId());
+                Object path = ParticleConstants.VIBRATION_PATH_CONSTRUCTOR.newInstance(start, source, getTicks());
+                return ParticleConstants.PARTICLE_PARAM_VIBRATION_CONSTRUCTOR.newInstance(path);
+            } else {
+                Object source;
+                if (isBlockDest) {
+                    Object dest = ReflectionUtils.createBlockPosition(getBlockDestination());
+                    source = ParticleConstants.BLOCK_POSITION_SOURCE_CONSTRUCTOR.newInstance(dest);
+                } else
+                    source = ParticleConstants.ENTITY_POSITION_SOURCE_CONSTRUCTOR.newInstance(ReflectionUtils.getEntityHandle(getEntityDestination()), 0f);
+                return ParticleConstants.PARTICLE_PARAM_VIBRATION_CONSTRUCTOR.newInstance(source, getTicks());
+            }
         } catch (Exception ex) {
             return null;
         }
