@@ -10,7 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,6 +25,7 @@ import me.redstonepvpcore.utils.CollectionUtils;
 import me.redstonepvpcore.utils.ConfigCreator;
 import me.redstonepvpcore.utils.ItemStackReader;
 import me.redstonepvpcore.utils.NBTEditor;
+import me.redstonepvpcore.utils.XMaterial;
 
 public class DamageListener implements Listener {
 
@@ -44,11 +44,10 @@ public class DamageListener implements Listener {
 
 	public void register() {
 		FileConfiguration config = ConfigCreator.getConfig("item-bleed.yml");
-		bleedItemStack = ItemStackReader.fromConfigurationSection(config.getConfigurationSection("item"), "material",
-				"amount", "data", "name", "lore", "enchantments", "flags", " ");
-		if (bleedItemStack.getType() == Material.AIR) {
-			parent.getLogger().warning("Bleeding item stack is AIR.");
-		}
+		ItemStack bleedItemStack0 = ItemStackReader.fromConfigurationSection(config.getConfigurationSection("item"),
+				"material", "amount", "data", "name", "lore", "enchantments", "flags", " ");
+		bleedItemStack = XMaterial.matchXMaterial(bleedItemStack0).parseItem();
+		bleedItemStack.setItemMeta(bleedItemStack0.getItemMeta());
 		String[] amountRange = config.getString("item.amount-range").split("->");
 		minimumAmount = Integer.parseInt(amountRange[0]);
 		maximumAmount = Integer.parseInt(amountRange[1]);
@@ -102,7 +101,7 @@ public class DamageListener implements Listener {
 	}
 
 	private Location randomizeLocation(LivingEntity entity) {
-		return entity.getLocation().clone().add(getRandom(-1, 1), 0, getRandom(-1, 1));
+		return entity.getLocation().clone().add(getRandom(-2, 2), 1, getRandom(-2, 2));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -125,17 +124,15 @@ public class DamageListener implements Listener {
 			parent.doSync(() -> activateEnchantments(entity, damager, customEnchantments, levels));
 			removeEffectDamage(damager);
 		}
-		Bukkit.broadcastMessage("WTF.");
 		if (BypassManager.isBypassOff(damager) && disabledWorlds.contains(damager.getWorld().getName())
 				&& !(targetEntity instanceof Player)) {
-			Bukkit.broadcastMessage("Not a player");
 			return;
 		}
-		if (e.getDamage() >= 0.01 && getRandom(1, 100) <= dropChance && bleedItemStack.getType() != Material.AIR) {
-			Bukkit.broadcastMessage("Not air");
-			Item item = damager.getWorld().dropItemNaturally(randomizeLocation(entity), bleedItemStack);
-			item.getItemStack().setAmount(getRandom(minimumAmount, maximumAmount));
-		}
+		if (e.getDamage() >= 0.01 && getRandom(1, 100) <= dropChance && bleedItemStack.getType() != Material.AIR)
+			damager.getWorld()
+					.dropItemNaturally(randomizeLocation(entity), bleedItemStack)
+					.getItemStack()
+					.setAmount(getRandom(minimumAmount, maximumAmount));
 	}
 
 }

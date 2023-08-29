@@ -541,11 +541,12 @@ public class ItemStackReader {
 		loreKey = loreKey == null ? "lore" : loreKey;
 		enchantmentsKey = enchantmentsKey == null ? "enchantments" : enchantmentsKey;
 		flagsKey = flagsKey == null ? "flags" : flagsKey;
-		ItemStack stack = new ItemStack(Material.STONE, 1);
+		ItemStack stack = XMaterial.matchXMaterial(Material.STONE).parseItem();
 		ItemMeta meta = stack.getItemMeta();
 		for (String key : section.getKeys(false)) {
 			if (key.startsWith(itemKey)) {
-				stack.setType(getMaterial(section.getString(key)));
+				// stack.setType(getMaterial(section.getString(key)));
+				stack = XMaterial.matchXMaterial(section.getString(key)).get().parseItem();
 			} else if (key.startsWith(amountKey)) {
 				stack.setAmount(section.getInt(key));
 			} else if (key.startsWith(dataKey)) {
