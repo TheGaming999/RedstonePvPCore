@@ -20,6 +20,7 @@ import me.redstonepvpcore.listeners.DamageListener;
 import me.redstonepvpcore.listeners.DropListener;
 import me.redstonepvpcore.listeners.InteractListener;
 import me.redstonepvpcore.listeners.InventoryListener;
+import me.redstonepvpcore.listeners.JoinListener;
 import me.redstonepvpcore.messages.Messages;
 import me.redstonepvpcore.mothers.ConverterMother;
 import me.redstonepvpcore.mothers.DropPartyActivatorMother;
@@ -48,6 +49,7 @@ public class RedstonePvPCore extends JavaPlugin {
 	private DropListener dropListener;
 	private DamageListener damageListener;
 	private InventoryListener inventoryListener;
+	private JoinListener joinListener;
 	private RedstonePvPCoreCommand redstonePvPCoreCommand;
 	private TrashCommand trashCommand;
 	private Shop shop;
@@ -66,7 +68,8 @@ public class RedstonePvPCore extends JavaPlugin {
 		noteBlockAPI.onEnable();
 		ConfigCreator.copyAndSaveDefaults(true, "converters.yml", "data.yml", "drop-party.yml", "enchantments.yml",
 				"exp-sign.yml", "frame-giver.yml", "item-bleed.yml", "randombox.yml", "repair-anvil.yml", "shop.yml",
-				"soulbound.yml", "trash.yml", "messages.yml");
+				"soulbound.yml", "trash.yml");
+		ConfigCreator.copyAndSaveDefaults(false, "messages.yml", "soulbound.yml");
 		scheduler = Bukkit.getScheduler();
 		enchantmentManager = new EnchantmentManager();
 		soulBoundManager = new SoulBoundManager();
@@ -156,10 +159,12 @@ public class RedstonePvPCore extends JavaPlugin {
 		dropListener = new DropListener(this);
 		damageListener = new DamageListener(this);
 		inventoryListener = new InventoryListener(this);
+		joinListener = new JoinListener(this);
 		interactListener.register();
 		dropListener.register();
 		damageListener.register();
 		inventoryListener.register();
+		joinListener.register();
 	}
 
 	public void unregisterListeners() {
@@ -167,6 +172,7 @@ public class RedstonePvPCore extends JavaPlugin {
 		if (dropListener != null) dropListener.unregister();
 		if (damageListener != null) damageListener.unregister();
 		if (inventoryListener != null) inventoryListener.unregister();
+		if (joinListener != null) joinListener.unregister();
 	}
 
 	public void reload() {
@@ -201,6 +207,11 @@ public class RedstonePvPCore extends JavaPlugin {
 		stopDataSavingTask();
 		stopDropPartyChecker();
 		noteBlockAPI.onDisable();
+		GadgetManager.getCooldownGadgets().values().forEach(cooldown -> {
+			cooldown.storeDurations();
+			cooldown.saveDurations();
+		});
+		ConfigCreator.saveConfigs();
 	}
 
 	public BukkitTask doAsync(Runnable runnable) {
@@ -281,6 +292,30 @@ public class RedstonePvPCore extends JavaPlugin {
 
 	public SoulBoundManager getSoulBoundManager() {
 		return soulBoundManager;
+	}
+
+	public TrashCommand getTrashCommand() {
+		return trashCommand;
+	}
+
+	public ShopCommand getShopCommand() {
+		return shopCommand;
+	}
+
+	public DropListener getDropListener() {
+		return dropListener;
+	}
+
+	public InteractListener getInteractListener() {
+		return interactListener;
+	}
+
+	public DamageListener getDamageListener() {
+		return damageListener;
+	}
+
+	public InventoryListener getInventoryListener() {
+		return inventoryListener;
 	}
 
 }

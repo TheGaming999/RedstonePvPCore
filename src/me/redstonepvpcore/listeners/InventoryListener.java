@@ -56,11 +56,14 @@ public class InventoryListener implements Listener {
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent e) {
 		Inventory inv = e.getInventory();
+		String title = e.getView().getTitle();
 		if (inv.getType() == InventoryType.ENCHANTING) {
 			EnchantingInventory einv = (EnchantingInventory) inv;
 			einv.setSecondary(air);
-		} else if (e.getView().getTitle().equals(shop.getInventoryName())) {
+		} else if (title.equals(shop.getInventoryName())) {
 			Gadget.sendSound((Player) e.getPlayer(), shop.getCloseSound());
+		} else if (title.equals(parent.getTrashCommand().getInventoryName())) {
+			parent.getTrashCommand().getInventory().clear();
 		}
 	}
 

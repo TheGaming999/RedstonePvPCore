@@ -1,11 +1,12 @@
 package me.redstonepvpcore.messages;
 
+// to increase size as needed
 public class MessagesHolder {
 
 	private String[] messages;
 
 	public MessagesHolder() {
-		this.messages = new String[] { "none", "none" };
+		this.messages = new String[] { "none", "none", "none" };
 	}
 
 	/**

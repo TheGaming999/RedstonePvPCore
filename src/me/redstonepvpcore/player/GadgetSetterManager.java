@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import me.redstonepvpcore.gadgets.ConverterType;
+import me.redstonepvpcore.gadgets.Cooldown;
 import me.redstonepvpcore.gadgets.Gadget;
 import me.redstonepvpcore.gadgets.GadgetManager;
 import me.redstonepvpcore.gadgets.GadgetType;
@@ -16,6 +17,7 @@ public class GadgetSetterManager {
 
 	private static final Map<UUID, Gadget> SETTERS = new HashMap<>();
 	private static final Map<UUID, ConverterType> SUB = new HashMap<>();
+	private static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
 
 	public static void assign(UUID uniqueId, GadgetType type) {
 		SETTERS.put(uniqueId, GadgetManager.fromGadgetType(type, null));
@@ -26,8 +28,14 @@ public class GadgetSetterManager {
 		SUB.put(uniqueId, subType);
 	}
 
+	public static void assign(UUID uniqueId, int cooldown) {
+		SETTERS.put(uniqueId, new Cooldown(null).withDuration(cooldown));
+		COOLDOWNS.put(uniqueId, cooldown);
+	}
+
 	public static Gadget cancel(UUID uniqueId) {
 		SUB.remove(uniqueId);
+		COOLDOWNS.remove(uniqueId);
 		return SETTERS.remove(uniqueId);
 	}
 
@@ -58,6 +66,10 @@ public class GadgetSetterManager {
 	@Nullable
 	public static ConverterType getAssignedSubType(UUID uniqueId) {
 		return SUB.get(uniqueId);
+	}
+
+	public static Integer getAssignedCooldown(UUID uniqueId) {
+		return COOLDOWNS.get(uniqueId);
 	}
 
 }

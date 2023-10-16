@@ -11,13 +11,16 @@ import javax.annotation.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import me.redstonepvpcore.utils.ConfigCreator;
 
 public class GadgetManager {
 
 	private static final Map<Location, Gadget> GADGETS = new HashMap<>();
+	private static final Map<Location, Cooldown> COOLDOWNS = new HashMap<>();
 
 	public static void loadGadgets() {
 		FileConfiguration gadgetConfig = ConfigCreator.getConfig("data.yml");
@@ -26,6 +29,9 @@ public class GadgetManager {
 		gadgetConfig.getStringList("drop-party").forEach(GadgetManager::addDropPartyActivator);
 		gadgetConfig.getStringList("exp-sign").forEach(GadgetManager::addExpSign);
 		gadgetConfig.getStringList("frame-giver").forEach(GadgetManager::addFrameGiver);
+		if (gadgetConfig.isList("cooldown")) gadgetConfig.set("cooldown", null);
+		if (!gadgetConfig.isConfigurationSection("cooldown")) gadgetConfig.createSection("cooldown");
+		gadgetConfig.getConfigurationSection("cooldown").getKeys(false).forEach(GadgetManager::addCooldown);
 		gadgetConfig.getStringList("redstone-converter")
 				.forEach(stringLocation -> GadgetManager.addConverter(stringLocation, ConverterType.REDSTONE));
 		gadgetConfig.getStringList("gold-converter")
@@ -39,7 +45,7 @@ public class GadgetManager {
 		List<String> repairAnvils = new ArrayList<>(), redstoneConverters = new ArrayList<>(),
 				goldConverters = new ArrayList<>(), emeraldConverters = new ArrayList<>(),
 				dropPartyActivators = new ArrayList<>(), expSigns = new ArrayList<>(), frameGivers = new ArrayList<>(),
-				randomBoxes = new ArrayList<>();
+				randomBoxes = new ArrayList<>(), cooldowns = new ArrayList<>(), durations = new ArrayList<>();
 		GADGETS.forEach((location, holder) -> {
 			switch (holder.getType()) {
 				case CONVERTER:
@@ -82,9 +88,24 @@ public class GadgetManager {
 		gadgetConfig.set("exp-sign", expSigns);
 		gadgetConfig.set("frame-giver", frameGivers);
 		gadgetConfig.set("random-box", randomBoxes);
+
 		gadgetConfig.set("redstone-converter", redstoneConverters);
 		gadgetConfig.set("gold-converter", goldConverters);
 		gadgetConfig.set("emerald-converter", emeraldConverters);
+		COOLDOWNS.forEach((location, cooldown) -> {
+			cooldowns.add(deparseSectionLocation(location));
+			durations.add(String.valueOf(cooldown.getDuration()));
+			cooldown.saveDurations();
+		});
+		ConfigurationSection cooldownSection = gadgetConfig.getConfigurationSection("cooldown");
+		for (int i = 0; i < cooldowns.size(); i++) {
+			String cooldownLoc = cooldowns.get(i);
+			String cooldownDuration = durations.get(i);
+			ConfigurationSection cooldownLocSection = cooldownSection.getConfigurationSection(cooldownLoc);
+			if (cooldownLocSection == null) cooldownLocSection = cooldownSection.createSection(cooldownLoc);
+			cooldownLocSection.set("duration", Integer.parseInt(cooldownDuration));
+			if (!cooldownLocSection.isConfigurationSection("players")) cooldownLocSection.createSection("players");
+		}
 	}
 
 	public static Gadget addGadget(Gadget gadget, String locationString) {
@@ -144,17 +165,49 @@ public class GadgetManager {
 		return GADGETS.put(frameGiver.getLocation(), frameGiver);
 	}
 
-	public static Gadget removeGadget(String locationString) {
-		Gadget gadget = GADGETS.remove(parseLocation(locationString));
-		return gadget;
+	public static Gadget addCooldown(String locationString) {
+		ConfigurationSection cooldownSection = ConfigCreator.getConfig("data.yml").getConfigurationSection("cooldown");
+		ConfigurationSection gadgetSection = cooldownSection.getConfigurationSection(locationString);
+		Location loc = parseSectionLocation(locationString);
+		int duration = gadgetSection.getInt("duration");
+		Cooldown cooldown = new Cooldown(loc);
+		cooldown.withDuration(duration);
+		cooldown.setup();
+		if (cooldown.getLocation() == null) cooldown.setLocation(loc);
+		return COOLDOWNS.put(cooldown.getLocation(), cooldown);
+	}
+
+	public static Gadget addCooldown(String locationString, int duration) {
+		Location loc = parseSectionLocation(locationString);
+		Cooldown cooldown = new Cooldown(loc);
+		cooldown.withDuration(duration);
+		cooldown.setup();
+		if (cooldown.getLocation() == null) cooldown.setLocation(loc);
+		return COOLDOWNS.put(cooldown.getLocation(), cooldown);
 	}
 
 	public static Gadget removeGadget(Location location) {
 		Gadget gadget = GADGETS.remove(location);
+		COOLDOWNS.remove(location);
+		ConfigCreator.getConfig("data.yml")
+				.getConfigurationSection("cooldown")
+				.set(deparseSectionLocation(location), null);
 		return gadget;
 	}
 
+	public static int parseDuration(String location) {
+		return Integer.parseInt(location.substring(location.lastIndexOf(" ") + 1, location.length()));
+	}
+
 	public static Location parseLocation(String location) {
+		String[] arguments = location.split(" ");
+		return new Location(Bukkit.getWorld(arguments[0]), Double.parseDouble(arguments[1]),
+				Double.parseDouble(arguments[2]), Double.parseDouble(arguments[3]), Float.parseFloat(arguments[4]),
+				Float.parseFloat(arguments[5]));
+	}
+
+	public static Location parseSectionLocation(String location) {
+		location = location.replace("_-_", ".");
 		String[] arguments = location.split(" ");
 		return new Location(Bukkit.getWorld(arguments[0]), Double.parseDouble(arguments[1]),
 				Double.parseDouble(arguments[2]), Double.parseDouble(arguments[3]), Float.parseFloat(arguments[4]),
@@ -165,6 +218,12 @@ public class GadgetManager {
 		return location.getWorld().getName() + " " + String.valueOf(location.getX()) + " "
 				+ String.valueOf(location.getY()) + " " + String.valueOf(location.getZ()) + " "
 				+ String.valueOf(location.getYaw()) + " " + String.valueOf(location.getPitch());
+	}
+
+	public static String deparseSectionLocation(Location location) {
+		return (location.getWorld().getName() + " " + String.valueOf(location.getX()) + " "
+				+ String.valueOf(location.getY()) + " " + String.valueOf(location.getZ()) + " "
+				+ String.valueOf(location.getYaw()) + " " + String.valueOf(location.getPitch())).replace(".", "_-_");
 	}
 
 	public static Gadget fromGadgetType(GadgetType gadgetType, @Nullable ConverterType converterType) {
@@ -184,6 +243,8 @@ public class GadgetManager {
 				return new RandomBox(null);
 			case REPAIR_ANVIL:
 				return new RepairAnvil(null);
+			case COOLDOWN:
+				return new Cooldown(null);
 			default:
 				return null;
 		}
@@ -191,6 +252,10 @@ public class GadgetManager {
 
 	public static Map<Location, Gadget> getGadgets() {
 		return GADGETS;
+	}
+
+	public static Map<Location, Cooldown> getCooldownGadgets() {
+		return COOLDOWNS;
 	}
 
 	public static Set<Location> getGadgetsLocations() {
@@ -202,7 +267,15 @@ public class GadgetManager {
 	}
 
 	public static boolean isGadget(Location location) {
-		return GADGETS.containsKey(location);
+		return getGadget(location) != null;
+	}
+
+	public static boolean isCooldownGadget(Location location) {
+		return COOLDOWNS.get(location) != null;
+	}
+
+	public static Cooldown getCooldownGadget(Location location) {
+		return COOLDOWNS.get(location);
 	}
 
 	public static boolean isEntityGadget(Location location) {
@@ -215,6 +288,16 @@ public class GadgetManager {
 
 	public static Gadget getGadget(Location location) {
 		return GADGETS.get(location);
+	}
+
+	public static Gadget getCooldownGadget(Gadget gadget) {
+		return getCooldownGadget(gadget.getLocation());
+	}
+
+	public static boolean testCooldown(Gadget gadget, Player player) {
+		Cooldown cooldownGadget = getCooldownGadget(gadget.getLocation());
+		if (cooldownGadget == null) return true;
+		return cooldownGadget.perform(player);
 	}
 
 }

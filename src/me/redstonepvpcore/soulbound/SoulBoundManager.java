@@ -18,6 +18,7 @@ public class SoulBoundManager {
 	private boolean allowDrop;
 	private boolean dropOnDeath;
 	private boolean useLore;
+	private boolean keepAfterDeath;
 	private List<String> lore;
 
 	public SoulBoundManager() {
@@ -29,6 +30,7 @@ public class SoulBoundManager {
 		allowDrop = config.getBoolean("allow-drop");
 		dropOnDeath = config.getBoolean("drop-on-death");
 		useLore = config.getBoolean("use-lore");
+		keepAfterDeath = config.getBoolean("keep-after-death", false);
 		lore = Colorizer.colorize(config.getStringList("lore"));
 	}
 
@@ -102,6 +104,14 @@ public class SoulBoundManager {
 
 	public void setLore(List<String> lore) {
 		this.lore = lore;
+	}
+
+	public boolean isKeepAfterDeath() {
+		return keepAfterDeath;
+	}
+
+	public void setKeepAfterDeath(boolean keepAfterDeath) {
+		this.keepAfterDeath = keepAfterDeath;
 	}
 
 }

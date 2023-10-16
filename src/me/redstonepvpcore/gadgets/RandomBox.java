@@ -21,7 +21,7 @@ import me.redstonepvpcore.sounds.SoundInfo;
 import me.redstonepvpcore.utils.RandomUnique;
 import xyz.xenondevs.particle.ParticleEffect;
 
-public class RandomBox extends Gadget {
+public class RandomBox extends Gadget implements Cooldownable {
 
 	private boolean inUse;
 	private ItemStack takeItemStack;
@@ -58,8 +58,7 @@ public class RandomBox extends Gadget {
 		if (name.contains("_")) {
 			name = name.replace("_", " ");
 			String[] args = name.split(" ");
-			for (String arg : args)
-				finalName += " " + capitalize(arg);
+			for (String arg : args) finalName += " " + capitalize(arg);
 			finalName = finalName.substring(1);
 		} else {
 			finalName = capitalize(name);

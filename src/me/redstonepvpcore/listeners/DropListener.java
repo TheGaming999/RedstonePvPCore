@@ -1,14 +1,20 @@
 package me.redstonepvpcore.listeners;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.redstonepvpcore.RedstonePvPCore;
@@ -18,6 +24,7 @@ public class DropListener implements Listener {
 
 	private RedstonePvPCore parent;
 	private SoulBoundManager soulBoundManager;
+	private Map<UUID, List<ItemStack>> keepSoulbound;
 
 	public DropListener(RedstonePvPCore parent) {
 		this.parent = parent;
@@ -25,6 +32,7 @@ public class DropListener implements Listener {
 
 	public void register() {
 		soulBoundManager = parent.getSoulBoundManager();
+		keepSoulbound = new HashMap<>();
 		parent.getServer().getPluginManager().registerEvents(this, parent);
 	}
 
@@ -32,6 +40,16 @@ public class DropListener implements Listener {
 		ItemMergeEvent.getHandlerList().unregister(parent);
 		PlayerDropItemEvent.getHandlerList().unregister(parent);
 		PlayerDeathEvent.getHandlerList().unregister(parent);
+		PlayerRespawnEvent.getHandlerList().unregister(parent);
+	}
+
+	public void keepItem(UUID uniqueId, ItemStack itemStack) {
+		if (!keepSoulbound.containsKey(uniqueId)) keepSoulbound.put(uniqueId, new ArrayList<>());
+		keepSoulbound.get(uniqueId).add(itemStack);
+	}
+
+	public Map<UUID, List<ItemStack>> getKeptSoulboundedItems() {
+		return keepSoulbound;
 	}
 
 	@EventHandler
@@ -53,8 +71,24 @@ public class DropListener implements Listener {
 		if (soulBoundManager.isDropOnDeath()) return;
 		List<ItemStack> drops = e.getDrops();
 		drops.forEach(drop -> {
-			if (soulBoundManager.isSoulBounded(drop)) drop.setType(Material.AIR);
+			if (soulBoundManager.isSoulBounded(drop)) {
+				if (soulBoundManager.isKeepAfterDeath()) keepItem(e.getEntity().getUniqueId(), drop.clone());
+				drop.setType(Material.AIR);
+			}
 		});
+	}
+
+	@EventHandler
+	public void onRespawn(PlayerRespawnEvent e) {
+		if (!soulBoundManager.isKeepAfterDeath()) return;
+		parent.doSyncLater(() -> {
+			Player player = e.getPlayer();
+			UUID uniqueId = player.getUniqueId();
+			List<ItemStack> keptItems = keepSoulbound.get(uniqueId);
+			if (keptItems == null) return;
+			keptItems.forEach(player.getInventory()::addItem);
+			keepSoulbound.remove(uniqueId);
+		}, 2);
 	}
 
 }

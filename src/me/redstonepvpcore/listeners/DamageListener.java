@@ -135,4 +135,36 @@ public class DamageListener implements Listener {
 					.setAmount(getRandom(minimumAmount, maximumAmount));
 	}
 
+	public int getMinimumAmount() {
+		return minimumAmount;
+	}
+
+	public void setMinimumAmount(int minimumAmount) {
+		this.minimumAmount = minimumAmount;
+	}
+
+	public int getMaximumAmount() {
+		return maximumAmount;
+	}
+
+	public void setMaximumAmount(int maximumAmount) {
+		this.maximumAmount = maximumAmount;
+	}
+
+	public void setDropChance(int dropChance) {
+		this.dropChance = dropChance;
+	}
+
+	public int getDropChance() {
+		return dropChance;
+	}
+
+	public void setBleedItemStack(ItemStack itemStack) {
+		this.bleedItemStack = itemStack;
+	}
+
+	public ItemStack getBleedItemStack() {
+		return bleedItemStack;
+	}
+
 }

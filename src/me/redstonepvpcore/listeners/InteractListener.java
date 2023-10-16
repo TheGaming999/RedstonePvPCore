@@ -21,7 +21,9 @@ import me.redstonepvpcore.RedstonePvPCore;
 import me.redstonepvpcore.gadgets.FrameGiver;
 import me.redstonepvpcore.gadgets.Gadget;
 import me.redstonepvpcore.gadgets.GadgetManager;
+import me.redstonepvpcore.gadgets.GadgetType;
 import me.redstonepvpcore.messages.Messages;
+import me.redstonepvpcore.messages.TimeFormatter;
 import me.redstonepvpcore.player.GadgetSetterManager;
 import me.redstonepvpcore.utils.ConfigCreator;
 
@@ -63,9 +65,28 @@ public class InteractListener implements Listener {
 			// Get the gadget the player is trying to create / register / set
 			Gadget gadget = GadgetSetterManager.getAssignedGadget(uniqueId);
 			if (GadgetManager.isEntityGadget(gadget)) return;
-			GadgetManager.addGadget(gadget, stringLocation, GadgetSetterManager.getAssignedSubType(uniqueId));
-			Messages.sendMessage(player,
-					gadget.getMessagesHolder().getMessage(0).replace("%location%", stringLocation));
+			// Special case for cooldown gadgets
+			if (gadget.getType() == GadgetType.COOLDOWN) {
+				if (!GadgetManager.isGadget(location)) {
+					Messages.sendMessage(player, gadget.getMessagesHolder().getMessage(2));
+				} else {
+					int timeLeft = GadgetSetterManager.getAssignedCooldown(uniqueId);
+					GadgetManager.addCooldown(GadgetManager.deparseSectionLocation(location), timeLeft);
+					Messages.sendMessage(player,
+							gadget.getMessagesHolder()
+									.getMessage(0)
+									.replace("%location%", stringLocation)
+									.replace("%time%", String.valueOf(timeLeft))
+									.replace("%time_long%", TimeFormatter.formatLong(timeLeft, true))
+									.replace("%time_split%", TimeFormatter.formatShortSplit(timeLeft, true))
+									.replace("%time_short%", TimeFormatter.formatShort(timeLeft, true)));
+				}
+			} else {
+				GadgetManager.addGadget(gadget, stringLocation, GadgetSetterManager.getAssignedSubType(uniqueId));
+				Messages.sendMessage(player,
+						gadget.getMessagesHolder().getMessage(0).replace("%location%", stringLocation));
+			}
+
 			GadgetManager.saveGadgets();
 			ConfigCreator.saveConfig("data.yml");
 			getParent().getMainCommand().updatePagedList();
@@ -79,9 +100,9 @@ public class InteractListener implements Listener {
 		if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Gadget gadget = GadgetManager.getGadget(location);
 			if (gadget == null) return; // There is no gadget on that location. Stop!
-			gadget.perform(player);
-			// Cancel event to prevent opening containers such as workbenches and anvils
 			e.setCancelled(true);
+			if (gadget.testCooldown(player)) gadget.perform(player);
+
 		} else if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
 			if (!GadgetManager.isGadget(location) || !player.isOp()) return;
 			Gadget gadget = GadgetManager.removeGadget(location);
@@ -106,9 +127,26 @@ public class InteractListener implements Listener {
 		if (GadgetSetterManager.isAssigned(uniqueId)) {
 			String stringLocation = GadgetManager.deparseLocation(location);
 			Gadget gadget = GadgetSetterManager.getAssignedGadget(uniqueId);
-			Messages.sendMessage(player,
-					gadget.getMessagesHolder().getMessage(0).replace("%location%", stringLocation));
-			GadgetManager.addFrameGiver(stringLocation);
+			if (gadget.getType() == GadgetType.COOLDOWN) {
+				if (!GadgetManager.isGadget(location)) {
+					Messages.sendMessage(player, gadget.getMessagesHolder().getMessage(2));
+				} else {
+					int timeLeft = GadgetSetterManager.getAssignedCooldown(uniqueId);
+					GadgetManager.addCooldown(GadgetManager.deparseSectionLocation(location), timeLeft);
+					Messages.sendMessage(player,
+							gadget.getMessagesHolder()
+									.getMessage(0)
+									.replace("%location%", stringLocation)
+									.replace("%time%", String.valueOf(timeLeft))
+									.replace("%time_long%", TimeFormatter.formatLong(timeLeft, true))
+									.replace("%time_split%", TimeFormatter.formatShortSplit(timeLeft, true))
+									.replace("%time_short%", TimeFormatter.formatShort(timeLeft, true)));
+				}
+			} else {
+				Messages.sendMessage(player,
+						gadget.getMessagesHolder().getMessage(0).replace("%location%", stringLocation));
+				GadgetManager.addFrameGiver(stringLocation);
+			}
 			GadgetManager.saveGadgets();
 			ConfigCreator.saveConfig("data.yml");
 			getParent().getMainCommand().updatePagedList();
@@ -122,6 +160,7 @@ public class InteractListener implements Listener {
 		}
 		if (GadgetManager.isGadget(location)) {
 			FrameGiver frameGiver = (FrameGiver) GadgetManager.getGadget(location);
+			if (!frameGiver.testCooldown(player)) return;
 			frameGiver.perform(entity);
 			frameGiver.perform(player);
 			e.setCancelled(true);

@@ -42,6 +42,22 @@ public class TrashCommand implements CommandExecutor {
 		trashInv = Bukkit.createInventory(null, size, name);
 	}
 
+	public String getInventoryName() {
+		return name;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public Inventory getInventory() {
+		return trashInv;
+	}
+
+	public void setInventory(Inventory trashInv) {
+		this.trashInv = trashInv;
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		switch (args.length) {

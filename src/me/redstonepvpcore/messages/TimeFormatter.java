@@ -1,13 +1,27 @@
 package me.redstonepvpcore.messages;
 
+import java.time.Duration;
+
+import me.redstonepvpcore.utils.IntParser;
+
 public class TimeFormatter {
+
+	public static int toSeconds(String strDuration) {
+		int i = IntParser.parseInt(strDuration, -69);
+		if (i != -69) return i;
+		strDuration = strDuration.replaceAll("\\s+", "").replaceFirst("(\\d+d)", "P$1T");
+		strDuration = strDuration.charAt(0) != 'P' ? "PT" + strDuration.replace("min", "m")
+				: strDuration.replace("min", "m");
+		Duration duration = Duration.parse(strDuration);
+		return (int) duration.toSeconds();
+	}
 
 	/**
 	 * 
 	 * @param totalSeconds seconds to format into hours, minutes and seconds.
 	 * @return Long format: 00 hours 00 minutes 00 seconds
 	 */
-	public final static String formatLong(long totalSeconds) {
+	public static String formatLong(long totalSeconds) {
 		long hours = totalSeconds / 3600;
 		long minutes = (totalSeconds % 3600) / 60;
 		long seconds = totalSeconds % 60;
@@ -26,8 +40,8 @@ public class TimeFormatter {
 		long hours = totalSeconds / 3600;
 		long minutes = (totalSeconds % 3600) / 60;
 		long seconds = totalSeconds % 60;
-		return hours <= 0
-				? minutes <= 0 ? String.format("%02d seconds", seconds)
+		return totalSeconds < 60 ? seconds + " seconds"
+				: hours <= 0 ? minutes <= 0 ? String.format("%02d seconds", seconds)
 						: String.format("%02d minutes %02d seconds", minutes, seconds)
 				: String.format("%02d hours %02d minutes %02d seconds", hours, minutes, seconds);
 	}
@@ -55,8 +69,9 @@ public class TimeFormatter {
 		long hours = totalSeconds / 3600;
 		long minutes = (totalSeconds % 3600) / 60;
 		long seconds = totalSeconds % 60;
-		return hours <= 0
-				? minutes <= 0 ? String.format("%02s", seconds) : String.format("%02dm%02ds", minutes, seconds)
+		return totalSeconds < 60 ? seconds + "s"
+				: hours <= 0
+						? minutes <= 0 ? String.format("%02s", seconds) : String.format("%02dm%02ds", minutes, seconds)
 				: String.format("%02dh%02dm%02ds", hours, minutes, seconds);
 	}
 
@@ -83,8 +98,9 @@ public class TimeFormatter {
 		long hours = totalSeconds / 3600;
 		long minutes = (totalSeconds % 3600) / 60;
 		long seconds = totalSeconds % 60;
-		return hours <= 0
-				? minutes <= 0 ? String.format("%02 s", seconds) : String.format("%02d m %02d s", minutes, seconds)
+		return totalSeconds < 60 ? seconds + " s"
+				: hours <= 0 ? minutes <= 0 ? String.format("%02 s", seconds)
+						: String.format("%02d m %02d s", minutes, seconds)
 				: String.format("%02d h %02d m %02d s", hours, minutes, seconds);
 	}
 
@@ -111,7 +127,9 @@ public class TimeFormatter {
 		long hours = totalSeconds / 3600;
 		long minutes = (totalSeconds % 3600) / 60;
 		long seconds = totalSeconds % 60;
-		return hours <= 0 ? minutes <= 0 ? String.format("%02d", seconds) : String.format("%02d:%02d", minutes, seconds)
+		return totalSeconds < 60 ? seconds + ""
+				: hours <= 0
+						? minutes <= 0 ? String.format("%02d", seconds) : String.format("%02d:%02d", minutes, seconds)
 				: String.format("%02d:%02d:%02d", hours, minutes, seconds);
 	}
 

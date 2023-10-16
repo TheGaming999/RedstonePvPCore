@@ -17,16 +17,16 @@ public class Messages {
 			repairAnvilRepairing, repairAnvilRepaired, redstoneConverterNotEnough, goldConverterNotEnough,
 			emeraldConverterNotEnough, redstoneConverterUse, goldConverterUse, emeraldConverterUse, randomBoxNotEnough,
 			randomBoxInUse, randomBoxUse, randomBoxDone, dropPartyNotReady, dropPartyAlreadyRunning, dropPartyActivate,
-			dropPartyReady, dropPartyNotEnoughPlayers, frameGiverUse, expSignNotEnough, expSignUse, selectRepairAnvil,
-			selectRedstoneConverter, selectGoldConverter, selectEmeraldConverter, selectRandomBox, selectDropParty,
-			selectExpSign, selectFrameGiver, setRepairAnvil, setRedstoneConverter, setGoldConverter,
-			setEmeraldConverter, setRandomBox, setDropParty, setExpSign, setFrameGiver, removeRepairAnvil,
-			removeRedstoneConverter, removeGoldConverter, removeEmeraldConverter, removeRandomBox, removeDropParty,
-			removeExpSign, removeFrameGiver, selectCancel, unknownPlayer, playerOnly, reload, cancel, bypassOn,
-			bypassOff, bypassOnOther, bypassOffOther, resetDropParty, startDropParty, noPermissionUse,
-			enchantLevelNotNumber, enchantLevelMax, enchantItemHand, enchantItemAdd, enchantItemUpdate,
-			enchantItemRemove, soulboundAdd, soulboundRemove, shopNoPermission, shopBuy, shopNotEnough, listNotNumber,
-			listLastPage, listInvalidPage;
+			dropPartyReady, dropPartyNotEnoughPlayers, frameGiverUse, expSignNotEnough, expSignUse, cooldownNotDone,
+			selectRepairAnvil, selectRedstoneConverter, selectGoldConverter, selectEmeraldConverter, selectRandomBox,
+			selectDropParty, selectExpSign, selectFrameGiver, selectCooldown, selectCooldownNotGadget, setRepairAnvil,
+			setRedstoneConverter, setGoldConverter, setEmeraldConverter, setRandomBox, setDropParty, setExpSign,
+			setFrameGiver, setCooldown, removeRepairAnvil, removeRedstoneConverter, removeGoldConverter,
+			removeEmeraldConverter, removeRandomBox, removeDropParty, removeExpSign, removeFrameGiver, removeCooldown,
+			selectCancel, unknownPlayer, playerOnly, reload, cancel, bypassOn, bypassOff, bypassOnOther, bypassOffOther,
+			resetDropParty, startDropParty, noPermissionUse, enchantLevelNotNumber, enchantLevelMax, enchantItemHand,
+			enchantItemAdd, enchantItemUpdate, enchantItemRemove, soulboundAdd, soulboundRemove, shopNoPermission,
+			shopBuy, shopNotEnough, listNotNumber, listLastPage, listInvalidPage;
 
 	private List<String> list;
 
@@ -80,6 +80,7 @@ public class Messages {
 		frameGiverUse = get("frame-giver-use");
 		expSignUse = get("exp-sign-use");
 		expSignNotEnough = get("exp-sign-not-enough");
+		cooldownNotDone = get("cooldown-not-done");
 
 		selectRepairAnvil = get("select-repair-anvil");
 		selectRedstoneConverter = get("select-redstone-converter");
@@ -89,6 +90,9 @@ public class Messages {
 		selectDropParty = get("select-drop-party");
 		selectExpSign = get("select-exp-sign");
 		selectFrameGiver = get("select-frame-giver");
+		selectCooldown = get("select-cooldown");
+		selectCooldownNotGadget = get("select-cooldown-not-gadget");
+
 		setRepairAnvil = get("set-repair-anvil");
 		setRedstoneConverter = get("set-redstone-converter");
 		setGoldConverter = get("set-gold-converter");
@@ -97,6 +101,8 @@ public class Messages {
 		setDropParty = get("set-drop-party");
 		setExpSign = get("set-exp-sign");
 		setFrameGiver = get("set-frame-giver");
+		setCooldown = get("set-cooldown");
+
 		removeRepairAnvil = get("remove-repair-anvil");
 		removeRedstoneConverter = get("remove-redstone-converter");
 		removeGoldConverter = get("remove-gold-converter");
@@ -105,6 +111,8 @@ public class Messages {
 		removeDropParty = get("remove-drop-party");
 		removeExpSign = get("remove-exp-sign");
 		removeFrameGiver = get("remove-frame-giver");
+		removeCooldown = get("remove-cooldown");
+
 		selectCancel = get("select-cancel");
 
 		unknownPlayer = get("unknown-player");
@@ -437,6 +445,26 @@ public class Messages {
 
 	public String getListInvalidPage() {
 		return listInvalidPage;
+	}
+
+	public String getCooldownNotDone() {
+		return cooldownNotDone;
+	}
+
+	public String getSelectCooldown() {
+		return selectCooldown;
+	}
+
+	public String getSelectCooldownNotGadget() {
+		return selectCooldownNotGadget;
+	}
+
+	public String getSetCooldown() {
+		return setCooldown;
+	}
+
+	public String getRemoveCooldown() {
+		return removeCooldown;
 	}
 
 }

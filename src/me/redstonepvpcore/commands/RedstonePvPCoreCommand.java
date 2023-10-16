@@ -24,6 +24,7 @@ import me.redstonepvpcore.gadgets.Gadget;
 import me.redstonepvpcore.gadgets.GadgetManager;
 import me.redstonepvpcore.gadgets.GadgetType;
 import me.redstonepvpcore.messages.Messages;
+import me.redstonepvpcore.messages.TimeFormatter;
 import me.redstonepvpcore.player.BypassManager;
 import me.redstonepvpcore.player.GadgetSetterManager;
 import me.redstonepvpcore.player.Permissions;
@@ -31,6 +32,7 @@ import me.redstonepvpcore.utils.CollectionUtils;
 import me.redstonepvpcore.utils.Colorizer;
 import me.redstonepvpcore.utils.ConfigCreator;
 import me.redstonepvpcore.utils.CooldownScheduler;
+import me.redstonepvpcore.utils.CooldownScheduler.SimpleCooldownEntry;
 import me.redstonepvpcore.utils.NBTEditor;
 import me.redstonepvpcore.utils.PagedArrayList;
 import me.redstonepvpcore.utils.XSound;
@@ -40,6 +42,7 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 	private RedstonePvPCore parent;
 	private final List<String> helpMessage = Colorizer.colorize("&3[&cRedstonePvPCore&3] &aHelp Page",
 			"&2/&6{label} &9set &7<&6goldconverter&7⎟&aemeraldconverter&7⎟&4redstoneconverter&7⎟&bdropparty&7⎟&frepairanvil&7⎟&2expsign&7⎟&cframe&7⎟&3randombox&7>",
+			"&2/&6{label} &9setcooldown <time> &8⎟ &7requests setting a cooldown for a gadget",
 			"&2/&6{label} &9reload &8⎟ &7reloads config files",
 			"&2/&6{label} &9bypass [player] &8⎟ &7bypass every limit and break the rules",
 			"&2/&6{label} &9cancel &8⎟ &7cancels &f/rputils set &7block click request",
@@ -58,6 +61,8 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 			"&2/&6{label} &9playsound &1<name> [volume] [pitch] &8⎟ &7plays a sound to you for testing",
 			"&2/&6{label} &9help 1 &8⎟ &7goto the previous help page", "&3[&c&m                                  &3]");
 	private final String setExampleMessage = Colorizer.colorize("&cExample: &7/{label} set randombox");
+	private final String setCooldownExampleMessage = Colorizer.colorize(
+			"&cExample: &7/{label} setcooldown 60m\nDuration Examples:\n5d - 5 days\n34s - 34 seconds\n11m - 11 minutes");
 	private final String enchantmentsHeaderMessage = Colorizer.colorize("&3[&cRedstonePvPCore&3] &aEnchantments");
 	private final String enchantmentsFooterMessage = Colorizer.colorize("&3[&c&m                                  &3]");
 
@@ -131,6 +136,10 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 						case "set":
 							sender.sendMessage(helpMessage.get(1).replace("{label}", label));
 							sender.sendMessage(setExampleMessage.replace("{label}", label));
+							break;
+						case "setcooldown":
+							sender.sendMessage(helpMessage.get(2).replace("{label}", label));
+							sender.sendMessage(setCooldownExampleMessage.replace("{label}", label));
 							break;
 						case "cancel":
 							if (!(sender instanceof Player)) {
@@ -314,7 +323,7 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 										.replace("%lastpage%", String.valueOf(pagedList.getLastPage())));
 							});
 							break;
-						case "set":
+						case "set": {
 							if (!(sender instanceof Player)) {
 								Messages.sendMessage(sender, parent.getMessages().getPlayerOnly());
 								return true;
@@ -385,6 +394,18 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 									break;
 							}
 							break;
+						}
+						case "setcooldown": {
+							if (!(sender instanceof Player)) {
+								Messages.sendMessage(sender, parent.getMessages().getPlayerOnly());
+								return true;
+							}
+							Player player = (Player) sender;
+							GadgetSetterManager.assign(player.getUniqueId(), TimeFormatter.toSeconds(args[1]));
+							Messages.sendMessage(player, parent.getMessages().getSelectCooldown());
+							Messages.sendMessage(player, parent.getMessages().getSelectCancel());
+							break;
+						}
 						case "playsound":
 							XSound sound = XSound.matchXSound(args[1].toUpperCase()).orElse(null);
 							if (sound == null) {
@@ -422,139 +443,31 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 							p.playSound(p.getLocation(), sound.parseSound(), volume, 1.0f);
 							break;
 						case "enchant":
-							if (!(sender instanceof Player)) {
-								Messages.sendMessage(sender, parent.getMessages().getPlayerOnly());
-								return true;
-							}
-							Player player = (Player) sender;
-							String name = args[1].toUpperCase();
-							int enchantmentsAmount = parent.getEnchantmentManager().getEnchantmentsMap().size();
-							RPEnchantment enchantment = parent.getEnchantmentManager().getEnchantment(name);
-							if (enchantment == null) {
-								return true;
-							}
-							int lvl = 0;
-							try {
-								lvl = Integer.parseInt(args[2]);
-							} catch (NumberFormatException ex) {
-								try {
-									lvl = fromRomanNumeral(args[2]);
-								} catch (NumberFormatException ex2) {
-									Messages.sendMessage(player, parent.getMessages().getEnchantLevelNotNumber());
+							enchant(sender, args);
+							break;
+						case "set":
+							if (args[1].equalsIgnoreCase("cooldown")) {
+								if (!(sender instanceof Player)) {
+									Messages.sendMessage(sender, parent.getMessages().getPlayerOnly());
 									return true;
 								}
+								Player player = (Player) sender;
+								GadgetSetterManager.assign(player.getUniqueId(), TimeFormatter.toSeconds(args[2]));
+								Messages.sendMessage(player, parent.getMessages().getSelectCooldown());
+								Messages.sendMessage(player, parent.getMessages().getSelectCancel());
 							}
-							if (lvl > enchantment.getMaxLevel()) {
-								Messages.sendMessage(player, parent.getMessages()
-										.getEnchantLevelMax()
-										.replace("%enchantment_max_level%", String.valueOf(enchantment.getMaxLevel())));
+							break;
+						case "setplayercooldown":
+							Player target = Bukkit.getPlayer(args[1]);
+							if (target == null) {
+								Messages.sendMessage(sender,
+										parent.getMessages().getUnknownPlayer().replace("%target%", args[1]));
 								return true;
 							}
-							ItemStack itemInHand = player.getItemInHand();
-							if (itemInHand.getType() == Material.AIR) {
-								Messages.sendMessage(player, parent.getMessages().getEnchantItemHand());
-								return true;
-							}
-							int[] enchantmentIds = NBTEditor.getIntArray(itemInHand, "rpids");
-							if (enchantmentIds == null) enchantmentIds = new int[enchantmentsAmount];
-							int[] enchantmentLvls = NBTEditor.getIntArray(itemInHand, "rplvls");
-							if (enchantmentLvls == null) enchantmentLvls = new int[enchantmentsAmount];
-							int emptySection = -1;
-							int foundEnchantment = -1;
-							for (int i = 0; i < enchantmentIds.length; i++) {
-								if (enchantmentIds[i] == 0) {
-									emptySection = i;
-								} else if (enchantmentIds[i] == enchantment.getId()) {
-									foundEnchantment = i;
-								}
-							}
-							// if enchantment was found
-							if (foundEnchantment != -1) {
-								// if trying to remove
-								if (lvl <= 0) {
-									// remove enchantment by setting it to 0 (empty enchantment)
-									enchantmentIds[foundEnchantment] = 0;
-									// set invalid lvl to the found enchantment indicating that the enchantment got
-									// removed
-									enchantmentLvls[foundEnchantment] = -1;
-								} else {
-									// or else set the correct lvl starting from 0
-									enchantmentLvls[foundEnchantment] = lvl - 1;
-								}
-								// or else enchantment wasn't found
-							} else if (emptySection != -1) {
-								// if trying to remove
-								if (lvl <= 0) {
-									/*
-									 * // set enchantment id of nothing to 0 ? useless
-									 * enchantmentIds[emptySection] = 0;
-									 * // set enchantment lvl to invalid level
-									 * enchantmentLvls[emptySection] = -1;
-									 */
-								} else {
-									enchantmentIds[emptySection] = enchantment.getId();
-									enchantmentLvls[emptySection] = lvl - 1;
-								}
-							}
-							// There are no enchantments. Therefore, signal NBT tags removal by nullizing
-							// the arrays
-							if (IntStream.of(enchantmentIds).sum() <= 0) enchantmentIds = null;
-							if (IntStream.of(enchantmentLvls).sum() <= -1) enchantmentLvls = null;
-							//
-							itemInHand = NBTEditor.set(itemInHand, enchantmentIds, "rpids");
-							itemInHand = NBTEditor.set(itemInHand, enchantmentLvls, "rplvls");
-							ItemMeta meta = itemInHand.getItemMeta();
-							List<String> lore = meta.getLore();
-							if (lore == null) lore = new ArrayList<>();
-							String displayName = Colorizer.colorize(enchantment.getDisplayName());
-							if (CollectionUtils.containsIgnoreCase(lore, displayName)) {
-								if (lvl > 0) {
-									Messages.sendMessage(player,
-											parent.getMessages()
-													.getEnchantItemUpdate()
-													.replace("%enchantment_name%", name)
-													.replace("%enchantment_display_name%", displayName)
-													.replace("%enchantment_level_number%", String.valueOf(lvl))
-													.replace("%enchantment_level%", getRomanNumeral(lvl)));
-									lore = CollectionUtils.replaceContainsIgnoreCase(lore, displayName,
-											displayName + " " + getRomanNumeral(lvl));
-								} else {
-									Messages.sendMessage(player,
-											parent.getMessages()
-													.getEnchantItemRemove()
-													.replace("%enchantment_name%", name)
-													.replace("%enchantment_display_name%", displayName)
-													.replace("%enchantment_level_number%", String.valueOf(lvl))
-													.replace("%enchantment_level%", String.valueOf(lvl)));
-									String lineToRemove = lore.stream()
-											.filter(line -> line.contains(displayName))
-											.findFirst()
-											.get();
-									lore.remove(lineToRemove);
-								}
-							} else {
-								if (lvl > 0) {
-									Messages.sendMessage(player,
-											parent.getMessages()
-													.getEnchantItemAdd()
-													.replace("%enchantment_name%", name)
-													.replace("%enchantment_display_name%", displayName)
-													.replace("%enchantment_level_number%", String.valueOf(lvl))
-													.replace("%enchantment_level%", getRomanNumeral(lvl)));
-									lore.add(displayName + " " + getRomanNumeral(lvl));
-								} else {
-									Messages.sendMessage(player,
-											parent.getMessages()
-													.getEnchantItemRemove()
-													.replace("%enchantment_name%", name)
-													.replace("%enchantment_display_name%", displayName)
-													.replace("%enchantment_level_number%", String.valueOf(lvl))
-													.replace("%enchantment_level%", String.valueOf(lvl)));
-								}
-							}
-							meta.setLore(lore);
-							itemInHand.setItemMeta(meta);
-							player.setItemInHand(itemInHand);
+							GadgetManager.getCooldownGadgets().values().forEach(cooldown -> {
+								SimpleCooldownEntry<UUID> entry = cooldown.COOLDOWN.getEntry(target.getUniqueId());
+								entry.setLiveDuration(Integer.parseInt(args[2]));
+							});
 							break;
 					}
 					break;
@@ -585,11 +498,159 @@ public class RedstonePvPCoreCommand implements CommandExecutor {
 							Player p = (Player) sender;
 							p.playSound(p.getLocation(), sound.parseSound(), volume, pitch);
 							break;
+						case "enchant":
+							enchant(sender, args);
+							break;
 					}
 					break;
 			}
 		}
 		return true;
+	}
+
+	private boolean enchant(CommandSender sender, String[] args) {
+		boolean targeted = args.length == 4;
+		Player target = null;
+		if (!targeted) {
+			if (!(sender instanceof Player)) {
+				Messages.sendMessage(sender, parent.getMessages().getPlayerOnly());
+				return true;
+			}
+			target = (Player) sender;
+		} else {
+			target = Bukkit.getPlayer(args[3]);
+			if (target == null) {
+				Messages.sendMessage(sender, parent.getMessages().getUnknownPlayer().replace("%target%", args[3]));
+				return true;
+			}
+		}
+		Player player = target;
+		String name = args[1].toUpperCase();
+		int enchantmentsAmount = parent.getEnchantmentManager().getEnchantmentsMap().size();
+		RPEnchantment enchantment = parent.getEnchantmentManager().getEnchantment(name);
+		if (enchantment == null) {
+			return true;
+		}
+		int lvl = 0;
+		try {
+			lvl = Integer.parseInt(args[2]);
+		} catch (NumberFormatException ex) {
+			try {
+				lvl = fromRomanNumeral(args[2]);
+			} catch (NumberFormatException ex2) {
+				Messages.sendMessage(sender, parent.getMessages().getEnchantLevelNotNumber());
+				return true;
+			}
+		}
+		if (lvl > enchantment.getMaxLevel()) {
+			Messages.sendMessage(sender,
+					parent.getMessages()
+							.getEnchantLevelMax()
+							.replace("%enchantment_max_level%", String.valueOf(enchantment.getMaxLevel())));
+			return true;
+		}
+		ItemStack itemInHand = player.getItemInHand();
+		if (itemInHand.getType() == Material.AIR) {
+			Messages.sendMessage(sender, parent.getMessages().getEnchantItemHand());
+			return true;
+		}
+		int[] enchantmentIds = NBTEditor.getIntArray(itemInHand, "rpids");
+		if (enchantmentIds == null) enchantmentIds = new int[enchantmentsAmount];
+		int[] enchantmentLvls = NBTEditor.getIntArray(itemInHand, "rplvls");
+		if (enchantmentLvls == null) enchantmentLvls = new int[enchantmentsAmount];
+		int emptySection = -1;
+		int foundEnchantment = -1;
+		for (int i = 0; i < enchantmentIds.length; i++) {
+			if (enchantmentIds[i] == 0) {
+				emptySection = i;
+			} else if (enchantmentIds[i] == enchantment.getId()) {
+				foundEnchantment = i;
+			}
+		}
+		// if enchantment was found
+		if (foundEnchantment != -1) {
+			// if trying to remove
+			if (lvl <= 0) {
+				// remove enchantment by setting it to 0 (empty enchantment)
+				enchantmentIds[foundEnchantment] = 0;
+				// set invalid lvl to the found enchantment indicating that the enchantment got
+				// removed
+				enchantmentLvls[foundEnchantment] = -1;
+			} else {
+				// or else set the correct lvl starting from 0
+				enchantmentLvls[foundEnchantment] = lvl - 1;
+			}
+			// or else enchantment wasn't found
+		} else if (emptySection != -1) {
+			// if trying to remove
+			if (lvl <= 0) {
+				/*
+				 * // set enchantment id of nothing to 0 ? useless
+				 * enchantmentIds[emptySection] = 0;
+				 * // set enchantment lvl to invalid level
+				 * enchantmentLvls[emptySection] = -1;
+				 */
+			} else {
+				enchantmentIds[emptySection] = enchantment.getId();
+				enchantmentLvls[emptySection] = lvl - 1;
+			}
+		}
+		// There are no enchantments. Therefore, signal NBT tags removal by nullizing
+		// the arrays
+		if (IntStream.of(enchantmentIds).sum() <= 0) enchantmentIds = null;
+		if (IntStream.of(enchantmentLvls).sum() <= -1) enchantmentLvls = null;
+		//
+		itemInHand = NBTEditor.set(itemInHand, enchantmentIds, "rpids");
+		itemInHand = NBTEditor.set(itemInHand, enchantmentLvls, "rplvls");
+		ItemMeta meta = itemInHand.getItemMeta();
+		List<String> lore = meta.getLore();
+		if (lore == null) lore = new ArrayList<>();
+		String displayName = Colorizer.colorize(enchantment.getDisplayName());
+		if (CollectionUtils.containsIgnoreCase(lore, displayName)) {
+			if (lvl > 0) {
+				Messages.sendMessage(sender,
+						parent.getMessages()
+								.getEnchantItemUpdate()
+								.replace("%enchantment_name%", name)
+								.replace("%enchantment_display_name%", displayName)
+								.replace("%enchantment_level_number%", String.valueOf(lvl))
+								.replace("%enchantment_level%", getRomanNumeral(lvl)));
+				lore = CollectionUtils.replaceContainsIgnoreCase(lore, displayName,
+						displayName + " " + getRomanNumeral(lvl));
+			} else {
+				Messages.sendMessage(sender,
+						parent.getMessages()
+								.getEnchantItemRemove()
+								.replace("%enchantment_name%", name)
+								.replace("%enchantment_display_name%", displayName)
+								.replace("%enchantment_level_number%", String.valueOf(lvl))
+								.replace("%enchantment_level%", String.valueOf(lvl)));
+				lore.removeIf(line -> line.contains(displayName));
+			}
+		} else {
+			if (lvl > 0) {
+				Messages.sendMessage(sender,
+						parent.getMessages()
+								.getEnchantItemAdd()
+								.replace("%enchantment_name%", name)
+								.replace("%enchantment_display_name%", displayName)
+								.replace("%enchantment_level_number%", String.valueOf(lvl))
+								.replace("%enchantment_level%", getRomanNumeral(lvl)));
+				lore.add(displayName + " " + getRomanNumeral(lvl));
+			} else {
+				Messages.sendMessage(sender,
+						parent.getMessages()
+								.getEnchantItemRemove()
+								.replace("%enchantment_name%", name)
+								.replace("%enchantment_display_name%", displayName)
+								.replace("%enchantment_level_number%", String.valueOf(lvl))
+								.replace("%enchantment_level%", String.valueOf(lvl)));
+			}
+		}
+		meta.setLore(lore);
+		itemInHand.setItemMeta(meta);
+		player.setItemInHand(itemInHand);
+		return false;
 	}
 
 }
