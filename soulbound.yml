@@ -1,6 +1,10 @@
+# true: allows item to be dropped
 allow-drop: false
+# true: drops the item when player dies
 drop-on-death: false
-# Shows the lore when an item has a soulbound
+# true: Shows the lore below when an item has a soulbound
 use-lore: true
+# true: Give the item back to the player when they die and respawn
+keep-after-death: false
 lore:
 - "&4Soulbound"

@@ -7,4 +7,4 @@ emerald-converter: []
 drop-party: []
 exp-sign: []
 frame-giver: []
-cooldown: []
+cooldown: {}

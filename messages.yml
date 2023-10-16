@@ -50,6 +50,11 @@ frame-giver-use: '&f&o[&e&k&oi&f&o] &b&oYou have taken an item.'
 # available variables: %amount%
 exp-sign-not-enough: '&cYou need %amount% to use the exp sign.'
 exp-sign-use: ''
+# ==================================
+# << Cooldown >>
+# ==================================
+# available variables: %time% %time_long% %time_split% %time_short%
+cooldown-not-done: '&cYou need to wait &4%time%&c for another usage.'
 # =============================
 # COMMAND /rpcore set <gadget> and admin stuff
 # =============================
@@ -69,6 +74,8 @@ select-exp-sign: '&a&lSELECT&c a block/sign by clicking with your mouse to set a
   Sign&c.'
 select-frame-giver: '&a&lSELECT&c an item frame by clicking with your mouse to set a &9Frame
   Giver&c.'
+select-cooldown: '&a&lSELECT&c a gadget by clicking with your mouse to set specified &5Cooldown&c.'
+select-cooldown-not-gadget: '&c<!> The object you interacted with is not a RedstonePvPCore gadget! Select a valid gadget!'
 # available variables: %location% {
 set-repair-anvil: '&cSuccessfully set &7Repair Anvil &cat &o&n%location%&c.'
 set-redstone-converter: '&cSuccessfully set &4Redstone Converter &cat &o&n%location%&c.'
@@ -78,6 +85,8 @@ set-random-box: '&cSuccessfully set &eRandom Box &cat &o&n%location%&c.'
 set-drop-party: '&cSuccessfully set &bDrop Party Activator &cat &o&n%location%&c.'
 set-exp-sign: '&cSuccessfully set &2Exp Sign &cat &o&n%location%&c.'
 set-frame-giver: '&cSuccessfully set &9Frame Giver &cat &o&n%location%&c.'
+# available variables: %time% %time_long% %time_split% %time_short%
+set-cooldown: '&cSuccessfully set a &5%time_short% cooldown&c at &o&n%location%&c.'
 remove-repair-anvil: '&cSuccessfully removed &7Repair Anvil &cat &o&n%location%&c.'
 remove-redstone-converter: '&cSuccessfully removed &4Redstone Converter &cat &o&n%location%&c.'
 remove-gold-converter: '&cSuccessfully removed &6Gold Converter &cat &o&n%location%&c.'
@@ -86,6 +95,7 @@ remove-random-box: '&cSuccessfully removed &eRandom Box &cat &o&n%location%&c.'
 remove-drop-party: '&cSuccessfully removed &bDrop Party Activator &cat &o&n%location%&c.'
 remove-exp-sign: '&cSuccessfully removed &2Exp Sign &cat &o&n%location%&c.'
 remove-frame-giver: '&cSuccessfully removed &9Frame Giver &cat &o&n%location%&c.'
+remove-cooldown: '&cSuccessfully removed &5Cooldown &cat &o&n%location%&c.'
 # }
 select-cancel: '&cor write &o/rpcore cancel &cto cancel the process.'
 # available variables: %target%
